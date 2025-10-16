@@ -1,5 +1,5 @@
 name: Bug Report
-description: File a bug report to help us improve
+description: Report a bug or issue with Vita Agents
 title: "[Bug]: "
 labels: ["bug", "triage"]
 assignees:
@@ -8,29 +8,65 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report! 
-        Please provide as much detail as possible to help us resolve the issue.
+        Thanks for reporting a bug! 
+        Please provide detailed information to help us reproduce and fix the issue.
 
-  - type: input
-    id: version
+  - type: dropdown
+    id: bug-type
     attributes:
-      label: Vita Agents Version
-      description: What version of Vita Agents are you running?
-      placeholder: e.g., 2.1.0
+      label: Bug Type
+      description: What type of bug are you reporting?
+      options:
+        - Crash/Exception
+        - Performance Issue
+        - Data Corruption/Loss
+        - Authentication/Authorization
+        - FHIR Processing Error
+        - API Error
+        - Web Portal Issue
+        - CLI Issue
+        - Docker/Container Issue
+        - Installation/Setup Issue
+        - Documentation Error
+        - Other
     validations:
       required: true
 
   - type: dropdown
-    id: installation
+    id: component
     attributes:
-      label: Installation Method
-      description: How did you install Vita Agents?
+      label: Affected Component
+      description: Which component is affected by this bug?
       options:
-        - pip install vita-agents
-        - pip install vita-agents[all]
-        - Docker
-        - From source
+        - FHIR Agent
+        - Enhanced FHIR Agent (Multi-engine)
+        - HL7 Agent
+        - EHR Agent
+        - Clinical Decision Support
+        - Data Harmonization
+        - Compliance & Security
+        - NLP Agent
+        - Web Portal
+        - CLI Interface
+        - Docker Integration
+        - API
+        - Authentication
+        - Database
+        - Monitoring
         - Other
+    validations:
+      required: false
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How severe is this bug?
+      options:
+        - Critical (System unusable, data loss, security issue)
+        - High (Major functionality broken, workaround exists)
+        - Medium (Functionality impaired, minor workaround exists)
+        - Low (Cosmetic issue, functionality works)
     validations:
       required: true
 
@@ -39,15 +75,34 @@ body:
     attributes:
       label: Bug Description
       description: A clear and concise description of what the bug is.
-      placeholder: Describe the bug...
+      placeholder: Describe what happened...
     validations:
       required: true
 
   - type: textarea
-    id: steps
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+      placeholder: Describe what should have happened...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: A clear and concise description of what actually happened.
+      placeholder: Describe what actually happened...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
     attributes:
       label: Steps to Reproduce
-      description: Steps to reproduce the behavior
+      description: |
+        Detailed steps to reproduce the behavior:
       placeholder: |
         1. Go to '...'
         2. Click on '....'
