@@ -55,25 +55,59 @@ from vita_agents.connectors import (
     EHRConnectionConfig,
 )
 
+# Enhanced FHIR Agent with multi-engine support
+try:
+    from vita_agents.agents.enhanced_fhir_agent import EnhancedFHIRAgent
+    from vita_agents.fhir_engines.open_source_clients import (
+        FHIREngineManager,
+        FHIRServerConfiguration,
+        FHIREngineType,
+        get_server_template,
+        list_server_templates,
+    )
+    _ENHANCED_FHIR_AVAILABLE = True
+except ImportError:
+    _ENHANCED_FHIR_AVAILABLE = False
+
 __all__ = [
+    # Version and metadata
+    "__version__",
+    "__version_info__", 
+    "__title__",
+    "__description__",
+    "__author__",
+    "__license__",
+    "get_version_info",
+    "print_version_info",
+    
+    # Core agents
     "AgentOrchestrator",
     "FHIRAgent",
     "HL7Agent", 
-    "EHRAgent",
+    "EHRAgent", 
     "ClinicalDecisionSupportAgent",
     "DataHarmonizationAgent",
+    
     # Enhanced EHR Connectors
     "EHRConnectorFactory",
     "ehr_factory",
-    "EpicConnector",
+    "EpicConnector", 
     "CernerConnector",
     "AllscriptsConnector",
     "EHRVendor",
     "EHRConnectionConfig",
 ]
 
-# Version info
-VERSION_INFO = tuple(map(int, __version__.split(".")))
+# Add enhanced FHIR exports if available
+if _ENHANCED_FHIR_AVAILABLE:
+    __all__.extend([
+        "EnhancedFHIRAgent",
+        "FHIREngineManager",
+        "FHIRServerConfiguration", 
+        "FHIREngineType",
+        "get_server_template",
+        "list_server_templates",
+    ])
 
 # Package metadata
 PACKAGE_NAME = "vita-agents"
