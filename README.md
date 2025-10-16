@@ -129,6 +129,9 @@ Vita Agents creates specialized AI agents that work collaboratively to handle di
 | **Deployment** | Docker, Kubernetes, cloud-native |
 | **Monitoring** | Prometheus, structured logging |
 
+<img width="1346" height="603" alt="image" src="https://github.com/user-attachments/assets/67d00eb5-5e1f-40eb-a26e-089462402e36" />
+
+
 ## 🚀 Quick Start
 
 ### Installation
