@@ -38,12 +38,18 @@ class LLMManager:
     def __init__(self):
         self.models = {}
         self.active_model = None
+        self.config_path = "config/llm_config.json"
         self.config = self._load_config()
         self._initialize_models()
+        # Load the active model from config
+        self.active_model = self.config.get("default_model")
+        if self.active_model and self.active_model not in self.models:
+            logger.warning(f"Configured default model '{self.active_model}' not available. Clearing selection.")
+            self.active_model = None
     
     def _load_config(self) -> Dict:
         """Load LLM configuration from config file or environment"""
-        config_path = "config/llm_config.json"
+        config_path = self.config_path if hasattr(self, 'config_path') else "config/llm_config.json"
         default_config = {
             "ollama": {
                 "base_url": "http://localhost:11434",
@@ -200,10 +206,22 @@ class LLMManager:
         """Get models optimized for healthcare"""
         return {k: v for k, v in self.models.items() if v.healthcare_optimized}
     
+    def _save_config(self):
+        """Save the current configuration to file"""
+        try:
+            os.makedirs("config", exist_ok=True)
+            with open(self.config_path, 'w') as f:
+                json.dump(self.config, f, indent=2)
+        except Exception as e:
+            logger.error(f"Failed to save config: {e}")
+
     def set_active_model(self, model_key: str) -> bool:
         """Set the active model"""
         if model_key in self.models:
             self.active_model = model_key
+            # Update config and save to file
+            self.config["default_model"] = model_key
+            self._save_config()
             logger.info(f"Set active model: {model_key}")
             return True
         return False
