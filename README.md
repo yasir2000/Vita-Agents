@@ -623,12 +623,27 @@ pytest tests/
 
 ## 📚 Documentation
 
+### 🚀 Getting Started
 - **[User Guide](docs/user-guide.md)** - Complete user documentation
+- **[Upgrade Guide](docs/UPGRADE_GUIDE.md)** - Upgrading from previous versions
+- **[Features Overview](docs/FEATURES_OVERVIEW.md)** - Comprehensive feature matrix
+
+### 🏥 HMCP Healthcare Communication (NEW!)
+- **[HMCP Integration Guide](docs/HMCP_INTEGRATION.md)** - Complete HMCP protocol documentation
+- **[Healthcare Workflow Examples](examples/hmcp_workflows.py)** - 5 complete clinical workflows
+- **[HMCP CLI Reference](vita_agents/cli/hmcp_cli.py)** - Interactive CLI documentation
+
+### 🔧 Technical Documentation
 - **[API Reference](docs/api-reference.md)** - Detailed API documentation  
 - **[Agent Development Guide](docs/agent-development.md)** - Creating custom agents
 - **[Healthcare Standards Guide](docs/healthcare-standards.md)** - FHIR, HL7, and EHR integration
 - **[Deployment Guide](docs/deployment.md)** - Production deployment instructions
 - **[Security Guide](docs/security.md)** - HIPAA compliance and security best practices
+
+### 📋 Release Information
+- **[Release Notes](RELEASE_NOTES.md)** - Detailed v2.1.0 release information
+- **[Changelog](CHANGELOG.md)** - Complete change history
+- **[Version History](docs/VERSION_HISTORY.md)** - Comprehensive version timeline
 
 ## 📄 License
 
@@ -678,6 +693,32 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 - **Healthcare IT Professionals** who inspire and guide this work
 - **Open Source AI Frameworks** (CrewAI, LangChain) that make this possible
 - **Contributors and Community Members** who help improve this project
+
+## ⚡ Quick Reference
+
+### Essential Commands
+```bash
+# Start healthcare portal
+python start_portal.py
+
+# Create HMCP healthcare agents
+python -m vita_agents.cli.hmcp_cli create diagnostic_copilot --role ai_agent --emergency-capable
+
+# Test multi-engine FHIR operations
+python -m vita_agents.cli.fhir_engines_cli test-connections
+
+# Run healthcare workflow examples
+python examples/hmcp_workflows.py
+
+# Interactive healthcare agent management
+python -m vita_agents.cli.hmcp_cli interactive
+```
+
+### Key URLs (Default Setup)
+- **Healthcare Portal**: http://localhost:8080
+- **API Documentation**: http://localhost:8080/docs
+- **HMCP Agent Management**: CLI-based interface
+- **Multi-Engine FHIR**: Integrated in portal and CLI
 
 ## 📞 Contact
 
