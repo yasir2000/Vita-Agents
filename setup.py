@@ -94,43 +94,144 @@ def read_long_description():
         return "Multi-Agent AI Framework for Healthcare Interoperability"
 
 
+# Core requirements
+install_requires = read_requirements()
+
+# Optional requirements for different features
+extras_require = {
+    'fhir-engines': [
+        'aiohttp>=3.8.0',
+        'structlog>=23.0.0',
+        'rich>=13.0.0',
+        'click>=8.0.0',
+        'pydantic>=2.0.0',
+    ],
+    'web-portal': [
+        'fastapi>=0.104.0',
+        'uvicorn[standard]>=0.24.0',
+        'jinja2>=3.1.0',
+        'python-multipart>=0.0.6',
+        'websockets>=12.0',
+    ],
+    'docker': [
+        'docker>=6.1.0',
+        'docker-compose>=1.29.0',
+    ],
+    'monitoring': [
+        'prometheus-client>=0.19.0',
+        'grafana-api>=1.0.3',
+        'psutil>=5.9.0',
+    ],
+    'security': [
+        'cryptography>=41.0.0',
+        'pyjwt>=2.8.0',
+        'bcrypt>=4.1.0',
+        'python-jose[cryptography]>=3.3.0',
+    ],
+    'testing': [
+        'pytest>=7.4.0',
+        'pytest-asyncio>=0.21.0',
+        'pytest-cov>=4.1.0',
+        'pytest-xdist>=3.3.0',
+        'pytest-timeout>=2.2.0',
+        'pytest-benchmark>=4.0.0',
+        'locust>=2.17.0',
+        'factory-boy>=3.3.0',
+        'faker>=20.0.0',
+    ],
+    'dev': read_dev_requirements() + [
+        'bandit>=1.7.5',
+        'safety>=2.3.0',
+        'pip-audit>=2.6.0',
+        'pre-commit>=3.5.0',
+    ],
+    'docs': [
+        'mkdocs>=1.5.0',
+        'mkdocs-material>=9.4.0',
+        'mkdocs-mermaid2-plugin>=1.1.0',
+        'sphinx>=7.2.0',
+        'sphinx-rtd-theme>=1.3.0',
+        'sphinx-autodoc-typehints>=1.25.0',
+    ],
+}
+
+# Add 'all' option that includes everything
+extras_require['all'] = list(set().union(*extras_require.values()))
+extras_require['all'] = list(set().union(*extras_require.values()))
+
 setup(
     name="vita-agents",
-    version="1.0.0",
-    author="Yasir",
-    author_email="yasir@vita-agents.org",
-    description="Multi-Agent AI Framework for Healthcare Interoperability",
-    long_description=read_long_description(),
+    version=get_version(),
+    author="Yasir Ahmed",
+    author_email="yasir@vita-agents.dev",
+    description="Multi-Agent AI for Healthcare Interoperability - FHIR, HL7, and EHR Integration",
+    long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/yasir2000/vita-agents",
     project_urls={
+        "Homepage": "https://vita-agents.org",
+        "Documentation": "https://vita-agents.readthedocs.io",
+        "Repository": "https://github.com/yasir2000/vita-agents",
         "Bug Tracker": "https://github.com/yasir2000/vita-agents/issues",
-        "Documentation": "https://vita-agents.org/docs",
-        "Source Code": "https://github.com/yasir2000/vita-agents",
+        "Changelog": "https://github.com/yasir2000/vita-agents/blob/main/CHANGELOG.md",
+        "Discord": "https://discord.gg/vita-agents",
+        "LinkedIn": "https://linkedin.com/company/vita-agents",
     },
-    packages=find_packages(),
+    packages=find_packages(exclude=["tests*", "docs*", "examples*"]),
+    include_package_data=True,
+    package_data={
+        "vita_agents": [
+            "config/*.yml",
+            "config/*.yaml",
+            "config/*.json",
+            "templates/*.html",
+            "templates/*.jinja2",
+            "static/css/*.css",
+            "static/js/*.js",
+            "static/images/*",
+            "schemas/*.json",
+            "schemas/*.xsd",
+        ],
+    },
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Healthcare Industry",
         "Intended Audience :: Developers",
+        "Topic :: Scientific/Engineering :: Medical Science Apps.",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
         "License :: OSI Approved :: Apache Software License",
-        "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
-        "Topic :: Scientific/Engineering :: Medical Science Apps.",
-        "Topic :: Software Development :: Libraries :: Python Modules",
-        "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
-        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Operating System :: OS Independent",
+        "Environment :: Web Environment",
+        "Environment :: Console",
+        "Framework :: FastAPI",
+        "Framework :: AsyncIO",
+        "Natural Language :: English",
+        "Typing :: Typed",
     ],
     python_requires=">=3.9",
-    install_requires=read_requirements(),
-    extras_require={
-        "dev": read_dev_requirements(),
-        "docs": [
-            "mkdocs>=1.5.0",
+    install_requires=install_requires,
+    extras_require=extras_require,
+    entry_points={
+        "console_scripts": [
+            "vita-agents=vita_agents.cli.main:main",
+            "fhir-engines=vita_agents.cli.fhir_engines_cli:cli",
+            "vita-portal=vita_agents.web.portal:main",
+            "vita-orchestrator=vita_agents.orchestrator.main:main",
+        ],
+    },
+    keywords=[
+        "healthcare", "FHIR", "HL7", "EHR", "interoperability", 
+        "medical", "agents", "AI", "machine learning", "clinical",
+        "HIPAA", "compliance", "medical records", "health informatics",
+        "telemedicine", "telehealth", "clinical decision support",
+        "population health", "public health", "medical imaging",
+        "DICOM", "SNOMED", "ICD-10", "LOINC", "CPT"
             "mkdocs-material>=9.5.0",
             "mkdocs-mermaid2-plugin>=1.1.0",
         ]
