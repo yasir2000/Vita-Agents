@@ -25,8 +25,8 @@ Connect to **11+ open source FHIR servers simultaneously**:
 - **Aidbox FHIR Platform** - Cloud-native FHIR
 - And 4+ more engines with extensible architecture
 
-### 🏥 **HMCP - Healthcare Multi-agent Communication Protocol** (NEW!)
-Revolutionary protocol for healthcare AI agent communication inspired by Innovaccer's healthcare workflows:
+### 🏥 **HMCP - Healthcare Model Context Protocol** (NEW!)
+Healthcare Model Context Protocol - like MCP (Model Context Protocol) but specifically designed for healthcare environments. Enables secure, multi-step conversational workflows between healthcare agents with context preservation:
 - **Clinical Context Awareness**: Patient data, urgency levels, healthcare roles
 - **Emergency Response Protocols**: Cardiac arrest, stroke, sepsis, respiratory failure
 - **Care Coordination**: Multi-disciplinary team communication and workflow orchestration
@@ -275,7 +275,7 @@ graph TB
 
 #### 🎼 **Orchestration & Communication Layer**
 - **Agent Orchestrator**: Central workflow management and agent coordination
-- **HMCP Protocol**: Healthcare Multi-agent Communication Protocol for clinical context
+- **HMCP Protocol**: Healthcare Model Context Protocol for clinical context
 - **Message Router**: Intelligent load balancing and message routing
 - **Health Monitor**: Real-time performance analytics and system health
 
