@@ -1,10 +1,10 @@
 # Release Notes - Vita Agents v2.1.0
 
-## 🎉 Major Release: Multi-Engine FHIR Support
+## 🎉 Major Release: Multi-Engine FHIR Support + HMCP Healthcare Communication
 
 **Release Date**: October 16, 2025  
 **Version**: 2.1.0  
-**Codename**: "Interoperability Bridge"
+**Codename**: "Healthcare Interoperability Bridge"
 
 ---
 
@@ -12,6 +12,9 @@
 
 ### 🚀 Multi-Engine FHIR Support
 We've added comprehensive support for **11+ open source FHIR engines**, making Vita Agents the most versatile FHIR integration platform available.
+
+### 🏥 HMCP - Healthcare Multi-agent Communication Protocol (NEW!)
+Introducing a revolutionary communication protocol specifically designed for healthcare AI agents, enabling sophisticated clinical workflows, emergency responses, and care coordination with full HIPAA compliance.
 
 #### Supported FHIR Engines:
 - **HAPI FHIR Server** (hapifhir.io) - Most popular open source FHIR server

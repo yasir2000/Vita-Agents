@@ -8,12 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Enhanced FHIR Agent with multi-engine support for open source FHIR servers
-- Support for 11+ FHIR engines including HAPI FHIR, IBM FHIR, Medplum, Firely
-- Professional CLI interface for FHIR engine management
-- Cross-engine validation and performance benchmarking
-- Data migration tools between different FHIR engines
-- OAuth2 and SMART on FHIR authentication support
+- Performance improvements and bug fixes
+- Enhanced documentation and examples
+- Community contributions and feedback integration
 
 ## [2.1.0] - 2025-10-16
 
@@ -48,6 +45,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Professional CLI Interface** (`vita_agents/cli/fhir_engines_cli.py`)
   - Rich terminal UI with tables and progress bars
   - Server template management and connection testing
+
+- **HMCP - Healthcare Multi-agent Communication Protocol** 
+  - Complete protocol implementation (`vita_agents/protocols/hmcp.py`)
+  - Healthcare agent with clinical context awareness (`vita_agents/agents/hmcp_agent.py`)
+  - Interactive CLI for healthcare agent management (`vita_agents/cli/hmcp_cli.py`)
+  - Comprehensive healthcare workflow examples (`examples/hmcp_workflows.py`)
+  - Complete documentation (`docs/HMCP_INTEGRATION.md`)
+
+- **Healthcare Communication Features**
+  - 6 message types: request, response, notification, emergency, coordination, event
+  - Clinical urgency levels: routine, urgent, emergency
+  - Healthcare roles: physician, nurse, pharmacist, ai_agent
+  - Patient context with PHI protection and HIPAA compliance
+  - Emergency response protocols: cardiac arrest, stroke, sepsis, respiratory failure
+  - Care coordination workflows: multidisciplinary care, discharge planning, transfer of care
+  - Real-time clinical guidance and workflow orchestration
+
+- **Healthcare Workflow Examples**
+  - Chest pain diagnosis workflow with multi-agent coordination
+  - Medication interaction checking and alert generation
+  - Emergency cardiac arrest response with ACLS protocols
+  - Comprehensive discharge planning coordination
+  - Critical lab value notification and response workflows
+
+- **Security & Compliance**
+  - HIPAA-compliant communication with PHI protection
+  - Comprehensive audit trails and security monitoring
+  - End-to-end encryption for sensitive healthcare data
+  - Role-based access control and authorization
   - Multi-engine search and validation operations
   - Performance testing and benchmarking tools
   - Configuration management and troubleshooting

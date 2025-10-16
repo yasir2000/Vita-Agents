@@ -8,9 +8,9 @@
 [![GitHub release](https://img.shields.io/github/release/yasir2000/vita-agents.svg)](https://GitHub.com/yasir2000/vita-agents/releases/)
 [![GitHub stars](https://img.shields.io/github/stars/yasir2000/vita-agents.svg?style=social&label=Star)](https://GitHub.com/yasir2000/vita-agents/stargazers/)
 
-> **🚀 Latest Release v2.1.0**: Multi-Engine FHIR Support with 11+ Open Source FHIR Servers!
+> **🚀 Latest Release v2.1.0**: Multi-Engine FHIR Support + HMCP Healthcare Agent Communication!
 
-An enterprise-grade, open-source framework that leverages multi-agent AI systems to streamline healthcare data interoperability. Supporting FHIR (Fast Healthcare Interoperability Resources), HL7 standards, and Electronic Health Records (EHR) integration with **11+ open source FHIR engines** including HAPI FHIR, IBM FHIR, Medplum, and more.
+An enterprise-grade, open-source framework that leverages multi-agent AI systems to streamline healthcare data interoperability. Supporting FHIR (Fast Healthcare Interoperability Resources), HL7 standards, Electronic Health Records (EHR) integration with **11+ open source FHIR engines**, and now featuring the revolutionary **HMCP (Healthcare Multi-agent Communication Protocol)** for seamless healthcare AI agent coordination.
 
 ## 🌟 What's New in v2.1.0
 
@@ -25,6 +25,15 @@ Connect to **11+ open source FHIR servers simultaneously**:
 - **Aidbox FHIR Platform** - Cloud-native FHIR
 - And 4+ more engines with extensible architecture
 
+### 🏥 **HMCP - Healthcare Multi-agent Communication Protocol** (NEW!)
+Revolutionary protocol for healthcare AI agent communication inspired by Innovaccer's healthcare workflows:
+- **Clinical Context Awareness**: Patient data, urgency levels, healthcare roles
+- **Emergency Response Protocols**: Cardiac arrest, stroke, sepsis, respiratory failure
+- **Care Coordination**: Multi-disciplinary team communication and workflow orchestration
+- **HIPAA Compliance**: Secure PHI handling with audit trails and encryption
+- **Healthcare Workflows**: 5+ complete clinical workflows (diagnosis, medication checks, discharge planning)
+- **Interactive CLI**: Full-featured command line interface for healthcare agent management
+
 ### 🎯 **Key Features**
 - ⚡ **Parallel Operations**: Execute across multiple FHIR engines simultaneously  
 - 📊 **Performance Benchmarking**: Compare engines and identify optimal performance
@@ -32,7 +41,9 @@ Connect to **11+ open source FHIR servers simultaneously**:
 - 🚀 **Data Migration**: Seamlessly migrate between different FHIR engines
 - 🔐 **Multi-Auth Support**: OAuth2, SMART on FHIR, Basic Auth, Bearer tokens
 - 🎨 **Professional CLI**: Beautiful command-line interface with rich features
-- 🏥 **Production Ready**: Enterprise-grade with Docker, monitoring, and security
+- 🏥 **Healthcare Agent Communication**: HMCP protocol for clinical workflows
+- 🚨 **Emergency Response**: Automated emergency protocols and care team coordination
+- 🔒 **Security & Compliance**: HIPAA-compliant with comprehensive audit trails
 
 ## 🐳 Docker Integration (New!)
 
@@ -176,6 +187,14 @@ Vita Agents creates specialized AI agents that work collaboratively to handle di
 - ✅ Clinical sentiment analysis and quality assessment
 - ✅ Automated clinical documentation insights
 
+### 8. **HMCP Agent** (`hmcp_agent.py`) - **NEW!**
+- ✅ Healthcare Multi-agent Communication Protocol implementation
+- ✅ Clinical context awareness with patient data and urgency levels
+- ✅ Emergency response protocols (cardiac arrest, stroke, sepsis, respiratory failure)
+- ✅ Care coordination and multi-disciplinary team communication
+- ✅ HIPAA-compliant secure messaging with audit trails
+- ✅ Healthcare workflow orchestration and real-time clinical guidance
+
 ## 🚀 Key Features
 
 ### 🤖 **Multi-Agent Coordination**
@@ -208,6 +227,15 @@ Vita Agents creates specialized AI agents that work collaboratively to handle di
 - Clinical decision support algorithms
 - Population health analytics
 - Real-time alerts and notifications
+
+### 🏥 **HMCP - Healthcare Multi-agent Communication** (NEW!)
+- **Clinical Workflows**: 5+ pre-built healthcare workflows (chest pain diagnosis, medication interactions, emergency response)
+- **Emergency Protocols**: Automated cardiac arrest, stroke, sepsis, and respiratory failure responses
+- **Care Coordination**: Multi-disciplinary team communication and workflow orchestration
+- **HIPAA Compliance**: Secure PHI handling with comprehensive audit trails
+- **Healthcare Roles**: Support for physician, nurse, pharmacist, and AI agent roles
+- **Clinical Urgency**: Routine, urgent, and emergency message prioritization
+- **Interactive CLI**: Full-featured command line interface for healthcare agent management
 
 ## 🛠️ Technology Stack
 
@@ -294,6 +322,28 @@ vita-agents status
 
 # Run specific workflow
 vita-agents workflow execute patient_data_integration --input data.hl7
+```
+
+### HMCP Healthcare Agent Communication (NEW!)
+
+```bash
+# Create healthcare agents with HMCP
+python -m vita_agents.cli.hmcp_cli create diagnostic_copilot --role ai_agent --capabilities differential_diagnosis --emergency-capable
+
+# Send clinical messages between agents
+python -m vita_agents.cli.hmcp_cli send medical_knowledge request '{"action": "medication_check", "drugs": ["warfarin", "aspirin"]}' --patient-id PATIENT_001 --urgency urgent
+
+# Initiate emergency response
+python -m vita_agents.cli.hmcp_cli emergency PATIENT_001 cardiac_arrest "room_305_icu" --details '{"witnessed": true}'
+
+# Coordinate care workflows
+python -m vita_agents.cli.hmcp_cli coordinate PATIENT_001 discharge_planning diagnostic_copilot medical_knowledge --care-plan '{"discharge_date": "2024-12-17"}'
+
+# Interactive healthcare agent management
+python -m vita_agents.cli.hmcp_cli interactive
+
+# Run healthcare workflow examples
+python examples/hmcp_workflows.py
 ```
 
 ### API Server
