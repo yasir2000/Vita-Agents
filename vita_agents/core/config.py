@@ -91,13 +91,63 @@ class EHRSettings(BaseSettings):
 
 
 class AISettings(BaseSettings):
-    """AI/ML configuration."""
+    """AI/ML configuration for multiple LLM providers."""
+    # OpenAI Configuration
     openai_api_key: Optional[str] = Field(default=None)
+    openai_api_base: Optional[str] = Field(default=None)
+    openai_organization: Optional[str] = Field(default=None)
+    
+    # Anthropic Configuration
     anthropic_api_key: Optional[str] = Field(default=None)
-    model_provider: str = Field(default="openai")
+    anthropic_api_base: Optional[str] = Field(default=None)
+    
+    # Azure OpenAI Configuration
+    azure_openai_api_key: Optional[str] = Field(default=None)
+    azure_openai_endpoint: Optional[str] = Field(default=None)
+    azure_openai_api_version: str = Field(default="2024-02-15-preview")
+    azure_openai_deployment_name: Optional[str] = Field(default=None)
+    
+    # Google AI Configuration
+    google_api_key: Optional[str] = Field(default=None)
+    google_project_id: Optional[str] = Field(default=None)
+    
+    # Ollama Configuration
+    ollama_api_base: str = Field(default="http://localhost:11434")
+    ollama_timeout: float = Field(default=120.0)
+    
+    # Hugging Face Configuration
+    huggingface_api_key: Optional[str] = Field(default=None)
+    huggingface_api_base: str = Field(default="https://api-inference.huggingface.co")
+    huggingface_use_local: bool = Field(default=False)
+    huggingface_device: str = Field(default="auto")  # auto, cpu, cuda
+    
+    # General LLM Settings
+    model_provider: str = Field(default="openai")  # openai, anthropic, azure_openai, google, ollama, huggingface
     default_model: str = Field(default="gpt-4-turbo-preview")
+    fallback_providers: List[str] = Field(default_factory=lambda: ["openai", "anthropic"])
     max_tokens: int = Field(default=4000)
     temperature: float = Field(default=0.1)
+    top_p: float = Field(default=0.9)
+    frequency_penalty: float = Field(default=0.0)
+    presence_penalty: float = Field(default=0.0)
+    
+    # Provider-specific settings
+    provider_timeout: float = Field(default=60.0)
+    provider_max_retries: int = Field(default=3)
+    provider_rate_limit: Optional[int] = Field(default=None)
+    
+    # Healthcare-specific settings
+    enable_healthcare_models: bool = Field(default=True)
+    prefer_local_models: bool = Field(default=False)
+    require_hipaa_compliance: bool = Field(default=True)
+    enable_model_routing: bool = Field(default=True)
+    
+    # Cost optimization
+    max_cost_per_request: float = Field(default=1.0)  # USD
+    enable_cost_tracking: bool = Field(default=True)
+    
+    class Config:
+        env_prefix = "VITA_AI_"
 
 
 class MonitoringSettings(BaseSettings):
