@@ -198,6 +198,9 @@ Vita Agents creates specialized AI agents that work collaboratively to handle di
 
 <img width="1349" height="608" alt="image" src="https://github.com/user-attachments/assets/84c57e64-098f-472b-b08f-1bf2ddf3f0e8" />
 
+<img width="1134" height="641" alt="image" src="https://github.com/user-attachments/assets/744efe00-0351-462f-a551-afe761cc4fd9" />
+
+Courtesy of @https://medium.com/@alexglee/building-framework-for-ai-agents-in-healthcare-e6b2c0935c93
 
 ## 🚀 Quick Start
 
