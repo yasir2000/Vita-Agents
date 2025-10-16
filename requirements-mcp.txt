@@ -1,0 +1,42 @@
+# MCP SDK and Healthcare-MCP Dependencies
+# Based on Innovaccer's Healthcare-MCP implementation
+
+# Core MCP SDK
+mcp>=0.1.0
+
+# Agents framework for multi-agent orchestration  
+agents>=0.1.0
+
+# Healthcare-specific authentication and security
+PyJWT>=2.8.0
+cryptography>=41.0.0
+python-jose[cryptography]>=3.3.0
+
+# OAuth2 and OpenID Connect
+authlib>=1.2.1
+requests-oauthlib>=1.3.1
+
+# Additional healthcare and security dependencies
+pydantic>=2.0.0
+httpx>=0.24.0
+websockets>=11.0.0
+asyncio-mqtt>=0.13.0
+
+# For server-sent events (SSE)
+sse-starlette>=1.6.0
+uvicorn[standard]>=0.23.0
+
+# Healthcare data validation
+fhir.resources>=7.0.0
+hl7apy>=1.3.4
+
+# Security and compliance
+bcrypt>=4.0.1
+passlib[bcrypt]>=1.7.4
+python-multipart>=0.0.6
+
+# Development and testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+httpx>=0.24.0
+respx>=0.20.0
