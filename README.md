@@ -35,7 +35,7 @@ Enforces HIPAA compliance
 Manages patient consent and data privacy
 Handles audit logging and security monitoring
 Technical Architecture
-Code
+```Code
 ┌─────────────────────────────────────────────────────────┐
 │                    Agent Orchestrator                   │
 ├─────────────────────────────────────────────────────────┤
@@ -52,6 +52,7 @@ Code
 │              Shared Knowledge Base                      │
 │          (Medical Ontologies, Standards)               │
 └─────────────────────────────────────────────────────────┘
+```
 Key Features
 🤖 Multi-Agent Coordination
 Agents communicate through standardized protocols
@@ -112,12 +113,13 @@ hl7_agent = HL7Agent(version="2.8")
 orchestrator.add_agents([fhir_agent, hl7_agent])
 
 # Process healthcare data
+```
 result = orchestrator.process_workflow(
     workflow="patient_data_integration",
     input_data=patient_hl7_message
 )
 Installation
-bash
+```bash
 # Clone the repository
 git clone https://github.com/yasir2000/vita-agents.git
 cd vita-agents
@@ -185,7 +187,9 @@ JSON
   ]
 }
 Testing
-bash
+```
+```bash
+
 # Run unit tests
 pytest tests/unit/
 
@@ -199,9 +203,9 @@ pytest tests/compliance/
 pytest --cov=vita_agents tests/
 Contributing
 We welcome contributions from the healthcare IT community! Please see our Contributing Guidelines for details.
-
+```
 Development Setup
-bash
+```bash
 # Fork and clone the repository
 git clone https://github.com/your-username/vita-agents.git
 
@@ -211,7 +215,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install development dependencies
 pip install -r requirements-dev.txt
-
+```
 # Run pre-commit hooks
 pre-commit install
 Code Standards
