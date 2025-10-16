@@ -1,8 +1,8 @@
 # HMCP Integration Documentation
 
-## Healthcare Multi-agent Communication Protocol (HMCP) for Vita Agents
+## Healthcare Model Context Protocol (HMCP) for Vita Agents
 
-This documentation covers the comprehensive integration of HMCP (Healthcare Multi-agent Communication Protocol) into the Vita Agents platform, enabling advanced healthcare multi-agent workflows with clinical context awareness, security, and interoperability.
+This documentation covers the comprehensive integration of HMCP (Healthcare Model Context Protocol) into the Vita Agents platform, enabling advanced healthcare multi-agent workflows with clinical context awareness, security, and interoperability.
 
 ## Overview
 

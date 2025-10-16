@@ -2,7 +2,7 @@
 """
 HMCP Agent Implementation for Vita Agents
 
-Healthcare Multi-agent Communication Protocol agent that enables seamless
+Healthcare Model Context Protocol agent that enables seamless
 communication between healthcare AI agents with clinical context awareness,
 security, and workflow orchestration capabilities.
 """
@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 class HMCPAgent(HIPAACompliantAgent, HealthcareAgent):
     """
-    Healthcare Multi-agent Communication Protocol Agent
+    Healthcare Model Context Protocol Agent
     
     Enables healthcare agents to communicate using HMCP with:
     - Clinical context awareness

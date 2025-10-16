@@ -18,7 +18,7 @@ The world's most comprehensive FHIR integration platform with support for **11+ 
 - LinuxForHealth, Aidbox, Microsoft FHIR, Google Cloud Healthcare
 - Amazon HealthLake, Smile CDR, and extensible architecture for more
 
-### 🏥 **HMCP - Healthcare Multi-agent Communication Protocol**
+### 🏥 **HMCP - Healthcare Model Context Protocol**
 Revolutionary protocol designed specifically for healthcare AI agent communication:
 - Clinical context awareness with patient data and urgency levels
 - Emergency response protocols for cardiac arrest, stroke, sepsis, respiratory failure

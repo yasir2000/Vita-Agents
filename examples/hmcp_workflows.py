@@ -624,7 +624,7 @@ async def main():
     await examples.display_metrics_summary()
     
     print("\n✅ All HMCP workflow examples completed successfully!")
-    print("🏥 Healthcare Multi-agent Communication Protocol demonstration finished.")
+    print("🏥 Healthcare Model Context Protocol demonstration finished.")
 
 
 if __name__ == "__main__":

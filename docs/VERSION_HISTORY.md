@@ -31,7 +31,7 @@ v1.x.x (2025-08-xx)
 
 ### 🌟 Headline Features
 
-#### 🏥 HMCP - Healthcare Multi-agent Communication Protocol
+#### 🏥 HMCP - Healthcare Model Context Protocol
 Revolutionary protocol for healthcare AI agent communication:
 - **Clinical Context Awareness**: Patient data, urgency levels, healthcare roles
 - **6 Message Types**: Request, response, notification, emergency, coordination, event

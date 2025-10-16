@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Healthcare Multi-agent Communication Protocol (HMCP) Implementation for Vita Agents
+Healthcare Model Context Protocol (HMCP) Implementation for Vita Agents
 
 Based on Innovaccer's HMCP specification, this module provides comprehensive support
 for multi-agent healthcare workflows with bidirectional communication, security,
@@ -109,7 +109,7 @@ class SecurityContext:
 
 
 class HMCPMessage(BaseModel):
-    """Healthcare Multi-agent Communication Protocol Message"""
+    """Healthcare Model Context Protocol Message"""
     
     # Core message fields
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))

@@ -2,13 +2,13 @@
 
 ## 🚀 Upgrading from v2.0.x to v2.1.0
 
-This guide helps you upgrade your Vita Agents installation to take advantage of the new Multi-Engine FHIR Support and HMCP (Healthcare Multi-agent Communication Protocol) features.
+This guide helps you upgrade your Vita Agents installation to take advantage of the new Multi-Engine FHIR Support and HMCP (Healthcare Model Context Protocol) features.
 
 ## 📋 What's New in v2.1.0
 
 ### Major Features Added
 - **Multi-Engine FHIR Support**: Connect to 11+ open source FHIR servers simultaneously
-- **HMCP Protocol**: Healthcare Multi-agent Communication Protocol for clinical workflows
+- **HMCP Protocol**: Healthcare Model Context Protocol for clinical workflows
 - **Emergency Response**: Automated emergency protocols and care team coordination
 - **Enhanced Security**: HIPAA-compliant messaging with comprehensive audit trails
 - **Healthcare Workflows**: 5+ pre-built clinical workflows for immediate use

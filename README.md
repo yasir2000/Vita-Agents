@@ -353,7 +353,7 @@ graph TB
 - ✅ Automated clinical documentation insights
 
 ### 8. **HMCP Agent** (`hmcp_agent.py`) - **NEW!**
-- ✅ Healthcare Multi-agent Communication Protocol implementation
+- ✅ Healthcare Model Context Protocol implementation
 - ✅ Clinical context awareness with patient data and urgency levels
 - ✅ Emergency response protocols (cardiac arrest, stroke, sepsis, respiratory failure)
 - ✅ Care coordination and multi-disciplinary team communication
