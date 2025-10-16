@@ -1,0 +1,24 @@
+{
+  "resourceType": "Patient",
+  "id": "patient-1",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2025-10-16T17:48:43.496512Z"
+  },
+  "name": [
+    {
+      "given": [
+        "John1"
+      ],
+      "family": "Doe"
+    }
+  ],
+  "gender": "male",
+  "birthDate": "1980-01-01",
+  "identifier": [
+    {
+      "system": "http://hospital.org/patient-ids",
+      "value": "PAT-1000"
+    }
+  ]
+}

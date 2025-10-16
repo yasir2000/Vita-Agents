@@ -881,6 +881,10 @@ def drug_interactions(
         else:
             console.print("[green]✅ No significant drug interactions detected[/green]")
         
+    except Exception as e:
+        console.print(f"[red]❌ Drug interaction check failed: {e}[/red]")
+
+
 # Data Harmonization Commands
 harmonization_app = typer.Typer(help="🔄 Data harmonization operations")
 app.add_typer(harmonization_app, name="harmonization")

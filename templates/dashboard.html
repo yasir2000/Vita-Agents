@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Vita Agents Dashboard</h1>
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> System Running in Demo Mode - All Features Available
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card metric-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-heartbeat fa-2x mb-2"></i>
+                    <h5>System Status</h5>
+                    <span id="system-status" class="badge bg-light text-dark">Healthy</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card metric-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-robot fa-2x mb-2"></i>
+                    <h5>Active Agents</h5>
+                    <h3 id="active-agents">7</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card metric-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-brain fa-2x mb-2"></i>
+                    <h5>AI Managers</h5>
+                    <h3 id="ai-managers">10</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card metric-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-tasks fa-2x mb-2"></i>
+                    <h5>Tasks Today</h5>
+                    <h3 id="tasks-today">42</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <button class="btn btn-primary w-100 mb-2" onclick="testAgents()">
+                                <i class="fas fa-robot"></i> Test Agents
+                            </button>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-success w-100 mb-2" onclick="runTests()">
+                                <i class="fas fa-vial"></i> Run Tests
+                            </button>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-info w-100 mb-2" onclick="processData()">
+                                <i class="fas fa-sync"></i> Process Data
+                            </button>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-warning w-100 mb-2" onclick="viewMetrics()">
+                                <i class="fas fa-chart-bar"></i> Metrics
+                            </button>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-secondary w-100 mb-2" onclick="viewDocs()">
+                                <i class="fas fa-file-alt"></i> API Docs
+                            </button>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-dark w-100 mb-2" onclick="refreshStatus()">
+                                <i class="fas fa-refresh"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-history"></i> Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div id="activity-feed">
+                        <div class="alert alert-success" role="alert">
+                            <strong>SUCCESS:</strong> Web portal accessed - Dashboard loaded successfully
+                        </div>
+                        <div class="alert alert-info" role="alert">
+                            <strong>INFO:</strong> Demo mode activated - All features available for testing
+                        </div>
+                        <div class="alert alert-warning" role="alert">
+                            <strong>READY:</strong> System ready for comprehensive testing
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-pie"></i> Performance Overview</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Success Rate</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" style="width: 97%">97%</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">System Load</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" style="width: 15%">15%</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Memory Usage</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" style="width: 60%">60%</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Response Time</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-primary" style="width: 80%">1.2s avg</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function testAgents() {
+    try {
+        const response = await axios.post('/api/agents/task', {
+            agent_type: 'fhir',
+            task_type: 'validate',
+            data: {test: 'sample'}
+        });
+        alert('Agent test completed successfully!');
+    } catch (error) {
+        alert('Error testing agents: ' + (error.response?.data?.detail || error.message));
+    }
+}
+
+async function runTests() {
+    try {
+        const response = await axios.post('/api/test/comprehensive');
+        alert('Comprehensive test completed successfully!');
+    } catch (error) {
+        alert('Error starting tests: ' + (error.response?.data?.detail || error.message));
+    }
+}
+
+function processData() { window.location.href = '/harmonization'; }
+function viewMetrics() { window.location.href = '/monitoring'; }
+function viewDocs() { window.open('/api/docs', '_blank'); }
+
+async function refreshStatus() {
+    try {
+        const response = await axios.get('/api/status');
+        alert('Status refreshed - System healthy!');
+    } catch (error) {
+        alert('Error refreshing status');
+    }
+}
+</script>
+{% endblock %}

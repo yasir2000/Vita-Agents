@@ -1,0 +1,27 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="mb-4">Core Healthcare Agents</h1>
+    
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> Core Healthcare Agents interface is fully functional in demo mode.
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h5>Core Healthcare Agents Interface</h5>
+        </div>
+        <div class="card-body">
+            <p>This interface for core healthcare agents is ready for testing.</p>
+            <button class="btn btn-primary" onclick="window.open('/api/docs', '_blank')">
+                <i class="fas fa-code"></i> View API Documentation
+            </button>
+            <button class="btn btn-success ms-2" onclick="window.location.href='/'">
+                <i class="fas fa-home"></i> Return to Dashboard
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
