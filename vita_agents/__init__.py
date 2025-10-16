@@ -17,6 +17,17 @@ from vita_agents.agents.ehr_agent import EHRAgent
 from vita_agents.agents.clinical_decision_agent import ClinicalDecisionSupportAgent
 from vita_agents.agents.data_harmonization_agent import DataHarmonizationAgent
 
+# Enhanced EHR Connectors
+from vita_agents.connectors import (
+    EHRConnectorFactory,
+    ehr_factory,
+    EpicConnector,
+    CernerConnector,
+    AllscriptsConnector,
+    EHRVendor,
+    EHRConnectionConfig,
+)
+
 __all__ = [
     "AgentOrchestrator",
     "FHIRAgent",
@@ -24,6 +35,14 @@ __all__ = [
     "EHRAgent",
     "ClinicalDecisionSupportAgent",
     "DataHarmonizationAgent",
+    # Enhanced EHR Connectors
+    "EHRConnectorFactory",
+    "ehr_factory",
+    "EpicConnector",
+    "CernerConnector",
+    "AllscriptsConnector",
+    "EHRVendor",
+    "EHRConnectionConfig",
 ]
 
 # Version info

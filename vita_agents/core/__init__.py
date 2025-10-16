@@ -23,6 +23,23 @@ from vita_agents.core.orchestrator import (
     get_orchestrator,
     set_orchestrator
 )
+from vita_agents.core.exceptions import (
+    VitaAgentsError,
+    ConfigurationError,
+    AuthenticationError,
+    AuthorizationError,
+    ValidationError,
+    ConnectionError,
+    RateLimitError,
+    TimeoutError,
+    DataProcessingError,
+    ExternalServiceError,
+    AgentError,
+    SecurityError,
+    ComplianceError,
+    FHIRError,
+    HL7Error
+)
 
 __all__ = [
     # Config
@@ -49,4 +66,21 @@ __all__ = [
     "WorkflowExecution",
     "get_orchestrator",
     "set_orchestrator",
+    
+    # Exceptions
+    "VitaAgentsError",
+    "ConfigurationError",
+    "AuthenticationError",
+    "AuthorizationError",
+    "ValidationError",
+    "ConnectionError",
+    "RateLimitError",
+    "TimeoutError",
+    "DataProcessingError",
+    "ExternalServiceError",
+    "AgentError",
+    "SecurityError",
+    "ComplianceError",
+    "FHIRError",
+    "HL7Error",
 ]
