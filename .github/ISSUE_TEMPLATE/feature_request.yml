@@ -1,0 +1,255 @@
+name: Feature Request
+description: Suggest an idea for Vita Agents
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+assignees:
+  - yasir2000
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! 
+        Please provide detailed information to help us understand and prioritize your request.
+
+  - type: dropdown
+    id: feature-type
+    attributes:
+      label: Feature Type
+      description: What type of feature are you requesting?
+      options:
+        - New Agent Type
+        - Enhanced FHIR Engine Support
+        - New Healthcare Standard Support
+        - API Enhancement
+        - Web Portal Feature
+        - CLI Improvement
+        - Performance Optimization
+        - Security Enhancement
+        - Integration
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which component should this feature be added to?
+      options:
+        - FHIR Agent
+        - Enhanced FHIR Agent (Multi-engine)
+        - HL7 Agent
+        - EHR Agent
+        - Clinical Decision Support
+        - Data Harmonization
+        - Compliance & Security
+        - NLP Agent
+        - Web Portal
+        - CLI Interface
+        - Docker Integration
+        - API
+        - Authentication
+        - Monitoring
+        - Other
+    validations:
+      required: false
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: |
+        Is your feature request related to a problem? Please describe.
+        A clear and concise description of what the problem is.
+      placeholder: I'm always frustrated when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: |
+        Describe the solution you'd like.
+        A clear and concise description of what you want to happen.
+      placeholder: I would like...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      description: |
+        Describe alternatives you've considered.
+        A clear and concise description of any alternative solutions or features you've considered.
+      placeholder: I also considered...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - Critical (Blocking my work)
+        - High (Would significantly improve my workflow)
+        - Medium (Would be nice to have)
+        - Low (Minor improvement)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Estimated Complexity
+      description: How complex do you think this feature would be to implement?
+      options:
+        - Simple (Small change or configuration)
+        - Medium (New functionality, moderate effort)
+        - Complex (Major feature requiring significant development)
+        - Unknown (Not sure about the complexity)
+    validations:
+      required: false
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: |
+        Describe your specific use case for this feature.
+        How would you use this feature in your healthcare workflow?
+      placeholder: |
+        In my hospital/clinic/system, I would use this feature to...
+        This would help me with...
+        The expected outcome would be...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: |
+        Define what success looks like for this feature.
+        What specific functionality should be delivered?
+      placeholder: |
+        - [ ] Feature should do X
+        - [ ] Feature should support Y
+        - [ ] Feature should integrate with Z
+    validations:
+      required: false
+
+  - type: dropdown
+    id: healthcare-standards
+    attributes:
+      label: Healthcare Standards
+      description: Does this feature involve specific healthcare standards?
+      multiple: true
+      options:
+        - FHIR R4
+        - FHIR R5
+        - HL7 v2.x
+        - HL7 CDA
+        - DICOM
+        - SNOMED CT
+        - ICD-10
+        - LOINC
+        - CPT
+        - HIPAA
+        - Other
+        - Not applicable
+    validations:
+      required: false
+
+  - type: dropdown
+    id: fhir-engines
+    attributes:
+      label: FHIR Engines
+      description: Does this feature involve specific FHIR engines?
+      multiple: true
+      options:
+        - HAPI FHIR
+        - IBM FHIR Server
+        - Medplum
+        - Firely .NET SDK
+        - Spark FHIR Server
+        - LinuxForHealth FHIR
+        - Aidbox
+        - Microsoft FHIR Server
+        - Google Cloud Healthcare API
+        - Amazon HealthLake
+        - Other
+        - Not applicable
+    validations:
+      required: false
+
+  - type: textarea
+    id: technical-requirements
+    attributes:
+      label: Technical Requirements
+      description: |
+        Any specific technical requirements or constraints?
+        (Performance, security, compatibility, etc.)
+      placeholder: |
+        - Must support async operations
+        - Should be HIPAA compliant
+        - Need to handle large datasets (>1M records)
+        - Must integrate with existing authentication
+    validations:
+      required: false
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: Mockups/Examples
+      description: |
+        If applicable, add mockups, examples, or references to help explain your feature request.
+        You can drag and drop images here.
+      placeholder: Attach mockups, diagrams, or example code...
+    validations:
+      required: false
+
+  - type: input
+    id: timeline
+    attributes:
+      label: Desired Timeline
+      description: When would you like to see this feature implemented?
+      placeholder: e.g., Next release, Within 3 months, No rush
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: |
+        Add any other context, screenshots, or examples about the feature request here.
+        Include links to relevant documentation, similar features in other tools, etc.
+      placeholder: Any additional information...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Are you interested in contributing to this feature?
+      options:
+        - label: I would be interested in implementing this feature myself
+          required: false
+        - label: I would be willing to test this feature when ready
+          required: false
+        - label: I can provide domain expertise/feedback during development
+          required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
