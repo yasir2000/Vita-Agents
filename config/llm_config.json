@@ -1,0 +1,82 @@
+{
+  "ollama": {
+    "base_url": "http://localhost:11434",
+    "enabled": true,
+    "models": {
+      "llama2": {
+        "healthcare_optimized": false,
+        "context_length": 4096
+      },
+      "llama2:7b-chat": {
+        "healthcare_optimized": false,
+        "context_length": 4096
+      },
+      "mistral": {
+        "healthcare_optimized": false,
+        "context_length": 8192
+      },
+      "codellama": {
+        "healthcare_optimized": false,
+        "context_length": 16384
+      },
+      "meditron": {
+        "healthcare_optimized": true,
+        "context_length": 4096
+      }
+    }
+  },
+  "openai": {
+    "api_key": "",
+    "enabled": false,
+    "models": {
+      "gpt-4": {
+        "context_length": 8192,
+        "cost_per_1k_tokens": 0.03
+      },
+      "gpt-4-turbo": {
+        "context_length": 128000,
+        "cost_per_1k_tokens": 0.01
+      },
+      "gpt-3.5-turbo": {
+        "context_length": 16384,
+        "cost_per_1k_tokens": 0.001
+      }
+    }
+  },
+  "anthropic": {
+    "api_key": "",
+    "enabled": false,
+    "models": {
+      "claude-3-opus": {
+        "context_length": 200000,
+        "cost_per_1k_tokens": 0.015
+      },
+      "claude-3-sonnet": {
+        "context_length": 200000,
+        "cost_per_1k_tokens": 0.003
+      }
+    }
+  },
+  "huggingface": {
+    "api_key": "",
+    "enabled": false,
+    "models": {
+      "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext": {
+        "healthcare_optimized": true,
+        "context_length": 512
+      },
+      "emilyalsentzer/Bio_ClinicalBERT": {
+        "healthcare_optimized": true,
+        "context_length": 512
+      }
+    }
+  },
+  "default_model": "ollama:llama2",
+  "healthcare_preferred": true,
+  "settings": {
+    "default_temperature": 0.7,
+    "default_max_tokens": 1000,
+    "timeout_seconds": 30,
+    "retry_attempts": 3
+  }
+}

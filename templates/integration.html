@@ -1,0 +1,461 @@
+{% extends "enhanced_base.html" %}
+
+{% block title %}System Integration{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2><i class="fas fa-plug me-2"></i>System Integration</h2>
+                    <p class="text-muted">Healthcare system integrations and API management</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="addIntegration()">
+                        <i class="fas fa-plus me-1"></i>Add Integration
+                    </button>
+                    <button class="btn btn-outline-primary" onclick="testConnections()">
+                        <i class="fas fa-check-circle me-1"></i>Test All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Integration Status Overview -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-check-circle fa-2x mb-2"></i>
+                    <h4>8</h4>
+                    <p>Active Integrations</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                    <h4>2</h4>
+                    <p>Issues Detected</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-sync-alt fa-2x mb-2"></i>
+                    <h4>15.2k</h4>
+                    <p>API Calls Today</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-secondary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-2x mb-2"></i>
+                    <h4>145ms</h4>
+                    <p>Avg Response Time</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Integration Categories -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-layer-group me-2"></i>Integration Categories</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card integration-category" onclick="filterIntegrations('ehr')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-file-medical fa-3x text-primary mb-3"></i>
+                                    <h6>EHR Systems</h6>
+                                    <p class="text-muted">Electronic Health Records integration</p>
+                                    <span class="badge bg-primary">3 Active</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card integration-category" onclick="filterIntegrations('lab')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-vial fa-3x text-success mb-3"></i>
+                                    <h6>Laboratory Systems</h6>
+                                    <p class="text-muted">Lab information systems</p>
+                                    <span class="badge bg-success">2 Active</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card integration-category" onclick="filterIntegrations('imaging')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-x-ray fa-3x text-info mb-3"></i>
+                                    <h6>Imaging Systems</h6>
+                                    <p class="text-muted">PACS and radiology integration</p>
+                                    <span class="badge bg-info">1 Active</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card integration-category" onclick="filterIntegrations('pharmacy')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-pills fa-3x text-warning mb-3"></i>
+                                    <h6>Pharmacy Systems</h6>
+                                    <p class="text-muted">Medication management</p>
+                                    <span class="badge bg-warning">1 Active</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card integration-category" onclick="filterIntegrations('external')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-external-link-alt fa-3x text-secondary mb-3"></i>
+                                    <h6>External APIs</h6>
+                                    <p class="text-muted">Third-party services</p>
+                                    <span class="badge bg-secondary">1 Active</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card integration-category" onclick="filterIntegrations('fhir')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-code fa-3x text-dark mb-3"></i>
+                                    <h6>FHIR Endpoints</h6>
+                                    <p class="text-muted">HL7 FHIR integration</p>
+                                    <span class="badge bg-dark">0 Active</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Integrations -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-link me-2"></i>Active Integrations</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>System</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>API Calls (24h)</th>
+                                    <th>Response Time</th>
+                                    <th>Last Sync</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="integrationsTable">
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-file-medical text-primary me-2"></i>
+                                            <div>
+                                                <strong>Epic EHR</strong><br>
+                                                <small class="text-muted">Production endpoint</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-primary">EHR</span></td>
+                                    <td><span class="badge bg-success">Connected</span></td>
+                                    <td>2,847</td>
+                                    <td>
+                                        <span class="text-success">92ms</span>
+                                        <div class="progress mt-1" style="height: 4px;">
+                                            <div class="progress-bar bg-success" style="width: 85%"></div>
+                                        </div>
+                                    </td>
+                                    <td>2 min ago</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-info" onclick="viewIntegration('epic')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-primary" onclick="testIntegration('epic')">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary" onclick="configureIntegration('epic')">
+                                                <i class="fas fa-cog"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-vial text-success me-2"></i>
+                                            <div>
+                                                <strong>Lab Corp LIS</strong><br>
+                                                <small class="text-muted">Laboratory interface</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-success">Laboratory</span></td>
+                                    <td><span class="badge bg-success">Connected</span></td>
+                                    <td>1,234</td>
+                                    <td>
+                                        <span class="text-success">156ms</span>
+                                        <div class="progress mt-1" style="height: 4px;">
+                                            <div class="progress-bar bg-success" style="width: 75%"></div>
+                                        </div>
+                                    </td>
+                                    <td>5 min ago</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-info" onclick="viewIntegration('labcorp')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-primary" onclick="testIntegration('labcorp')">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary" onclick="configureIntegration('labcorp')">
+                                                <i class="fas fa-cog"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-x-ray text-info me-2"></i>
+                                            <div>
+                                                <strong>PACS Imaging</strong><br>
+                                                <small class="text-muted">Radiology system</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-info">Imaging</span></td>
+                                    <td><span class="badge bg-warning">Limited</span></td>
+                                    <td>567</td>
+                                    <td>
+                                        <span class="text-warning">245ms</span>
+                                        <div class="progress mt-1" style="height: 4px;">
+                                            <div class="progress-bar bg-warning" style="width: 45%"></div>
+                                        </div>
+                                    </td>
+                                    <td>15 min ago</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-info" onclick="viewIntegration('pacs')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-warning" onclick="testIntegration('pacs')">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary" onclick="configureIntegration('pacs')">
+                                                <i class="fas fa-cog"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-pills text-warning me-2"></i>
+                                            <div>
+                                                <strong>Pharmacy Management</strong><br>
+                                                <small class="text-muted">Medication dispensing</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-warning">Pharmacy</span></td>
+                                    <td><span class="badge bg-danger">Offline</span></td>
+                                    <td>0</td>
+                                    <td>
+                                        <span class="text-danger">Timeout</span>
+                                        <div class="progress mt-1" style="height: 4px;">
+                                            <div class="progress-bar bg-danger" style="width: 15%"></div>
+                                        </div>
+                                    </td>
+                                    <td>2 hours ago</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-info" onclick="viewIntegration('pharmacy')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-danger" onclick="reconnectIntegration('pharmacy')">
+                                                <i class="fas fa-redo"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary" onclick="configureIntegration('pharmacy')">
+                                                <i class="fas fa-cog"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Integration Details Modal -->
+<div class="modal fade" id="integrationModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Integration Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="integrationModalBody">
+                <!-- Integration details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="integrationActionBtn">Configure</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.integration-category {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.integration-category:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadIntegrations();
+});
+
+function loadIntegrations() {
+    console.log('Loading integrations...');
+}
+
+function addIntegration() {
+    showToast('Integration wizard coming soon', 'info');
+}
+
+function testConnections() {
+    showToast('Testing all connections...', 'info');
+    setTimeout(() => {
+        showToast('Connection tests completed', 'success');
+    }, 3000);
+}
+
+function filterIntegrations(category) {
+    const rows = document.querySelectorAll('#integrationsTable tr');
+    
+    rows.forEach(row => {
+        if (category === '' || row.innerHTML.toLowerCase().includes(category)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+function viewIntegration(integrationId) {
+    const integrationDetails = {
+        'epic': {
+            name: 'Epic EHR',
+            type: 'Electronic Health Records',
+            endpoint: 'https://api.epic.example.com/fhir/R4',
+            status: 'Connected',
+            lastSync: '2 minutes ago',
+            apiCalls: '2,847',
+            responseTime: '92ms',
+            uptime: '99.8%'
+        },
+        'labcorp': {
+            name: 'Lab Corp LIS',
+            type: 'Laboratory Information System',
+            endpoint: 'https://api.labcorp.com/v1',
+            status: 'Connected',
+            lastSync: '5 minutes ago',
+            apiCalls: '1,234',
+            responseTime: '156ms',
+            uptime: '99.2%'
+        }
+    };
+    
+    const integration = integrationDetails[integrationId] || integrationDetails['epic'];
+    
+    const modalBody = document.getElementById('integrationModalBody');
+    modalBody.innerHTML = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Integration Information</h6>
+                <table class="table table-sm">
+                    <tr><td><strong>Name:</strong></td><td>${integration.name}</td></tr>
+                    <tr><td><strong>Type:</strong></td><td>${integration.type}</td></tr>
+                    <tr><td><strong>Endpoint:</strong></td><td><code>${integration.endpoint}</code></td></tr>
+                    <tr><td><strong>Status:</strong></td><td><span class="badge bg-success">${integration.status}</span></td></tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h6>Performance Metrics</h6>
+                <table class="table table-sm">
+                    <tr><td><strong>API Calls (24h):</strong></td><td>${integration.apiCalls}</td></tr>
+                    <tr><td><strong>Response Time:</strong></td><td>${integration.responseTime}</td></tr>
+                    <tr><td><strong>Uptime:</strong></td><td>${integration.uptime}</td></tr>
+                    <tr><td><strong>Last Sync:</strong></td><td>${integration.lastSync}</td></tr>
+                </table>
+            </div>
+        </div>
+        <hr>
+        <h6>Recent Activity</h6>
+        <div class="list-group list-group-flush">
+            <div class="list-group-item">
+                <small class="text-muted">2 min ago</small><br>
+                Synchronized 15 patient records
+            </div>
+            <div class="list-group-item">
+                <small class="text-muted">5 min ago</small><br>
+                Retrieved lab results for 8 patients
+            </div>
+            <div class="list-group-item">
+                <small class="text-muted">10 min ago</small><br>
+                Updated medication list for patient MRN-12345
+            </div>
+        </div>
+    `;
+    
+    new bootstrap.Modal(document.getElementById('integrationModal')).show();
+}
+
+function testIntegration(integrationId) {
+    showToast(`Testing ${integrationId} integration...`, 'info');
+    setTimeout(() => {
+        showToast(`${integrationId} integration test completed`, 'success');
+    }, 2000);
+}
+
+function configureIntegration(integrationId) {
+    showToast(`Opening configuration for ${integrationId}`, 'info');
+}
+
+function reconnectIntegration(integrationId) {
+    if (confirm(`Reconnect ${integrationId} integration?`)) {
+        showToast(`Reconnecting ${integrationId}...`, 'info');
+        setTimeout(() => {
+            showToast(`${integrationId} reconnected successfully`, 'success');
+        }, 3000);
+    }
+}
+</script>
+{% endblock %}

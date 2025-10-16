@@ -1,0 +1,984 @@
+{
+  "patients": [
+    {
+      "id": "f2af3094-3208-429f-8d04-47fcf136799c",
+      "name": "Rachel Thompson",
+      "age": 44,
+      "gender": "Female",
+      "email": "rachel.thompson@email.com",
+      "phone": "(874) 862-4824",
+      "address": "7294 Main St, City, ST 81013",
+      "emergency_contact": "James Thomas - (702) 547-5015",
+      "medical_record_number": "MRN350334",
+      "date_of_birth": "1981-12-23",
+      "insurance_info": {
+        "provider": "Kaiser",
+        "policy_number": "POL288424",
+        "group_number": "GRP3727"
+      },
+      "allergies": [
+        "Aspirin",
+        "NSAIDs",
+        "Penicillin"
+      ],
+      "current_medications": [
+        {
+          "name": "Levothyroxine",
+          "dosage": "75mcg",
+          "frequency": "Daily",
+          "indication": "Hypothyroidism"
+        },
+        {
+          "name": "Metformin",
+          "dosage": "500mg",
+          "frequency": "Twice daily",
+          "indication": "Diabetes"
+        }
+      ],
+      "medical_history": [
+        "Coronary Artery Disease",
+        "Chronic Kidney Disease",
+        "Hyperlipidemia",
+        "COPD"
+      ],
+      "vital_signs": {
+        "blood_pressure": "135/81",
+        "heart_rate": 88,
+        "respiratory_rate": 13,
+        "temperature": 98.3,
+        "oxygen_saturation": 100,
+        "weight": 130.1,
+        "height": "6'6\"",
+        "bmi": 27.2
+      },
+      "last_visit": "2025-08-17",
+      "next_appointment": "2025-10-30",
+      "status": "Active",
+      "primary_physician": "Dr. Maria Garcia, MD"
+    },
+    {
+      "id": "cac701dd-3587-441c-8ddb-6419267e74e9",
+      "name": "Michelle Taylor",
+      "age": 23,
+      "gender": "Female",
+      "email": "michelle.taylor@email.com",
+      "phone": "(559) 846-8186",
+      "address": "9456 Elm St, City, ST 97545",
+      "emergency_contact": "John Rodriguez - (212) 389-4791",
+      "medical_record_number": "MRN302445",
+      "date_of_birth": "2002-05-15",
+      "insurance_info": {
+        "provider": "Cigna",
+        "policy_number": "POL521862",
+        "group_number": "GRP5976"
+      },
+      "allergies": [
+        "Latex",
+        "Eggs"
+      ],
+      "current_medications": [
+        {
+          "name": "Lisinopril",
+          "dosage": "10mg",
+          "frequency": "Daily",
+          "indication": "Hypertension"
+        },
+        {
+          "name": "Metformin",
+          "dosage": "500mg",
+          "frequency": "Twice daily",
+          "indication": "Diabetes"
+        },
+        {
+          "name": "Aspirin",
+          "dosage": "81mg",
+          "frequency": "Daily",
+          "indication": "Cardioprotection"
+        },
+        {
+          "name": "Omeprazole",
+          "dosage": "20mg",
+          "frequency": "Daily",
+          "indication": "GERD"
+        }
+      ],
+      "medical_history": [
+        "Depression",
+        "Chronic Kidney Disease",
+        "Hypertension"
+      ],
+      "vital_signs": {
+        "blood_pressure": "110/72",
+        "heart_rate": 96,
+        "respiratory_rate": 18,
+        "temperature": 98.4,
+        "oxygen_saturation": 97,
+        "weight": 174.0,
+        "height": "5'2\"",
+        "bmi": 34.9
+      },
+      "last_visit": "2025-08-27",
+      "next_appointment": "2025-12-15",
+      "status": "Active",
+      "primary_physician": "Dr. David Kim, MD"
+    },
+    {
+      "id": "904d8814-1fcd-4791-b55f-c75014adf02b",
+      "name": "John Allen",
+      "age": 73,
+      "gender": "Female",
+      "email": "john.allen@email.com",
+      "phone": "(591) 545-4013",
+      "address": "391 Oak St, City, ST 16801",
+      "emergency_contact": "Joseph Martinez - (646) 823-3220",
+      "medical_record_number": "MRN275213",
+      "date_of_birth": "1952-11-03",
+      "insurance_info": {
+        "provider": "UnitedHealth",
+        "policy_number": "POL773948",
+        "group_number": "GRP5104"
+      },
+      "allergies": [
+        "Codeine",
+        "Aspirin"
+      ],
+      "current_medications": [],
+      "medical_history": [
+        "Coronary Artery Disease",
+        "Hypothyroidism"
+      ],
+      "vital_signs": {
+        "blood_pressure": "147/88",
+        "heart_rate": 77,
+        "respiratory_rate": 12,
+        "temperature": 98.0,
+        "oxygen_saturation": 98,
+        "weight": 194.4,
+        "height": "5'6\"",
+        "bmi": 34.9
+      },
+      "last_visit": "2025-06-15",
+      "next_appointment": "2025-12-06",
+      "status": "Active",
+      "primary_physician": "Dr. Maria Garcia, MD"
+    },
+    {
+      "id": "118aaf20-23ce-45fe-9be8-d0f480d7f892",
+      "name": "Christopher Gonzalez",
+      "age": 61,
+      "gender": "Male",
+      "email": "christopher.gonzalez@email.com",
+      "phone": "(419) 695-9074",
+      "address": "6275 Elm St, City, ST 73588",
+      "emergency_contact": "Samantha Anderson - (232) 264-1217",
+      "medical_record_number": "MRN901207",
+      "date_of_birth": "1964-09-18",
+      "insurance_info": {
+        "provider": "UnitedHealth",
+        "policy_number": "POL489756",
+        "group_number": "GRP7432"
+      },
+      "allergies": [
+        "Peanuts",
+        "Morphine",
+        "Eggs"
+      ],
+      "current_medications": [
+        {
+          "name": "Amlodipine",
+          "dosage": "5mg",
+          "frequency": "Daily",
+          "indication": "Hypertension"
+        },
+        {
+          "name": "Levothyroxine",
+          "dosage": "75mcg",
+          "frequency": "Daily",
+          "indication": "Hypothyroidism"
+        },
+        {
+          "name": "Lisinopril",
+          "dosage": "10mg",
+          "frequency": "Daily",
+          "indication": "Hypertension"
+        },
+        {
+          "name": "Metformin",
+          "dosage": "500mg",
+          "frequency": "Twice daily",
+          "indication": "Diabetes"
+        }
+      ],
+      "medical_history": [],
+      "vital_signs": {
+        "blood_pressure": "141/77",
+        "heart_rate": 78,
+        "respiratory_rate": 15,
+        "temperature": 98.1,
+        "oxygen_saturation": 95,
+        "weight": 193.3,
+        "height": "6'3\"",
+        "bmi": 29.7
+      },
+      "last_visit": "2025-08-24",
+      "next_appointment": "2025-12-17",
+      "status": "Follow-up needed",
+      "primary_physician": "Dr. Michael Rodriguez, MD"
+    },
+    {
+      "id": "9390835d-240e-4c37-b395-001de81aef3c",
+      "name": "Tyler Lee",
+      "age": 40,
+      "gender": "Male",
+      "email": "tyler.lee@email.com",
+      "phone": "(867) 224-3064",
+      "address": "6842 Pine St, City, ST 31026",
+      "emergency_contact": "Nicole Perez - (819) 835-4760",
+      "medical_record_number": "MRN246431",
+      "date_of_birth": "1985-04-14",
+      "insurance_info": {
+        "provider": "UnitedHealth",
+        "policy_number": "POL181390",
+        "group_number": "GRP1155"
+      },
+      "allergies": [
+        "Iodine",
+        "Peanuts",
+        "Aspirin"
+      ],
+      "current_medications": [
+        {
+          "name": "Lisinopril",
+          "dosage": "10mg",
+          "frequency": "Daily",
+          "indication": "Hypertension"
+        },
+        {
+          "name": "Aspirin",
+          "dosage": "81mg",
+          "frequency": "Daily",
+          "indication": "Cardioprotection"
+        },
+        {
+          "name": "Amlodipine",
+          "dosage": "5mg",
+          "frequency": "Daily",
+          "indication": "Hypertension"
+        }
+      ],
+      "medical_history": [
+        "Hypertension",
+        "Chronic Kidney Disease",
+        "COPD",
+        "Coronary Artery Disease"
+      ],
+      "vital_signs": {
+        "blood_pressure": "115/81",
+        "heart_rate": 69,
+        "respiratory_rate": 12,
+        "temperature": 98.6,
+        "oxygen_saturation": 99,
+        "weight": 125.4,
+        "height": "6'0\"",
+        "bmi": 30.5
+      },
+      "last_visit": "2025-08-03",
+      "next_appointment": "2025-11-26",
+      "status": "Scheduled",
+      "primary_physician": "Dr. Lisa Anderson, MD"
+    },
+    {
+      "id": "fe3a08c7-7cac-44b4-bdee-2cf92a518b4e",
+      "name": "Maria Thompson",
+      "age": 66,
+      "gender": "Male",
+      "email": "maria.thompson@email.com",
+      "phone": "(952) 393-1167",
+      "address": "8068 Oak St, City, ST 12514",
+      "emergency_contact": "Joshua Allen - (452) 425-2533",
+      "medical_record_number": "MRN709431",
+      "date_of_birth": "1959-10-10",
+      "insurance_info": {
+        "provider": "Kaiser",
+        "policy_number": "POL993638",
+        "group_number": "GRP6662"
+      },
+      "allergies": [
+        "NSAIDs"
+      ],
+      "current_medications": [
+        {
+          "name": "Levothyroxine",
+          "dosage": "75mcg",
+          "frequency": "Daily",
+          "indication": "Hypothyroidism"
+        }
+      ],
+      "medical_history": [
+        "Atrial Fibrillation",
+        "Hypertension",
+        "Arthritis"
+      ],
+      "vital_signs": {
+        "blood_pressure": "138/82",
+        "heart_rate": 78,
+        "respiratory_rate": 19,
+        "temperature": 98.5,
+        "oxygen_saturation": 99,
+        "weight": 229.5,
+        "height": "5'10\"",
+        "bmi": 33.0
+      },
+      "last_visit": "2025-08-30",
+      "next_appointment": "2025-12-14",
+      "status": "Scheduled",
+      "primary_physician": "Dr. Robert Johnson, MD"
+    },
+    {
+      "id": "22c90fee-0eaf-4bf8-9091-72cb0a076d61",
+      "name": "James Lee",
+      "age": 53,
+      "gender": "Female",
+      "email": "james.lee@email.com",
+      "phone": "(677) 293-3563",
+      "address": "630 Oak St, City, ST 40938",
+      "emergency_contact": "Rachel Rodriguez - (510) 740-1475",
+      "medical_record_number": "MRN314276",
+      "date_of_birth": "1972-03-12",
+      "insurance_info": {
+        "provider": "Blue Cross",
+        "policy_number": "POL968029",
+        "group_number": "GRP1321"
+      },
+      "allergies": [
+        "Shellfish",
+        "Codeine"
+      ],
+      "current_medications": [
+        {
+          "name": "Levothyroxine",
+          "dosage": "75mcg",
+          "frequency": "Daily",
+          "indication": "Hypothyroidism"
+        }
+      ],
+      "medical_history": [
+        "Coronary Artery Disease",
+        "Anxiety"
+      ],
+      "vital_signs": {
+        "blood_pressure": "128/85",
+        "heart_rate": 65,
+        "respiratory_rate": 20,
+        "temperature": 98.9,
+        "oxygen_saturation": 98,
+        "weight": 133.0,
+        "height": "5'3\"",
+        "bmi": 29.6
+      },
+      "last_visit": "2025-06-22",
+      "next_appointment": "2025-11-24",
+      "status": "Scheduled",
+      "primary_physician": "Dr. Lisa Anderson, MD"
+    },
+    {
+      "id": "e392b144-5b79-4fee-97c8-fb0d1128e904",
+      "name": "Christopher Thompson",
+      "age": 54,
+      "gender": "Female",
+      "email": "christopher.thompson@email.com",
+      "phone": "(320) 233-6545",
+      "address": "9142 Main St, City, ST 28097",
+      "emergency_contact": "William Moore - (529) 823-4432",
+      "medical_record_number": "MRN391714",
+      "date_of_birth": "1971-01-23",
+      "insurance_info": {
+        "provider": "UnitedHealth",
+        "policy_number": "POL467635",
+        "group_number": "GRP2705"
+      },
+      "allergies": [
+        "Peanuts",
+        "Penicillin"
+      ],
+      "current_medications": [
+        {
+          "name": "Lisinopril",
+          "dosage": "10mg",
+          "frequency": "Daily",
+          "indication": "Hypertension"
+        }
+      ],
+      "medical_history": [
+        "Arthritis",
+        "Coronary Artery Disease"
+      ],
+      "vital_signs": {
+        "blood_pressure": "123/76",
+        "heart_rate": 89,
+        "respiratory_rate": 15,
+        "temperature": 98.0,
+        "oxygen_saturation": 99,
+        "weight": 191.5,
+        "height": "6'0\"",
+        "bmi": 26.5
+      },
+      "last_visit": "2025-08-13",
+      "next_appointment": "2025-12-29",
+      "status": "Active",
+      "primary_physician": "Dr. David Kim, MD"
+    },
+    {
+      "id": "ca4e266f-8ead-41d9-951b-4104e089d892",
+      "name": "Sarah Davis",
+      "age": 29,
+      "gender": "Male",
+      "email": "sarah.davis@email.com",
+      "phone": "(954) 954-2318",
+      "address": "144 Elm St, City, ST 19979",
+      "emergency_contact": "Tyler Miller - (610) 359-6612",
+      "medical_record_number": "MRN381357",
+      "date_of_birth": "1996-06-21",
+      "insurance_info": {
+        "provider": "Kaiser",
+        "policy_number": "POL431497",
+        "group_number": "GRP7142"
+      },
+      "allergies": [
+        "Penicillin",
+        "Eggs",
+        "Sulfa drugs"
+      ],
+      "current_medications": [
+        {
+          "name": "Lisinopril",
+          "dosage": "10mg",
+          "frequency": "Daily",
+          "indication": "Hypertension"
+        },
+        {
+          "name": "Aspirin",
+          "dosage": "81mg",
+          "frequency": "Daily",
+          "indication": "Cardioprotection"
+        },
+        {
+          "name": "Omeprazole",
+          "dosage": "20mg",
+          "frequency": "Daily",
+          "indication": "GERD"
+        }
+      ],
+      "medical_history": [
+        "COPD",
+        "Coronary Artery Disease",
+        "Chronic Kidney Disease"
+      ],
+      "vital_signs": {
+        "blood_pressure": "123/78",
+        "heart_rate": 94,
+        "respiratory_rate": 14,
+        "temperature": 99.0,
+        "oxygen_saturation": 96,
+        "weight": 207.7,
+        "height": "5'11\"",
+        "bmi": 25.2
+      },
+      "last_visit": "2025-07-09",
+      "next_appointment": "2025-11-29",
+      "status": "Active",
+      "primary_physician": "Dr. David Kim, MD"
+    },
+    {
+      "id": "59bf9a05-0dc0-4b0e-bc84-c3c70aaa3242",
+      "name": "Nicole Martin",
+      "age": 18,
+      "gender": "Female",
+      "email": "nicole.martin@email.com",
+      "phone": "(888) 445-9269",
+      "address": "4492 Pine St, City, ST 76596",
+      "emergency_contact": "Nicole King - (335) 244-6378",
+      "medical_record_number": "MRN977113",
+      "date_of_birth": "2007-12-12",
+      "insurance_info": {
+        "provider": "Kaiser",
+        "policy_number": "POL339749",
+        "group_number": "GRP6005"
+      },
+      "allergies": [
+        "Sulfa drugs",
+        "NSAIDs",
+        "Penicillin"
+      ],
+      "current_medications": [],
+      "medical_history": [
+        "COPD"
+      ],
+      "vital_signs": {
+        "blood_pressure": "113/77",
+        "heart_rate": 97,
+        "respiratory_rate": 12,
+        "temperature": 98.4,
+        "oxygen_saturation": 97,
+        "weight": 215.1,
+        "height": "5'6\"",
+        "bmi": 33.9
+      },
+      "last_visit": "2025-04-22",
+      "next_appointment": "2025-11-24",
+      "status": "Follow-up needed",
+      "primary_physician": "Dr. Sarah Chen, MD"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "419ba553-d781-4a30-b738-598468277be6",
+      "title": "Acute Chest Pain Evaluation - Case 1",
+      "description": "65-year-old patient presents to ED with chest pain",
+      "patient": {
+        "id": "3df303bf-b9ce-470d-bbb4-bb84745f06c4",
+        "name": "Joseph Thompson",
+        "age": 76,
+        "gender": "Female",
+        "email": "joseph.thompson@email.com",
+        "phone": "(647) 285-8548",
+        "address": "6703 Elm St, City, ST 12032",
+        "emergency_contact": "Stephanie Moore - (453) 784-5128",
+        "medical_record_number": "MRN312101",
+        "date_of_birth": "1949-04-26",
+        "insurance_info": {
+          "provider": "Aetna",
+          "policy_number": "POL203579",
+          "group_number": "GRP1662"
+        },
+        "allergies": [
+          "Iodine",
+          "Penicillin",
+          "Codeine"
+        ],
+        "current_medications": [
+          {
+            "name": "Warfarin",
+            "dosage": "5mg",
+            "frequency": "Daily",
+            "indication": "Anticoagulation"
+          },
+          {
+            "name": "Atorvastatin",
+            "dosage": "20mg",
+            "frequency": "Daily",
+            "indication": "High cholesterol"
+          },
+          {
+            "name": "Metformin",
+            "dosage": "500mg",
+            "frequency": "Twice daily",
+            "indication": "Diabetes"
+          },
+          {
+            "name": "Levothyroxine",
+            "dosage": "75mcg",
+            "frequency": "Daily",
+            "indication": "Hypothyroidism"
+          }
+        ],
+        "medical_history": [
+          "Chronic Kidney Disease"
+        ],
+        "vital_signs": {
+          "blood_pressure": "129/80",
+          "heart_rate": 95,
+          "respiratory_rate": 19,
+          "temperature": 98.2,
+          "oxygen_saturation": 96,
+          "weight": 136.7,
+          "height": "6'9\"",
+          "bmi": 30.5
+        },
+        "last_visit": "2025-10-06",
+        "next_appointment": "2025-12-26",
+        "status": "Scheduled",
+        "primary_physician": "Dr. Sarah Chen, MD"
+      },
+      "clinical_notes": [
+        {
+          "id": "2236bbcf-317c-4047-9604-45c8a8616240",
+          "patient_id": "3df303bf-b9ce-470d-bbb4-bb84745f06c4",
+          "date": "2025-10-16 18:48",
+          "provider": "Dr. Sarah Chen, MD",
+          "note_type": "Initial Assessment",
+          "chief_complaint": "Chest pain for 2 hours",
+          "history_present_illness": "Patient reports sudden onset of substernal chest pain rated 8/10, radiating to left arm. Associated with diaphoresis and nausea. No previous episodes.",
+          "physical_exam": "Vital signs as documented. General appearance: alert and oriented. HEENT: normocephalic, atraumatic. Cardiovascular: regular rate and rhythm. Pulmonary: clear to auscultation bilaterally. Abdomen: soft, non-tender. Neurologic: grossly intact.",
+          "assessment": "Acute Coronary Syndrome vs. Gastroesophageal Reflux",
+          "plan": "ECG, cardiac enzymes, chest X-ray. Aspirin, nitroglycerin PRN. Cardiology consult.",
+          "vitals": {
+            "blood_pressure": "129/80",
+            "heart_rate": 95,
+            "respiratory_rate": 19,
+            "temperature": 98.2,
+            "oxygen_saturation": 96,
+            "weight": 136.7,
+            "height": "6'9\"",
+            "bmi": 30.5
+          }
+        }
+      ],
+      "lab_results": [
+        {
+          "id": "b9af3264-fdc3-415d-908c-997b4838e563",
+          "patient_id": "3df303bf-b9ce-470d-bbb4-bb84745f06c4",
+          "test_name": "Glucose",
+          "result_value": "145",
+          "normal_range": "70-100",
+          "units": "mg/dL",
+          "status": "Final",
+          "date_collected": "2025-10-16 16:48",
+          "date_reported": "2025-10-16 17:48",
+          "provider": "Dr. Sarah Chen, MD"
+        },
+        {
+          "id": "9aa45d09-e0bb-47f9-b6ee-5920c27e486a",
+          "patient_id": "3df303bf-b9ce-470d-bbb4-bb84745f06c4",
+          "test_name": "Sodium",
+          "result_value": "136",
+          "normal_range": "136-145",
+          "units": "mEq/L",
+          "status": "Final",
+          "date_collected": "2025-10-16 16:48",
+          "date_reported": "2025-10-16 17:48",
+          "provider": "Dr. Sarah Chen, MD"
+        },
+        {
+          "id": "1d583588-205d-4324-a318-9317dc49b1c9",
+          "patient_id": "3df303bf-b9ce-470d-bbb4-bb84745f06c4",
+          "test_name": "Creatinine",
+          "result_value": "0.8",
+          "normal_range": "0.7-1.3",
+          "units": "mg/dL",
+          "status": "Final",
+          "date_collected": "2025-10-16 16:48",
+          "date_reported": "2025-10-16 17:48",
+          "provider": "Dr. Sarah Chen, MD"
+        },
+        {
+          "id": "8bf6805c-39a3-4cee-95e7-b5edd5ea4630",
+          "patient_id": "3df303bf-b9ce-470d-bbb4-bb84745f06c4",
+          "test_name": "Troponin I",
+          "result_value": "0.3",
+          "normal_range": "<0.04",
+          "units": "ng/mL",
+          "status": "Final",
+          "date_collected": "2025-10-16 16:48",
+          "date_reported": "2025-10-16 17:48",
+          "provider": "Dr. Sarah Chen, MD"
+        }
+      ],
+      "diagnosis": "Acute Coronary Syndrome vs. Gastroesophageal Reflux",
+      "treatment_plan": "\n            Immediate:\n            - Dual antiplatelet therapy (aspirin + clopidogrel)\n            - Anticoagulation with heparin\n            - Beta-blocker therapy\n            - Statin therapy\n            \n            Monitoring:\n            - Serial ECGs and cardiac enzymes\n            - Continuous cardiac monitoring\n            - Blood pressure monitoring\n            \n            Follow-up:\n            - Cardiology consultation\n            - Echocardiogram\n            - Cardiac rehabilitation referral\n            ",
+      "learning_objectives": [
+        "Evaluate acute chest pain evaluation",
+        "Apply clinical reasoning skills",
+        "Develop appropriate treatment plan",
+        "Consider differential diagnoses"
+      ],
+      "difficulty_level": "Intermediate"
+    },
+    {
+      "id": "48219824-70cc-4122-8f52-a514558cd761",
+      "title": "Diabetic Ketoacidosis Management - Case 2",
+      "description": "Type 1 diabetic with nausea, vomiting, and altered mental status",
+      "patient": {
+        "id": "4f31c4c6-20cc-40f2-9b64-3a8aa5d5762c",
+        "name": "Elizabeth Ramirez",
+        "age": 57,
+        "gender": "Female",
+        "email": "elizabeth.ramirez@email.com",
+        "phone": "(329) 500-4896",
+        "address": "3364 Main St, City, ST 95433",
+        "emergency_contact": "John King - (313) 550-7477",
+        "medical_record_number": "MRN450651",
+        "date_of_birth": "1968-06-16",
+        "insurance_info": {
+          "provider": "Cigna",
+          "policy_number": "POL974137",
+          "group_number": "GRP1949"
+        },
+        "allergies": [],
+        "current_medications": [
+          {
+            "name": "Amlodipine",
+            "dosage": "5mg",
+            "frequency": "Daily",
+            "indication": "Hypertension"
+          },
+          {
+            "name": "Omeprazole",
+            "dosage": "20mg",
+            "frequency": "Daily",
+            "indication": "GERD"
+          },
+          {
+            "name": "Metformin",
+            "dosage": "500mg",
+            "frequency": "Twice daily",
+            "indication": "Diabetes"
+          },
+          {
+            "name": "Aspirin",
+            "dosage": "81mg",
+            "frequency": "Daily",
+            "indication": "Cardioprotection"
+          },
+          {
+            "name": "Warfarin",
+            "dosage": "5mg",
+            "frequency": "Daily",
+            "indication": "Anticoagulation"
+          }
+        ],
+        "medical_history": [
+          "Chronic Kidney Disease"
+        ],
+        "vital_signs": {
+          "blood_pressure": "141/91",
+          "heart_rate": 95,
+          "respiratory_rate": 19,
+          "temperature": 98.1,
+          "oxygen_saturation": 95,
+          "weight": 194.1,
+          "height": "6'1\"",
+          "bmi": 35.0
+        },
+        "last_visit": "2025-08-13",
+        "next_appointment": "2025-11-18",
+        "status": "Follow-up needed",
+        "primary_physician": "Dr. Michael Rodriguez, MD"
+      },
+      "clinical_notes": [
+        {
+          "id": "c4c83958-abcf-4626-aa64-8d1b2193c78b",
+          "patient_id": "4f31c4c6-20cc-40f2-9b64-3a8aa5d5762c",
+          "date": "2025-10-16 18:48",
+          "provider": "Dr. Michael Rodriguez, MD",
+          "note_type": "Initial Assessment",
+          "chief_complaint": "Nausea, vomiting, and fatigue for 2 days",
+          "history_present_illness": "Patient with known Type 1 diabetes reports 2 days of nausea, vomiting, and increasing fatigue. Last insulin dose unclear.",
+          "physical_exam": "Vital signs as documented. General appearance: alert and oriented. HEENT: normocephalic, atraumatic. Cardiovascular: regular rate and rhythm. Pulmonary: clear to auscultation bilaterally. Abdomen: soft, non-tender. Neurologic: grossly intact.",
+          "assessment": "Diabetic Ketoacidosis",
+          "plan": "IV fluids, insulin protocol, electrolyte monitoring. Endocrinology consult.",
+          "vitals": {
+            "blood_pressure": "141/91",
+            "heart_rate": 95,
+            "respiratory_rate": 19,
+            "temperature": 98.1,
+            "oxygen_saturation": 95,
+            "weight": 194.1,
+            "height": "6'1\"",
+            "bmi": 35.0
+          }
+        }
+      ],
+      "lab_results": [
+        {
+          "id": "24c80a77-103d-4d50-9cef-f5bf755b5562",
+          "patient_id": "4f31c4c6-20cc-40f2-9b64-3a8aa5d5762c",
+          "test_name": "Glucose",
+          "result_value": "185",
+          "normal_range": "70-100",
+          "units": "mg/dL",
+          "status": "Final",
+          "date_collected": "2025-10-16 16:48",
+          "date_reported": "2025-10-16 17:48",
+          "provider": "Dr. Michael Rodriguez, MD"
+        },
+        {
+          "id": "2e6462bc-c04f-46c4-87d1-09aac22b9069",
+          "patient_id": "4f31c4c6-20cc-40f2-9b64-3a8aa5d5762c",
+          "test_name": "Sodium",
+          "result_value": "140",
+          "normal_range": "136-145",
+          "units": "mEq/L",
+          "status": "Final",
+          "date_collected": "2025-10-16 16:48",
+          "date_reported": "2025-10-16 17:48",
+          "provider": "Dr. Michael Rodriguez, MD"
+        },
+        {
+          "id": "9640e145-34b7-4e3a-86e8-4506b7093a02",
+          "patient_id": "4f31c4c6-20cc-40f2-9b64-3a8aa5d5762c",
+          "test_name": "Creatinine",
+          "result_value": "1.0",
+          "normal_range": "0.7-1.3",
+          "units": "mg/dL",
+          "status": "Final",
+          "date_collected": "2025-10-16 16:48",
+          "date_reported": "2025-10-16 17:48",
+          "provider": "Dr. Michael Rodriguez, MD"
+        },
+        {
+          "id": "c0858579-f63e-442b-9b4d-d0e99990e59e",
+          "patient_id": "4f31c4c6-20cc-40f2-9b64-3a8aa5d5762c",
+          "test_name": "HbA1c",
+          "result_value": "11.2",
+          "normal_range": "<7.0",
+          "units": "%",
+          "status": "Final",
+          "date_collected": "2025-10-16 16:48",
+          "date_reported": "2025-10-16 17:48",
+          "provider": "Dr. Michael Rodriguez, MD"
+        },
+        {
+          "id": "d5bd36b5-aee3-41c8-a445-b73b3c14bd5b",
+          "patient_id": "4f31c4c6-20cc-40f2-9b64-3a8aa5d5762c",
+          "test_name": "Ketones",
+          "result_value": "Positive",
+          "normal_range": "Negative",
+          "units": "",
+          "status": "Final",
+          "date_collected": "2025-10-16 16:48",
+          "date_reported": "2025-10-16 17:48",
+          "provider": "Dr. Michael Rodriguez, MD"
+        }
+      ],
+      "diagnosis": "Diabetic Ketoacidosis",
+      "treatment_plan": "\n            Immediate:\n            - IV fluid resuscitation with normal saline\n            - Insulin infusion protocol\n            - Electrolyte replacement (K+, PO4, Mg)\n            - Glucose monitoring every hour\n            \n            Monitoring:\n            - Arterial blood gases\n            - Basic metabolic panel every 2-4 hours\n            - Neurologic status\n            \n            Follow-up:\n            - Endocrinology consultation\n            - Diabetes education\n            - Insulin regimen optimization\n            ",
+      "learning_objectives": [
+        "Evaluate diabetic ketoacidosis management",
+        "Apply clinical reasoning skills",
+        "Develop appropriate treatment plan",
+        "Consider differential diagnoses"
+      ],
+      "difficulty_level": "Advanced"
+    },
+    {
+      "id": "d78d7e3b-18d0-4ccb-9607-5b331e3a5002",
+      "title": "Medication Reconciliation - Case 3",
+      "description": "Polypharmacy patient with potential drug interactions",
+      "patient": {
+        "id": "09d44fd0-5705-492f-96f8-d441a3c10dc7",
+        "name": "Christopher Clark",
+        "age": 41,
+        "gender": "Female",
+        "email": "christopher.clark@email.com",
+        "phone": "(576) 492-8007",
+        "address": "7230 Pine St, City, ST 65222",
+        "emergency_contact": "Sarah Young - (663) 246-2133",
+        "medical_record_number": "MRN912654",
+        "date_of_birth": "1984-04-19",
+        "insurance_info": {
+          "provider": "Kaiser",
+          "policy_number": "POL844814",
+          "group_number": "GRP2235"
+        },
+        "allergies": [
+          "Morphine"
+        ],
+        "current_medications": [
+          {
+            "name": "Omeprazole",
+            "dosage": "20mg",
+            "frequency": "Daily",
+            "indication": "GERD"
+          }
+        ],
+        "medical_history": [
+          "Asthma",
+          "Hypertension",
+          "Depression"
+        ],
+        "vital_signs": {
+          "blood_pressure": "127/79",
+          "heart_rate": 79,
+          "respiratory_rate": 16,
+          "temperature": 98.8,
+          "oxygen_saturation": 98,
+          "weight": 220.6,
+          "height": "5'11\"",
+          "bmi": 34.8
+        },
+        "last_visit": "2025-08-03",
+        "next_appointment": "2025-11-29",
+        "status": "Follow-up needed",
+        "primary_physician": "Dr. Emily Thompson, MD"
+      },
+      "clinical_notes": [
+        {
+          "id": "e5360801-186d-454b-8d06-a7712e087d98",
+          "patient_id": "09d44fd0-5705-492f-96f8-d441a3c10dc7",
+          "date": "2025-10-16 18:48",
+          "provider": "Dr. Emily Thompson, MD",
+          "note_type": "Initial Assessment",
+          "chief_complaint": "Routine medication review",
+          "history_present_illness": "Patient reports taking multiple medications but unsure of exact regimen. Requests medication review.",
+          "physical_exam": "Vital signs as documented. General appearance: alert and oriented. HEENT: normocephalic, atraumatic. Cardiovascular: regular rate and rhythm. Pulmonary: clear to auscultation bilaterally. Abdomen: soft, non-tender. Neurologic: grossly intact.",
+          "assessment": "Polypharmacy with Drug Interactions",
+          "plan": "Complete medication reconciliation, drug interaction screening, patient education.",
+          "vitals": {
+            "blood_pressure": "127/79",
+            "heart_rate": 79,
+            "respiratory_rate": 16,
+            "temperature": 98.8,
+            "oxygen_saturation": 98,
+            "weight": 220.6,
+            "height": "5'11\"",
+            "bmi": 34.8
+          }
+        }
+      ],
+      "lab_results": [
+        {
+          "id": "f72128d0-fb18-423a-90f8-c6faa0f2398b",
+          "patient_id": "09d44fd0-5705-492f-96f8-d441a3c10dc7",
+          "test_name": "Glucose",
+          "result_value": "81",
+          "normal_range": "70-100",
+          "units": "mg/dL",
+          "status": "Final",
+          "date_collected": "2025-10-16 16:48",
+          "date_reported": "2025-10-16 17:48",
+          "provider": "Dr. Emily Thompson, MD"
+        },
+        {
+          "id": "31f7535a-6d3e-45ba-87cb-7eb9c7ebb121",
+          "patient_id": "09d44fd0-5705-492f-96f8-d441a3c10dc7",
+          "test_name": "Sodium",
+          "result_value": "139",
+          "normal_range": "136-145",
+          "units": "mEq/L",
+          "status": "Final",
+          "date_collected": "2025-10-16 16:48",
+          "date_reported": "2025-10-16 17:48",
+          "provider": "Dr. Emily Thompson, MD"
+        },
+        {
+          "id": "5d606c73-f4ba-435d-8400-33edd6bf2f4f",
+          "patient_id": "09d44fd0-5705-492f-96f8-d441a3c10dc7",
+          "test_name": "Creatinine",
+          "result_value": "1.0",
+          "normal_range": "0.7-1.3",
+          "units": "mg/dL",
+          "status": "Final",
+          "date_collected": "2025-10-16 16:48",
+          "date_reported": "2025-10-16 17:48",
+          "provider": "Dr. Emily Thompson, MD"
+        }
+      ],
+      "diagnosis": "Polypharmacy with Drug Interactions",
+      "treatment_plan": "Standard care plan to be developed based on clinical assessment.",
+      "learning_objectives": [
+        "Evaluate medication reconciliation",
+        "Apply clinical reasoning skills",
+        "Develop appropriate treatment plan",
+        "Consider differential diagnoses"
+      ],
+      "difficulty_level": "Intermediate"
+    }
+  ],
+  "metadata": {
+    "generated_date": "2025-10-16T18:48:58.757580",
+    "total_patients": 10,
+    "total_scenarios": 3,
+    "data_version": "1.0"
+  }
+}

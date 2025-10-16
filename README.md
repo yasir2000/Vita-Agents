@@ -4,8 +4,75 @@
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-yellow.svg)](https://opensource.org/licenses/Apache-2.0)
 [![HIPAA Compliant](https://img.shields.io/badge/HIPAA-Compliant-green.svg)](https://www.hhs.gov/hipaa/)
 [![FHIR R4](https://img.shields.io/badge/FHIR-R4-orange.svg)](https://hl7.org/fhir/R4/)
+[![Docker Ready](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
 
 An open-source framework that leverages multi-agent AI systems to streamline healthcare data interoperability, focusing on FHIR (Fast Healthcare Interoperability Resources), HL7 standards, and Electronic Health Records (EHR) integration.
+
+## 🐳 Docker Integration (New!)
+
+**Production-Ready Containerized Setup with Real Infrastructure Components:**
+
+### Quick Start with Docker
+```bash
+# Start full stack with Docker services
+python vita_agents_launcher.py
+
+# Or use Docker Compose directly
+docker-compose up -d
+
+# Test all services
+python test_docker_integration.py
+```
+
+### Docker Services Included
+- **PostgreSQL 15**: Primary database with connection pooling
+- **Redis 7**: Caching and session management  
+- **Elasticsearch 8**: Advanced search and analytics
+- **RabbitMQ 3.12**: Message queue for background tasks
+- **MinIO**: Object storage for files and documents
+- **Prometheus**: Metrics collection and monitoring
+- **Grafana**: Beautiful dashboards and visualization
+- **MailHog**: Email testing and development
+- **Nginx**: Reverse proxy and load balancing
+
+### Access Points
+| Service | URL | Credentials |
+|---------|-----|-------------|
+| **Main Application** | http://localhost:8083 | admin / admin123 |
+| **Grafana Dashboard** | http://localhost:3000 | admin / admin |
+| **MailHog Interface** | http://localhost:8025 | - |
+| **MinIO Console** | http://localhost:9001 | vita_admin / vita_minio_pass_2024 |
+
+## 🚀 Quick Start
+
+### One-Command Startup
+
+```bash
+# Start the healthcare portal (auto-detects available port)
+python start_portal.py
+
+# Or use platform-specific scripts:
+# Windows: double-click start_portal.bat
+# Unix/Linux/macOS: ./start_portal.sh
+```
+
+**Access the portal at:** http://localhost:8080
+
+### Advanced Options
+
+```bash
+# Development mode with hot reload
+python start_portal.py --dev
+
+# Specific port
+python start_portal.py --port 8081
+
+# Clean start (kills existing processes)
+python start_portal.py --clean
+
+# Auto-find available port
+python start_portal.py --find-port
+```
 
 ## 🎯 Project Overview
 

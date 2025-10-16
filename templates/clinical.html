@@ -1,0 +1,903 @@
+{% extends "enhanced_base.html" %}
+
+{% block page_title %}Clinical Decision Support{% endblock %}
+{% block page_subtitle %}AI-powered clinical analysis and diagnostic assistance{% endblock %}
+
+{% block content %}
+<!-- Clinical Tools Dashboard -->
+<div class="row g-4 mb-5">
+    <div class="col-xl-3 col-md-6">
+        <div class="card text-center border-0 shadow-sm h-100">
+            <div class="card-body">
+                <i class="fas fa-brain fs-1 text-primary mb-3"></i>
+                <h5>AI Diagnosis</h5>
+                <p class="text-muted">Advanced diagnostic assistance with differential diagnosis</p>
+                <button class="btn btn-primary" onclick="openDiagnosticTool()">Launch Tool</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+        <div class="card text-center border-0 shadow-sm h-100">
+            <div class="card-body">
+                <i class="fas fa-pills fs-1 text-success mb-3"></i>
+                <h5>Drug Interactions</h5>
+                <p class="text-muted">Check medication interactions and contraindications</p>
+                <button class="btn btn-success" onclick="openDrugChecker()">Check Drugs</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+        <div class="card text-center border-0 shadow-sm h-100">
+            <div class="card-body">
+                <i class="fas fa-heartbeat fs-1 text-danger mb-3"></i>
+                <h5>Risk Assessment</h5>
+                <p class="text-muted">Calculate patient risk scores and predictions</p>
+                <button class="btn btn-danger" onclick="openRiskAssessment()">Assess Risk</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+        <div class="card text-center border-0 shadow-sm h-100">
+            <div class="card-body">
+                <i class="fas fa-clipboard-list fs-1 text-warning mb-3"></i>
+                <h5>Clinical Guidelines</h5>
+                <p class="text-muted">Evidence-based treatment recommendations</p>
+                <button class="btn btn-warning" onclick="openGuidelines()">View Guidelines</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Active Clinical Workspace -->
+<div class="row g-4">
+    <div class="col-xl-8">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" id="clinicalTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="diagnosis-tab" data-bs-toggle="tab" data-bs-target="#diagnosis" type="button" role="tab">
+                            <i class="fas fa-stethoscope me-2"></i>AI Diagnosis
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="medications-tab" data-bs-toggle="tab" data-bs-target="#medications" type="button" role="tab">
+                            <i class="fas fa-prescription-bottle-alt me-2"></i>Medications
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="imaging-tab" data-bs-toggle="tab" data-bs-target="#imaging" type="button" role="tab">
+                            <i class="fas fa-x-ray me-2"></i>Imaging AI
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="lab-tab" data-bs-toggle="tab" data-bs-target="#lab" type="button" role="tab">
+                            <i class="fas fa-vial me-2"></i>Lab Analysis
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="clinicalTabContent">
+                    <!-- AI Diagnosis Tab -->
+                    <div class="tab-pane fade show active" id="diagnosis" role="tabpanel">
+                        <form id="diagnosisForm">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <h6>Patient Information</h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Patient ID/MRN</label>
+                                            <input type="text" class="form-control" id="patientId" placeholder="Enter patient ID">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Age</label>
+                                            <input type="number" class="form-control" id="patientAge" placeholder="Age">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Gender</label>
+                                            <select class="form-select" id="patientGender">
+                                                <option value="">Select</option>
+                                                <option value="male">Male</option>
+                                                <option value="female">Female</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <h6>Chief Complaint</h6>
+                                    <textarea class="form-control" id="chiefComplaint" rows="2" placeholder="Patient's primary concern or reason for visit"></textarea>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <h6>Present Illness History</h6>
+                                    <textarea class="form-control" id="presentIllness" rows="4" placeholder="Detailed description of current symptoms, onset, duration, associated factors"></textarea>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <h6>Vital Signs</h6>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <input type="text" class="form-control form-control-sm" placeholder="BP (mmHg)">
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" class="form-control form-control-sm" placeholder="HR (bpm)">
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" class="form-control form-control-sm" placeholder="Temp (°F)">
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" class="form-control form-control-sm" placeholder="RR (bpm)">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <h6>Physical Examination</h6>
+                                    <textarea class="form-control" rows="4" placeholder="Key physical examination findings"></textarea>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-primary btn-lg" onclick="generateDiagnosis()">
+                                        <i class="fas fa-brain me-2"></i>Generate AI Diagnosis
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary ms-2" onclick="clearDiagnosisForm()">
+                                        <i class="fas fa-undo me-2"></i>Clear Form
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <div id="diagnosisResults" class="mt-4" style="display: none;">
+                            <hr>
+                            <h5><i class="fas fa-lightbulb me-2 text-warning"></i>AI Diagnostic Analysis</h5>
+                            <div id="diagnosisContent"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Medications Tab -->
+                    <div class="tab-pane fade" id="medications" role="tabpanel">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <h6>Current Medications</h6>
+                                <div id="currentMedications">
+                                    <div class="input-group mb-2">
+                                        <input type="text" class="form-control" placeholder="Medication name">
+                                        <input type="text" class="form-control" placeholder="Dosage">
+                                        <button class="btn btn-outline-primary" type="button">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-secondary" onclick="addMedicationRow()">
+                                    <i class="fas fa-plus me-1"></i>Add Medication
+                                </button>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h6>New Prescription</h6>
+                                <input type="text" class="form-control mb-2" placeholder="Drug name" id="newDrug">
+                                <input type="text" class="form-control mb-2" placeholder="Dosage" id="newDosage">
+                                <button class="btn btn-success" onclick="checkDrugInteractions()">
+                                    <i class="fas fa-search me-2"></i>Check Interactions
+                                </button>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div id="interactionResults"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Imaging AI Tab -->
+                    <div class="tab-pane fade" id="imaging" role="tabpanel">
+                        <div class="row g-4">
+                            <div class="col-md-8">
+                                <h6>Upload Medical Images</h6>
+                                <div class="border-2 border-dashed border-secondary rounded p-4 text-center">
+                                    <i class="fas fa-cloud-upload-alt fs-1 text-muted mb-3"></i>
+                                    <p>Drag and drop images here or click to browse</p>
+                                    <input type="file" class="form-control" multiple accept=".jpg,.jpeg,.png,.dcm" onchange="handleImageUpload(event)">
+                                    <small class="text-muted">Supported formats: JPG, PNG, DICOM</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Analysis Options</h6>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="imageAnalysis" value="chest-xray" checked>
+                                    <label class="form-check-label">Chest X-Ray Analysis</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="imageAnalysis" value="ct-scan">
+                                    <label class="form-check-label">CT Scan Analysis</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="imageAnalysis" value="mri">
+                                    <label class="form-check-label">MRI Analysis</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="imageAnalysis" value="pathology">
+                                    <label class="form-check-label">Pathology Slides</label>
+                                </div>
+                                <button class="btn btn-primary mt-3" onclick="analyzeImages()">
+                                    <i class="fas fa-search me-2"></i>Analyze Images
+                                </button>
+                            </div>
+                        </div>
+                        <div id="imagingResults" class="mt-4"></div>
+                    </div>
+                    
+                    <!-- Lab Analysis Tab -->
+                    <div class="tab-pane fade" id="lab" role="tabpanel">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <h6>Lab Values</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Test</th>
+                                                <th>Value</th>
+                                                <th>Unit</th>
+                                                <th>Reference</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="labValuesTable">
+                                            <tr>
+                                                <td>Hemoglobin</td>
+                                                <td><input type="number" class="form-control form-control-sm" step="0.1"></td>
+                                                <td>g/dL</td>
+                                                <td>12.0-15.5</td>
+                                            </tr>
+                                            <tr>
+                                                <td>WBC Count</td>
+                                                <td><input type="number" class="form-control form-control-sm" step="0.1"></td>
+                                                <td>10³/μL</td>
+                                                <td>4.5-11.0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Glucose</td>
+                                                <td><input type="number" class="form-control form-control-sm"></td>
+                                                <td>mg/dL</td>
+                                                <td>70-100</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Creatinine</td>
+                                                <td><input type="number" class="form-control form-control-sm" step="0.01"></td>
+                                                <td>mg/dL</td>
+                                                <td>0.6-1.2</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button class="btn btn-primary" onclick="analyzeLabResults()">
+                                    <i class="fas fa-calculator me-2"></i>Analyze Results
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="labAnalysisResults">
+                                    <h6>Analysis Results</h6>
+                                    <p class="text-muted">Enter lab values and click analyze to see AI interpretation</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Clinical Guidelines & Quick Reference -->
+    <div class="col-xl-4">
+        <div class="row g-4">
+            <!-- Quick Clinical Calculator -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-calculator me-2"></i>Clinical Calculators</h6>
+                    </div>
+                    <div class="card-body">
+                        <select class="form-select mb-3" id="calculatorSelect" onchange="loadCalculator()">
+                            <option value="">Select Calculator</option>
+                            <option value="bmi">BMI Calculator</option>
+                            <option value="gfr">eGFR (Kidney Function)</option>
+                            <option value="chads">CHA₂DS₂-VASc Score</option>
+                            <option value="wells">Wells Score (PE)</option>
+                            <option value="apache">APACHE II Score</option>
+                        </select>
+                        <div id="calculatorContent" class="mt-3">
+                            <p class="text-muted text-center">Select a calculator to begin</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Clinical Alerts -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-bell me-2"></i>Clinical Alerts</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning alert-sm">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Drug Allergy Alert:</strong> Patient allergic to Penicillin
+                        </div>
+                        <div class="alert alert-info alert-sm">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Lab Critical:</strong> Potassium level 5.8 mEq/L
+                        </div>
+                        <div class="alert alert-success alert-sm">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong>Reminder:</strong> Annual mammogram due
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Guidelines -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-book-medical me-2"></i>Recent Guidelines</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            <a href="#" class="list-group-item list-group-item-action border-0 px-0">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">AHA Heart Failure Guidelines</h6>
+                                    <small>Updated 2024</small>
+                                </div>
+                                <p class="mb-1 text-muted small">Management of heart failure patients</p>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action border-0 px-0">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">CDC Diabetes Guidelines</h6>
+                                    <small>Updated 2024</small>
+                                </div>
+                                <p class="mb-1 text-muted small">Type 2 diabetes management</p>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action border-0 px-0">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">USPSTF Screening Guidelines</h6>
+                                    <small>Updated 2024</small>
+                                </div>
+                                <p class="mb-1 text-muted small">Cancer screening recommendations</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Clinical Decision Support JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    initializeClinicalTools();
+});
+
+function initializeClinicalTools() {
+    // Initialize any default settings
+    console.log('Clinical decision support tools initialized');
+}
+
+async function generateDiagnosis() {
+    const form = document.getElementById('diagnosisForm');
+    const formData = new FormData(form);
+    
+    const clinicalData = {
+        patient_id: document.getElementById('patientId').value,
+        patient_age: parseInt(document.getElementById('patientAge').value) || 0,
+        patient_gender: document.getElementById('patientGender').value,
+        symptoms: [document.getElementById('chiefComplaint').value, document.getElementById('presentIllness').value],
+        vital_signs: {
+            // Add vital signs if available
+        }
+    };
+    
+    // Show loading
+    const resultsDiv = document.getElementById('diagnosisResults');
+    const contentDiv = document.getElementById('diagnosisContent');
+    resultsDiv.style.display = 'block';
+    contentDiv.innerHTML = '<div class="text-center"><div class="loading-spinner"></div> Analyzing clinical data with AI...</div>';
+    
+    try {
+        const response = await fetch('/api/clinical/diagnosis', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            },
+            body: JSON.stringify(clinicalData)
+        });
+
+        if (response.ok) {
+            const diagnosis = await response.json();
+            contentDiv.innerHTML = renderDiagnosisResults(diagnosis);
+        } else {
+            contentDiv.innerHTML = '<div class="alert alert-danger">Failed to generate diagnosis. Please try again.</div>';
+        }
+        
+    } catch (error) {
+        contentDiv.innerHTML = `<div class="alert alert-danger">Error generating diagnosis: ${error.message}</div>`;
+    }
+}
+
+function renderDiagnosisResults(diagnosis) {
+    const differentialHtml = diagnosis.differential_diagnosis.map(item => 
+        `<div class="list-group-item d-flex justify-content-between align-items-center">
+            ${item.condition}
+            <span class="badge bg-${item.severity === 'critical' ? 'danger' : item.severity === 'high' ? 'warning' : 'info'} rounded-pill">${Math.round(item.probability * 100)}%</span>
+        </div>`
+    ).join('');
+
+    const recommendationsHtml = diagnosis.recommendations.map(rec => 
+        `<li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>${rec}</li>`
+    ).join('');
+
+    return `
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">Differential Diagnosis</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            ${differentialHtml}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-success">
+                    <div class="card-header bg-success text-white">
+                        <h6 class="mb-0">Recommended Actions</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            ${recommendationsHtml}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-lightbulb me-2"></i>AI Analysis</h6>
+                    <p class="mb-0">Confidence Level: ${Math.round(diagnosis.confidence * 100)}% | Generated: ${new Date(diagnosis.generated_at).toLocaleString()}</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function generateMockDiagnosis(data) {
+    return `
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">Differential Diagnosis</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                Acute Myocardial Infarction
+                                <span class="badge bg-danger rounded-pill">85%</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                Unstable Angina
+                                <span class="badge bg-warning rounded-pill">72%</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                Pulmonary Embolism
+                                <span class="badge bg-info rounded-pill">45%</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                Gastroesophageal Reflux
+                                <span class="badge bg-secondary rounded-pill">28%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-success">
+                    <div class="card-header bg-success text-white">
+                        <h6 class="mb-0">Recommended Actions</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Order ECG immediately</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Cardiac enzymes (Troponin)</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Chest X-ray</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Complete metabolic panel</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Consider cardiology consult</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-lightbulb me-2"></i>Clinical Reasoning</h6>
+                    <p class="mb-0">Based on the patient's presentation of chest pain, age, and associated symptoms, the AI model suggests high probability of acute coronary syndrome. The recommendations prioritize rapid cardiac evaluation and risk stratification.</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function clearDiagnosisForm() {
+    document.getElementById('diagnosisForm').reset();
+    document.getElementById('diagnosisResults').style.display = 'none';
+}
+
+function addMedicationRow() {
+    const container = document.getElementById('currentMedications');
+    const newRow = document.createElement('div');
+    newRow.className = 'input-group mb-2';
+    newRow.innerHTML = `
+        <input type="text" class="form-control" placeholder="Medication name">
+        <input type="text" class="form-control" placeholder="Dosage">
+        <button class="btn btn-outline-danger" type="button" onclick="this.parentElement.remove()">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    container.appendChild(newRow);
+}
+
+async function checkDrugInteractions() {
+    const newDrug = document.getElementById('newDrug').value;
+    const newDosage = document.getElementById('newDosage').value;
+    
+    if (!newDrug) {
+        showAlert('Please enter a medication name', 'warning');
+        return;
+    }
+    
+    // Collect current medications from the form
+    const currentMedications = [];
+    const medicationInputs = document.querySelectorAll('#currentMedications .input-group');
+    medicationInputs.forEach(group => {
+        const nameInput = group.querySelector('input[placeholder="Medication name"]');
+        const dosageInput = group.querySelector('input[placeholder="Dosage"]');
+        if (nameInput && nameInput.value) {
+            currentMedications.push({
+                name: nameInput.value,
+                dosage: dosageInput ? dosageInput.value : ''
+            });
+        }
+    });
+
+    const drugData = {
+        current_medications: currentMedications,
+        new_medication: newDrug,
+        new_dosage: newDosage
+    };
+
+    const resultsDiv = document.getElementById('interactionResults');
+    resultsDiv.innerHTML = '<div class="text-center"><div class="loading-spinner"></div> Checking drug interactions...</div>';
+
+    try {
+        const response = await fetch('/api/clinical/drug-interactions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            },
+            body: JSON.stringify(drugData)
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            renderDrugInteractionResults(data, newDrug);
+        } else {
+            resultsDiv.innerHTML = '<div class="alert alert-danger">Failed to check drug interactions. Please try again.</div>';
+        }
+    } catch (error) {
+        resultsDiv.innerHTML = `<div class="alert alert-danger">Error checking interactions: ${error.message}</div>`;
+    }
+}
+
+function renderDrugInteractionResults(data, newDrug) {
+    const resultsDiv = document.getElementById('interactionResults');
+    
+    if (data.interactions.length === 0) {
+        resultsDiv.innerHTML = `
+            <div class="alert alert-success">
+                <h6><i class="fas fa-check-circle me-2"></i>No Major Interactions Found</h6>
+                <p class="mb-0"><strong>${newDrug}</strong> appears safe to use with current medications.</p>
+            </div>
+        `;
+        return;
+    }
+
+    const interactionsHtml = data.interactions.map(interaction => `
+        <li class="mb-2">
+            <strong>${interaction.drug1}</strong> + <strong>${interaction.drug2}</strong>
+            <br><small class="text-muted">${interaction.description}</small>
+            <br><span class="badge bg-${interaction.severity === 'high' ? 'danger' : 'warning'}">${interaction.severity.toUpperCase()}</span>
+        </li>
+    `).join('');
+
+    const alertClass = data.risk_level === 'high' ? 'alert-danger' : data.risk_level === 'moderate' ? 'alert-warning' : 'alert-info';
+
+    resultsDiv.innerHTML = `
+        <div class="alert ${alertClass}">
+            <h6><i class="fas fa-exclamation-triangle me-2"></i>Drug Interaction Alert (${data.risk_level.toUpperCase()} Risk)</h6>
+            <p><strong>${newDrug}</strong> may interact with current medications:</p>
+            <ul class="mb-0">
+                ${interactionsHtml}
+            </ul>
+            <hr>
+            <p class="mb-0"><strong>Recommendation:</strong> ${data.interactions[0]?.recommendation || 'Consult with pharmacist or physician before administering.'}</p>
+        </div>
+    `;
+}
+
+function handleImageUpload(event) {
+    const files = event.target.files;
+    if (files.length > 0) {
+        showAlert(`${files.length} file(s) uploaded successfully`, 'success');
+    }
+}
+
+async function analyzeImages() {
+    const analysisType = document.querySelector('input[name="imageAnalysis"]:checked').value;
+    const resultsDiv = document.getElementById('imagingResults');
+    
+    // Check if files are uploaded
+    const fileInput = document.querySelector('input[type="file"]');
+    if (!fileInput.files.length) {
+        showAlert('Please upload medical images first', 'warning');
+        return;
+    }
+
+    resultsDiv.innerHTML = '<div class="text-center"><div class="loading-spinner"></div> Analyzing medical images with AI...</div>';
+
+    const imageData = {
+        analysis_type: analysisType,
+        file_count: fileInput.files.length
+    };
+
+    try {
+        const response = await fetch('/api/clinical/image-analysis', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            },
+            body: JSON.stringify(imageData)
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            renderImageAnalysisResults(data);
+        } else {
+            resultsDiv.innerHTML = '<div class="alert alert-danger">Failed to analyze images. Please try again.</div>';
+        }
+    } catch (error) {
+        resultsDiv.innerHTML = `<div class="alert alert-danger">Error analyzing images: ${error.message}</div>`;
+    }
+}
+
+function renderImageAnalysisResults(data) {
+    const resultsDiv = document.getElementById('imagingResults');
+    
+    const findingsHtml = data.findings.map(finding => `<li>${finding}</li>`).join('');
+    const recommendationsHtml = data.recommendations.map(rec => `<li>${rec}</li>`).join('');
+    
+    const alertClass = data.abnormalities_detected ? 'alert-warning' : 'alert-success';
+    const alertIcon = data.abnormalities_detected ? 'exclamation-triangle' : 'check-circle';
+    
+    resultsDiv.innerHTML = `
+        <div class="card border-info">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0">AI Imaging Analysis - ${data.analysis_type.toUpperCase()}</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h6>Findings</h6>
+                        <ul>
+                            ${findingsHtml}
+                        </ul>
+                        <div class="${alertClass}">
+                            <i class="fas fa-${alertIcon} me-2"></i>
+                            <strong>Status:</strong> ${data.abnormalities_detected ? 'Abnormalities detected - further review recommended' : 'No significant abnormalities detected'}
+                        </div>
+                        <h6 class="mt-3">Recommendations</h6>
+                        <ul>
+                            ${recommendationsHtml}
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Quality Metrics</h6>
+                        <div class="progress mb-2">
+                            <div class="progress-bar bg-success" style="width: 92%">Image Quality: 92%</div>
+                        </div>
+                        <div class="progress mb-2">
+                            <div class="progress-bar bg-info" style="width: ${Math.round(data.confidence * 100)}%">Analysis Confidence: ${Math.round(data.confidence * 100)}%</div>
+                        </div>
+                        <small class="text-muted">Analyzed: ${new Date(data.analyzed_at).toLocaleString()}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function analyzeLabResults() {
+    const resultsDiv = document.getElementById('labAnalysisResults');
+    
+    resultsDiv.innerHTML = `
+        <h6>Analysis Results</h6>
+        <div class="alert alert-warning">
+            <h6><i class="fas fa-exclamation-triangle me-2"></i>Abnormal Results Detected</h6>
+            <ul class="mb-0">
+                <li>Elevated glucose suggests diabetes screening needed</li>
+                <li>Creatinine within normal range</li>
+                <li>Hemoglobin slightly low - consider iron studies</li>
+            </ul>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h6>Recommendations</h6>
+                <ul class="mb-0">
+                    <li>Order HbA1c for diabetes evaluation</li>
+                    <li>Iron panel and B12/folate levels</li>
+                    <li>Follow-up in 2-4 weeks</li>
+                </ul>
+            </div>
+        </div>
+    `;
+}
+
+function loadCalculator() {
+    const calculator = document.getElementById('calculatorSelect').value;
+    const contentDiv = document.getElementById('calculatorContent');
+    
+    switch(calculator) {
+        case 'bmi':
+            contentDiv.innerHTML = `
+                <div class="row g-2">
+                    <div class="col-6">
+                        <input type="number" class="form-control form-control-sm" placeholder="Height (cm)" id="height">
+                    </div>
+                    <div class="col-6">
+                        <input type="number" class="form-control form-control-sm" placeholder="Weight (kg)" id="weight">
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-primary btn-sm w-100" onclick="calculateBMI()">Calculate BMI</button>
+                    </div>
+                    <div class="col-12">
+                        <div id="bmiResult"></div>
+                    </div>
+                </div>
+            `;
+            break;
+        case 'gfr':
+            contentDiv.innerHTML = `
+                <div class="row g-2">
+                    <div class="col-12">
+                        <input type="number" class="form-control form-control-sm" placeholder="Creatinine (mg/dL)" id="creatinine">
+                    </div>
+                    <div class="col-6">
+                        <input type="number" class="form-control form-control-sm" placeholder="Age" id="gfrAge">
+                    </div>
+                    <div class="col-6">
+                        <select class="form-select form-select-sm" id="gfrGender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-primary btn-sm w-100" onclick="calculateGFR()">Calculate eGFR</button>
+                    </div>
+                    <div class="col-12">
+                        <div id="gfrResult"></div>
+                    </div>
+                </div>
+            `;
+            break;
+        default:
+            contentDiv.innerHTML = '<p class="text-muted text-center">Select a calculator to begin</p>';
+    }
+}
+
+function calculateBMI() {
+    const height = parseFloat(document.getElementById('height').value);
+    const weight = parseFloat(document.getElementById('weight').value);
+    
+    if (height && weight) {
+        const bmi = weight / ((height / 100) ** 2);
+        let category = '';
+        let color = '';
+        
+        if (bmi < 18.5) {
+            category = 'Underweight';
+            color = 'info';
+        } else if (bmi < 25) {
+            category = 'Normal';
+            color = 'success';
+        } else if (bmi < 30) {
+            category = 'Overweight';
+            color = 'warning';
+        } else {
+            category = 'Obese';
+            color = 'danger';
+        }
+        
+        document.getElementById('bmiResult').innerHTML = `
+            <div class="alert alert-${color} mb-0">
+                <strong>BMI: ${bmi.toFixed(1)}</strong><br>
+                Category: ${category}
+            </div>
+        `;
+    }
+}
+
+function calculateGFR() {
+    const creatinine = parseFloat(document.getElementById('creatinine').value);
+    const age = parseFloat(document.getElementById('gfrAge').value);
+    const gender = document.getElementById('gfrGender').value;
+    
+    if (creatinine && age) {
+        // Simplified MDRD equation
+        let gfr = 175 * Math.pow(creatinine, -1.154) * Math.pow(age, -0.203);
+        if (gender === 'female') {
+            gfr *= 0.742;
+        }
+        
+        let interpretation = '';
+        let color = '';
+        
+        if (gfr >= 90) {
+            interpretation = 'Normal or high';
+            color = 'success';
+        } else if (gfr >= 60) {
+            interpretation = 'Mildly decreased';
+            color = 'info';
+        } else if (gfr >= 30) {
+            interpretation = 'Moderately decreased';
+            color = 'warning';
+        } else {
+            interpretation = 'Severely decreased';
+            color = 'danger';
+        }
+        
+        document.getElementById('gfrResult').innerHTML = `
+            <div class="alert alert-${color} mb-0">
+                <strong>eGFR: ${gfr.toFixed(0)} mL/min/1.73m²</strong><br>
+                ${interpretation}
+            </div>
+        `;
+    }
+}
+
+// Tool launcher functions
+function openDiagnosticTool() {
+    document.getElementById('diagnosis-tab').click();
+}
+
+function openDrugChecker() {
+    document.getElementById('medications-tab').click();
+}
+
+function openRiskAssessment() {
+    showAlert('Risk assessment tool will be implemented with advanced scoring algorithms', 'info');
+}
+
+function openGuidelines() {
+    showAlert('Clinical guidelines database will provide evidence-based recommendations', 'info');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,680 @@
+{% extends "enhanced_base.html" %}
+
+{% block page_title %}Patient Management{% endblock %}
+{% block page_subtitle %}Comprehensive patient records and clinical data management{% endblock %}
+
+{% block content %}
+<!-- Patient Management Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center">
+        <button class="btn btn-primary me-3" onclick="openNewPatientModal()">
+            <i class="fas fa-user-plus me-2"></i>Add New Patient
+        </button>
+        <button class="btn btn-outline-secondary me-2" onclick="exportPatients()">
+            <i class="fas fa-download me-2"></i>Export
+        </button>
+        <button class="btn btn-outline-secondary" onclick="importPatients()">
+            <i class="fas fa-upload me-2"></i>Import
+        </button>
+    </div>
+    <div class="d-flex align-items-center">
+        <input type="search" class="form-control me-2" placeholder="Search patients..." id="patientSearch" style="width: 300px;">
+        <button class="btn btn-outline-primary" onclick="searchPatients()">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Patient Statistics Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-users fs-1 text-primary mb-3"></i>
+                <h3 class="mb-1" id="total-patients">{{ patients|length }}</h3>
+                <p class="text-muted mb-0">Total Patients</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-check fs-1 text-success mb-3"></i>
+                <h3 class="mb-1">15</h3>
+                <p class="text-muted mb-0">Appointments Today</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-bed fs-1 text-warning mb-3"></i>
+                <h3 class="mb-1">8</h3>
+                <p class="text-muted mb-0">Admitted Patients</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-user-clock fs-1 text-info mb-3"></i>
+                <h3 class="mb-1">23</h3>
+                <p class="text-muted mb-0">Pending Reviews</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters and View Options -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">Department</label>
+                <select class="form-select" id="departmentFilter">
+                    <option value="">All Departments</option>
+                    <option value="cardiology">Cardiology</option>
+                    <option value="emergency">Emergency</option>
+                    <option value="oncology">Oncology</option>
+                    <option value="pediatrics">Pediatrics</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Age Range</label>
+                <select class="form-select" id="ageFilter">
+                    <option value="">All Ages</option>
+                    <option value="0-18">0-18 years</option>
+                    <option value="19-35">19-35 years</option>
+                    <option value="36-65">36-65 years</option>
+                    <option value="65+">65+ years</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Status</label>
+                <select class="form-select" id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="discharged">Discharged</option>
+                    <option value="transferred">Transferred</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-primary w-100" onclick="applyFilters()">
+                    <i class="fas fa-filter me-2"></i>Apply Filters
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Patient List Table -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Patient Directory</h5>
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="viewMode" id="tableView" checked>
+            <label class="btn btn-outline-primary btn-sm" for="tableView">
+                <i class="fas fa-table"></i> Table
+            </label>
+            <input type="radio" class="btn-check" name="viewMode" id="cardView">
+            <label class="btn btn-outline-primary btn-sm" for="cardView">
+                <i class="fas fa-th-large"></i> Cards
+            </label>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <!-- Table View -->
+        <div id="tableViewContent">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>MRN</th>
+                            <th>Patient Name</th>
+                            <th>Age/Gender</th>
+                            <th>Contact</th>
+                            <th>Last Visit</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patientTableBody">
+                        {% for patient in patients %}
+                        <tr>
+                            <td>
+                                <strong>{{ patient.mrn }}</strong>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar bg-primary text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                        {{ patient.first_name[0] }}{{ patient.last_name[0] }}
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">{{ patient.first_name }} {{ patient.last_name }}</div>
+                                        <small class="text-muted">ID: {{ patient.patient_id }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div>{{ (2024 - patient.date_of_birth.year) }} years</div>
+                                <small class="text-muted text-capitalize">{{ patient.gender }}</small>
+                            </td>
+                            <td>
+                                <div>{{ patient.phone or 'N/A' }}</div>
+                                <small class="text-muted">{{ patient.email or 'No email' }}</small>
+                            </td>
+                            <td>
+                                <div>{{ patient.updated_at.strftime('%m/%d/%Y') }}</div>
+                                <small class="text-muted">{{ patient.updated_at.strftime('%I:%M %p') }}</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-success">Active</span>
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewPatient('{{ patient.patient_id }}')" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="editPatient('{{ patient.patient_id }}')" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-info" onclick="addNote('{{ patient.patient_id }}')" title="Add Note">
+                                        <i class="fas fa-notes-medical"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Card View (Hidden by default) -->
+        <div id="cardViewContent" style="display: none;">
+            <div class="row g-4 p-4" id="patientCardsContainer">
+                {% for patient in patients %}
+                <div class="col-xl-4 col-md-6">
+                    <div class="card patient-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="avatar bg-primary text-white rounded-circle me-3" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                                    {{ patient.first_name[0] }}{{ patient.last_name[0] }}
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">{{ patient.first_name }} {{ patient.last_name }}</h6>
+                                    <small class="text-muted">MRN: {{ patient.mrn }}</small>
+                                </div>
+                            </div>
+                            <div class="row text-center mb-3">
+                                <div class="col-6">
+                                    <div class="border-end">
+                                        <strong>{{ (2024 - patient.date_of_birth.year) }}</strong>
+                                        <div class="small text-muted">Years Old</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <strong class="text-capitalize">{{ patient.gender }}</strong>
+                                    <div class="small text-muted">Gender</div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="small text-muted">Contact</div>
+                                <div>{{ patient.phone or 'No phone' }}</div>
+                                <div class="small">{{ patient.email or 'No email' }}</div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-success">Active</span>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-primary" onclick="viewPatient('{{ patient.patient_id }}')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-secondary" onclick="editPatient('{{ patient.patient_id }}')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="text-muted">Showing {{ patients|length }} patients</span>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">Previous</a>
+                    </li>
+                    <li class="page-item active">
+                        <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- New Patient Modal -->
+<div class="modal fade" id="newPatientModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Add New Patient</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newPatientForm">
+                    <div class="row g-4">
+                        <!-- Personal Information -->
+                        <div class="col-12">
+                            <h6 class="border-bottom pb-2 mb-3">Personal Information</h6>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">First Name *</label>
+                            <input type="text" class="form-control" name="first_name" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Last Name *</label>
+                            <input type="text" class="form-control" name="last_name" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Middle Name</label>
+                            <input type="text" class="form-control" name="middle_name">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Date of Birth *</label>
+                            <input type="date" class="form-control" name="date_of_birth" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Gender *</label>
+                            <select class="form-select" name="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">SSN</label>
+                            <input type="text" class="form-control" name="ssn" placeholder="XXX-XX-XXXX">
+                        </div>
+                        
+                        <!-- Contact Information -->
+                        <div class="col-12">
+                            <h6 class="border-bottom pb-2 mb-3">Contact Information</h6>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" name="phone" placeholder="+1 (555) 123-4567">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" name="email">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-control" name="address" placeholder="Street Address">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">City</label>
+                            <input type="text" class="form-control" name="city">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">State</label>
+                            <select class="form-select" name="state">
+                                <option value="">Select State</option>
+                                <option value="CA">California</option>
+                                <option value="NY">New York</option>
+                                <option value="TX">Texas</option>
+                                <option value="FL">Florida</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">ZIP Code</label>
+                            <input type="text" class="form-control" name="zip_code" placeholder="12345">
+                        </div>
+                        
+                        <!-- Emergency Contact -->
+                        <div class="col-12">
+                            <h6 class="border-bottom pb-2 mb-3">Emergency Contact</h6>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Emergency Contact Name</label>
+                            <input type="text" class="form-control" name="emergency_name">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Emergency Contact Phone</label>
+                            <input type="tel" class="form-control" name="emergency_phone">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Relationship</label>
+                            <input type="text" class="form-control" name="emergency_relationship" placeholder="Spouse, Parent, etc.">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveNewPatient()">
+                    <i class="fas fa-save me-2"></i>Save Patient
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Patient Detail Modal -->
+<div class="modal fade" id="patientDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-user me-2"></i>Patient Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="patientDetailContent">
+                    <!-- Patient details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Patient Management JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    initializePatientSearch();
+    initializeViewToggle();
+});
+
+function initializePatientSearch() {
+    const searchInput = document.getElementById('patientSearch');
+    searchInput.addEventListener('input', debounce(searchPatients, 300));
+}
+
+function initializeViewToggle() {
+    document.getElementById('tableView').addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById('tableViewContent').style.display = 'block';
+            document.getElementById('cardViewContent').style.display = 'none';
+        }
+    });
+    
+    document.getElementById('cardView').addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById('tableViewContent').style.display = 'none';
+            document.getElementById('cardViewContent').style.display = 'block';
+        }
+    });
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function searchPatients() {
+    const searchTerm = document.getElementById('patientSearch').value.toLowerCase();
+    const rows = document.querySelectorAll('#patientTableBody tr');
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? '' : 'none';
+    });
+}
+
+function applyFilters() {
+    const department = document.getElementById('departmentFilter').value;
+    const age = document.getElementById('ageFilter').value;
+    const status = document.getElementById('statusFilter').value;
+    
+    // In a real application, this would make an API call with filters
+    showAlert('Filters applied successfully', 'success');
+}
+
+function openNewPatientModal() {
+    new bootstrap.Modal(document.getElementById('newPatientModal')).show();
+}
+
+async function saveNewPatient() {
+    const form = document.getElementById('newPatientForm');
+    const formData = new FormData(form);
+    const patientData = Object.fromEntries(formData);
+    
+    // Validate required fields
+    if (!patientData.first_name || !patientData.last_name || !patientData.date_of_birth || !patientData.gender) {
+        showAlert('Please fill in all required fields', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await axios.post('/api/patients', patientData);
+        showAlert('Patient created successfully!', 'success');
+        bootstrap.Modal.getInstance(document.getElementById('newPatientModal')).hide();
+        form.reset();
+        
+        // Refresh the page to show new patient
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+    } catch (error) {
+        showAlert('Error creating patient: ' + (error.response?.data?.detail || error.message), 'danger');
+    }
+}
+
+async function viewPatient(patientId) {
+    try {
+        const response = await axios.get(`/api/patients/${patientId}`);
+        const patient = response.data.patient;
+        const notes = response.data.clinical_notes || [];
+        const labs = response.data.lab_results || [];
+        
+        const detailContent = `
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">Patient Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-3">
+                                <div class="avatar bg-primary text-white rounded-circle mx-auto" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                                    ${patient.first_name[0]}${patient.last_name[0]}
+                                </div>
+                                <h5 class="mt-3 mb-1">${patient.first_name} ${patient.last_name}</h5>
+                                <p class="text-muted">MRN: ${patient.mrn}</p>
+                            </div>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Age:</strong></td>
+                                    <td>${patient.age} years</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Gender:</strong></td>
+                                    <td class="text-capitalize">${patient.gender}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>DOB:</strong></td>
+                                    <td>${formatDate(patient.date_of_birth)}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Phone:</strong></td>
+                                    <td>${patient.phone || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Email:</strong></td>
+                                    <td>${patient.email || 'N/A'}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <ul class="nav nav-tabs" id="patientTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="notes-tab" data-bs-toggle="tab" data-bs-target="#notes" type="button" role="tab">
+                                Clinical Notes (${notes.length})
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="labs-tab" data-bs-toggle="tab" data-bs-target="#labs" type="button" role="tab">
+                                Lab Results (${labs.length})
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="vitals-tab" data-bs-toggle="tab" data-bs-target="#vitals" type="button" role="tab">
+                                Vital Signs
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="patientTabContent">
+                        <div class="tab-pane fade show active" id="notes" role="tabpanel">
+                            <div class="p-3">
+                                ${notes.length ? notes.map(note => `
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h6>${note.title}</h6>
+                                            <p class="mb-1">${note.content}</p>
+                                            <small class="text-muted">
+                                                ${formatDate(note.created_at)} by ${note.author_id}
+                                            </small>
+                                        </div>
+                                    </div>
+                                `).join('') : '<p class="text-muted">No clinical notes available</p>'}
+                                <button class="btn btn-primary btn-sm" onclick="addNote('${patientId}')">
+                                    <i class="fas fa-plus me-1"></i>Add Note
+                                </button>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="labs" role="tabpanel">
+                            <div class="p-3">
+                                ${labs.length ? `
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Test</th>
+                                                    <th>Result</th>
+                                                    <th>Reference</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${labs.map(lab => `
+                                                    <tr>
+                                                        <td>${lab.test_name}</td>
+                                                        <td>${lab.result_value} ${lab.unit}</td>
+                                                        <td>${lab.reference_range}</td>
+                                                        <td>${formatDate(lab.resulted_at)}</td>
+                                                    </tr>
+                                                `).join('')}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                ` : '<p class="text-muted">No lab results available</p>'}
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="vitals" role="tabpanel">
+                            <div class="p-3">
+                                <p class="text-muted">Vital signs data will be displayed here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('patientDetailContent').innerHTML = detailContent;
+        new bootstrap.Modal(document.getElementById('patientDetailModal')).show();
+        
+    } catch (error) {
+        showAlert('Error loading patient details: ' + error.message, 'danger');
+    }
+}
+
+function editPatient(patientId) {
+    // In a real application, this would open an edit modal
+    showAlert('Edit patient feature will be implemented', 'info');
+}
+
+function addNote(patientId) {
+    const noteContent = prompt('Enter clinical note:');
+    if (noteContent && noteContent.trim()) {
+        createClinicalNote(patientId, 'Progress Note', noteContent);
+    }
+}
+
+async function createClinicalNote(patientId, title, content) {
+    try {
+        const noteData = {
+            patient_id: patientId,
+            note_type: 'progress',
+            title: title,
+            content: content
+        };
+        
+        await axios.post('/api/clinical/notes', noteData);
+        showAlert('Clinical note added successfully', 'success');
+    } catch (error) {
+        showAlert('Error adding note: ' + error.message, 'danger');
+    }
+}
+
+function exportPatients() {
+    // Create CSV export
+    const csvContent = "data:text/csv;charset=utf-8," + 
+        "MRN,First Name,Last Name,DOB,Gender,Phone,Email\n" +
+        Array.from(document.querySelectorAll('#patientTableBody tr')).map(row => {
+            const cells = row.querySelectorAll('td');
+            return Array.from(cells).slice(0, 6).map(cell => 
+                '"' + cell.textContent.trim().replace(/"/g, '""') + '"'
+            ).join(',');
+        }).join('\n');
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `patients_export_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showAlert('Patient data exported successfully', 'success');
+}
+
+function importPatients() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv,.xlsx,.xls';
+    input.onchange = handlePatientImport;
+    input.click();
+}
+
+function handlePatientImport(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // In a real application, this would process the file
+    showAlert('Patient import feature will process: ' + file.name, 'info');
+}
+</script>
+{% endblock %}

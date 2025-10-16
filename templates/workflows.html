@@ -1,0 +1,401 @@
+{% extends "enhanced_base.html" %}
+
+{% block title %}Clinical Workflows{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2><i class="fas fa-project-diagram me-2"></i>Clinical Workflows</h2>
+                    <p class="text-muted">Automated clinical processes and workflow management</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="createWorkflow()">
+                        <i class="fas fa-plus me-1"></i>Create Workflow
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workflow Categories -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-user-injured fa-3x text-danger mb-3"></i>
+                    <h5>Emergency Protocols</h5>
+                    <p class="text-muted">Code blue, trauma, critical care</p>
+                    <span class="badge bg-danger">5 Active</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-pills fa-3x text-warning mb-3"></i>
+                    <h5>Medication Management</h5>
+                    <p class="text-muted">Prescribing, dispensing, monitoring</p>
+                    <span class="badge bg-warning">8 Active</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-vial fa-3x text-info mb-3"></i>
+                    <h5>Lab Workflows</h5>
+                    <p class="text-muted">Ordering, processing, results</p>
+                    <span class="badge bg-info">12 Active</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-calendar-check fa-3x text-success mb-3"></i>
+                    <h5>Appointment Workflows</h5>
+                    <p class="text-muted">Scheduling, reminders, follow-up</p>
+                    <span class="badge bg-success">6 Active</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Workflows -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-play me-2"></i>Active Workflows</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Workflow</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Patient</th>
+                                    <th>Started</th>
+                                    <th>Progress</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="workflowsTable">
+                                <tr>
+                                    <td>
+                                        <strong>Chest Pain Protocol</strong><br>
+                                        <small class="text-muted">Emergency assessment workflow</small>
+                                    </td>
+                                    <td><span class="badge bg-danger">Emergency</span></td>
+                                    <td><span class="badge bg-warning">In Progress</span></td>
+                                    <td>John Doe<br><small class="text-muted">MRN: 123456</small></td>
+                                    <td>10:30 AM</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-warning" style="width: 60%">60%</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" onclick="viewWorkflow('1')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-success" onclick="continueWorkflow('1')">
+                                                <i class="fas fa-play"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Medication Reconciliation</strong><br>
+                                        <small class="text-muted">Post-admission med review</small>
+                                    </td>
+                                    <td><span class="badge bg-warning">Medication</span></td>
+                                    <td><span class="badge bg-info">Pending Review</span></td>
+                                    <td>Jane Smith<br><small class="text-muted">MRN: 789012</small></td>
+                                    <td>09:15 AM</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-info" style="width: 80%">80%</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" onclick="viewWorkflow('2')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-success" onclick="continueWorkflow('2')">
+                                                <i class="fas fa-play"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Lab Results Follow-up</strong><br>
+                                        <small class="text-muted">Critical value notification</small>
+                                    </td>
+                                    <td><span class="badge bg-info">Laboratory</span></td>
+                                    <td><span class="badge bg-success">Completed</span></td>
+                                    <td>Robert Johnson<br><small class="text-muted">MRN: 345678</small></td>
+                                    <td>08:45 AM</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" style="width: 100%">100%</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" onclick="viewWorkflow('3')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary" disabled>
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workflow Templates -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-clipboard-list me-2"></i>Workflow Templates</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card workflow-template" onclick="startWorkflow('emergency')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-ambulance fa-2x text-danger mb-2"></i>
+                                    <h6>Emergency Response</h6>
+                                    <p class="text-muted small">Code Blue, Stroke Alert, STEMI</p>
+                                    <span class="badge bg-danger">Critical</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card workflow-template" onclick="startWorkflow('admission')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-bed fa-2x text-primary mb-2"></i>
+                                    <h6>Patient Admission</h6>
+                                    <p class="text-muted small">Registration, Assessment, Orders</p>
+                                    <span class="badge bg-primary">Standard</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card workflow-template" onclick="startWorkflow('discharge')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-sign-out-alt fa-2x text-success mb-2"></i>
+                                    <h6>Patient Discharge</h6>
+                                    <p class="text-muted small">Planning, Education, Follow-up</p>
+                                    <span class="badge bg-success">Standard</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card workflow-template" onclick="startWorkflow('surgery')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-cut fa-2x text-warning mb-2"></i>
+                                    <h6>Surgical Workflow</h6>
+                                    <p class="text-muted small">Pre-op, Procedure, Post-op</p>
+                                    <span class="badge bg-warning">Complex</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card workflow-template" onclick="startWorkflow('lab')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-flask fa-2x text-info mb-2"></i>
+                                    <h6>Laboratory Workflow</h6>
+                                    <p class="text-muted small">Order, Collect, Process, Report</p>
+                                    <span class="badge bg-info">Automated</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card workflow-template" onclick="startWorkflow('medication')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-prescription fa-2x text-secondary mb-2"></i>
+                                    <h6>Medication Workflow</h6>
+                                    <p class="text-muted small">Prescribe, Verify, Administer</p>
+                                    <span class="badge bg-secondary">Standard</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Workflow Details Modal -->
+<div class="modal fade" id="workflowModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Workflow Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="workflowModalBody">
+                <!-- Workflow details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="continueWorkflowBtn">Continue Workflow</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.workflow-template {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.workflow-template:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadWorkflows();
+});
+
+async function loadWorkflows() {
+    // In a real implementation, this would fetch from API
+    console.log('Loading workflows...');
+}
+
+function createWorkflow() {
+    showToast('Workflow creation feature coming soon', 'info');
+}
+
+function viewWorkflow(workflowId) {
+    const modalBody = document.getElementById('workflowModalBody');
+    
+    // Sample workflow details
+    const workflowDetails = {
+        '1': {
+            name: 'Chest Pain Protocol',
+            type: 'Emergency',
+            patient: 'John Doe (MRN: 123456)',
+            steps: [
+                { step: 'Initial Assessment', status: 'completed', time: '10:30 AM' },
+                { step: 'ECG Performed', status: 'completed', time: '10:32 AM' },
+                { step: 'Blood Draw', status: 'completed', time: '10:35 AM' },
+                { step: 'Chest X-ray', status: 'in-progress', time: '10:40 AM' },
+                { step: 'Cardiology Consult', status: 'pending', time: '' },
+                { step: 'Treatment Decision', status: 'pending', time: '' }
+            ]
+        },
+        '2': {
+            name: 'Medication Reconciliation',
+            type: 'Medication',
+            patient: 'Jane Smith (MRN: 789012)',
+            steps: [
+                { step: 'Collect Medication History', status: 'completed', time: '09:15 AM' },
+                { step: 'Review with Patient', status: 'completed', time: '09:30 AM' },
+                { step: 'Clinical Review', status: 'completed', time: '09:45 AM' },
+                { step: 'Pharmacist Review', status: 'in-progress', time: '10:00 AM' },
+                { step: 'Final Approval', status: 'pending', time: '' }
+            ]
+        }
+    };
+    
+    const workflow = workflowDetails[workflowId];
+    if (!workflow) return;
+    
+    let stepsHtml = '';
+    workflow.steps.forEach(step => {
+        const statusIcon = getStepStatusIcon(step.status);
+        const statusClass = getStepStatusClass(step.status);
+        
+        stepsHtml += `
+            <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-${statusIcon} text-${statusClass} me-3"></i>
+                <div class="flex-grow-1">
+                    <div class="fw-bold">${step.step}</div>
+                    ${step.time ? `<small class="text-muted">${step.time}</small>` : ''}
+                </div>
+                <span class="badge bg-${statusClass}">${step.status}</span>
+            </div>
+        `;
+    });
+    
+    modalBody.innerHTML = `
+        <div class="mb-3">
+            <h6>Workflow: ${workflow.name}</h6>
+            <p class="text-muted">Type: ${workflow.type} | Patient: ${workflow.patient}</p>
+        </div>
+        <hr>
+        <h6>Workflow Steps:</h6>
+        ${stepsHtml}
+    `;
+    
+    new bootstrap.Modal(document.getElementById('workflowModal')).show();
+}
+
+function getStepStatusIcon(status) {
+    const icons = {
+        'completed': 'check-circle',
+        'in-progress': 'clock',
+        'pending': 'circle'
+    };
+    return icons[status] || 'circle';
+}
+
+function getStepStatusClass(status) {
+    const classes = {
+        'completed': 'success',
+        'in-progress': 'warning',
+        'pending': 'secondary'
+    };
+    return classes[status] || 'secondary';
+}
+
+function continueWorkflow(workflowId) {
+    showToast(`Continuing workflow ${workflowId}`, 'info');
+}
+
+function startWorkflow(workflowType) {
+    const workflows = {
+        'emergency': 'Emergency Response Workflow',
+        'admission': 'Patient Admission Workflow',
+        'discharge': 'Patient Discharge Workflow',
+        'surgery': 'Surgical Workflow',
+        'lab': 'Laboratory Workflow',
+        'medication': 'Medication Workflow'
+    };
+    
+    const workflowName = workflows[workflowType];
+    if (confirm(`Start ${workflowName}?`)) {
+        showToast(`${workflowName} started`, 'success');
+        // In real implementation, this would start the workflow
+        setTimeout(() => {
+            location.reload();
+        }, 1500);
+    }
+}
+</script>
+{% endblock %}

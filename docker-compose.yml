@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # PostgreSQL Database
   postgres:
@@ -8,139 +6,339 @@ services:
     environment:
       POSTGRES_DB: vita_agents
       POSTGRES_USER: vita_user
-      POSTGRES_PASSWORD: vita_password
+      POSTGRES_PASSWORD: vita_secure_pass_2024
+      POSTGRES_MULTIPLE_DATABASES: vita_agents,vita_analytics,vita_audit
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d
+      - ./docker/postgres/conf:/etc/postgresql/conf.d
     ports:
       - "5432:5432"
+    networks:
+      - vita-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U vita_user -d vita_agents"]
       interval: 30s
       timeout: 10s
       retries: 3
-    networks:
-      - vita-network
+    restart: unless-stopped
 
-  # Redis Cache
+  # Redis Cache & Session Store
   redis:
     image: redis:7-alpine
     container_name: vita-redis
-    command: redis-server --appendonly yes
+    command: redis-server --requirepass vita_redis_pass_2024 --appendonly yes
     volumes:
       - redis_data:/data
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
     ports:
       - "6379:6379"
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
     networks:
       - vita-network
-
-  # Backend API
-  backend:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.backend
-    container_name: vita-backend
-    environment:
-      - DATABASE_URL=postgresql://vita_user:vita_password@postgres:5432/vita_agents
-      - REDIS_URL=redis://redis:6379/0
-      - API_HOST=0.0.0.0
-      - API_PORT=8000
-      - ENVIRONMENT=production
-      - DEBUG=false
-    ports:
-      - "8000:8000"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s
+    restart: unless-stopped
+
+  # Elasticsearch for Search & Analytics
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: vita-elasticsearch
+    environment:
+      - node.name=vita-es-node
+      - cluster.name=vita-cluster
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
-      - ./config:/app/config:ro
-      - logs_backend:/app/logs
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - vita-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # RabbitMQ Message Broker
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: vita-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: vita_admin
+      RABBITMQ_DEFAULT_PASS: vita_rabbit_pass_2024
+      RABBITMQ_DEFAULT_VHOST: vita_vhost
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - ./docker/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+      - ./docker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    ports:
+      - "5672:5672"
+      - "15672:15672"  # Management UI
+    networks:
+      - vita-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # MinIO S3-Compatible Object Storage
+  minio:
+    image: minio/minio:latest
+    container_name: vita-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: vita_admin
+      MINIO_ROOT_PASSWORD: vita_minio_pass_2024
+      MINIO_BROWSER_REDIRECT_URL: http://localhost:9001
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"  # Console UI
+    networks:
+      - vita-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # MailHog SMTP Server (Development)
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: vita-mailhog
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
     networks:
       - vita-network
     restart: unless-stopped
 
-  # Web Frontend
-  frontend:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.frontend
-    container_name: vita-frontend
+  # Grafana Monitoring
+  grafana:
+    image: grafana/grafana:latest
+    container_name: vita-grafana
     environment:
-      - VITA_AGENTS_API_URL=http://backend:8000
-      - NODE_ENV=production
+      GF_SECURITY_ADMIN_PASSWORD: vita_grafana_admin_2024
+      GF_USERS_ALLOW_SIGN_UP: false
+      GF_INSTALL_PLUGINS: grafana-piechart-panel,grafana-worldmap-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
+      - ./docker/grafana/dashboards:/var/lib/grafana/dashboards
     ports:
       - "3000:3000"
-    depends_on:
-      backend:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
     networks:
       - vita-network
+    depends_on:
+      - postgres
     restart: unless-stopped
 
-  # Prometheus (Optional - for monitoring)
+  # Prometheus Metrics Collection
   prometheus:
     image: prom/prometheus:latest
     container_name: vita-prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
       - '--web.console.libraries=/etc/prometheus/console_libraries'
       - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
-    networks:
-      - vita-network
-    profiles:
-      - monitoring
-
-  # Grafana (Optional - for monitoring)
-  grafana:
-    image: grafana/grafana:latest
-    container_name: vita-grafana
-    ports:
-      - "3001:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
-      - grafana_data:/var/lib/grafana
-      - ./docker/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
-      - ./docker/grafana/datasources:/etc/grafana/provisioning/datasources:ro
-    depends_on:
-      - prometheus
+      - prometheus_data:/prometheus
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
     networks:
       - vita-network
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy & Load Balancer
+  nginx:
+    image: nginx:alpine
+    container_name: vita-nginx
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./docker/nginx/ssl:/etc/nginx/ssl
+      - nginx_logs:/var/log/nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - vita-network
+    depends_on:
+      - vita-app
+    restart: unless-stopped
+
+  # Main Vita Agents Application
+  vita-app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    container_name: vita-app
+    environment:
+      # Database
+      DATABASE_URL: postgresql://vita_user:vita_secure_pass_2024@postgres:5432/vita_agents
+      REDIS_URL: redis://:vita_redis_pass_2024@redis:6379/0
+      
+      # Search & Analytics
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      
+      # Message Queue
+      RABBITMQ_URL: amqp://vita_admin:vita_rabbit_pass_2024@rabbitmq:5672/vita_vhost
+      
+      # Object Storage
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: vita_admin
+      MINIO_SECRET_KEY: vita_minio_pass_2024
+      
+      # Email
+      SMTP_HOST: mailhog
+      SMTP_PORT: 1025
+      SMTP_USER: ""
+      SMTP_PASSWORD: ""
+      SMTP_FROM: noreply@vita-agents.local
+      
+      # Security
+      SECRET_KEY: vita_super_secret_key_change_in_production_2024
+      JWT_SECRET: vita_jwt_secret_key_change_in_production_2024
+      
+      # Feature Flags
+      ENABLE_LLM: "true"
+      ENABLE_FHIR: "true"
+      ENABLE_HL7: "true"
+      ENABLE_METRICS: "true"
+      
+      # Environment
+      ENVIRONMENT: production
+      DEBUG: "false"
+      LOG_LEVEL: INFO
+      
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+      - app_data:/app/data
+    ports:
+      - "8080:8080"
+    networks:
+      - vita-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Background Task Worker
+  vita-worker:
+    build:
+      context: .
+      dockerfile: docker/worker/Dockerfile
+    container_name: vita-worker
+    environment:
+      # Same environment as main app
+      DATABASE_URL: postgresql://vita_user:vita_secure_pass_2024@postgres:5432/vita_agents
+      REDIS_URL: redis://:vita_redis_pass_2024@redis:6379/0
+      RABBITMQ_URL: amqp://vita_admin:vita_rabbit_pass_2024@rabbitmq:5672/vita_vhost
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: vita_admin
+      MINIO_SECRET_KEY: vita_minio_pass_2024
+      SECRET_KEY: vita_super_secret_key_change_in_production_2024
+      ENVIRONMENT: production
+      LOG_LEVEL: INFO
+    volumes:
+      - ./logs:/app/logs
+      - app_data:/app/data
+    networks:
+      - vita-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    restart: unless-stopped
+
+  # Data Seeder (Runs once to populate initial data)
+  vita-seeder:
+    build:
+      context: .
+      dockerfile: docker/seeder/Dockerfile
+    container_name: vita-seeder
+    environment:
+      DATABASE_URL: postgresql://vita_user:vita_secure_pass_2024@postgres:5432/vita_agents
+      REDIS_URL: redis://:vita_redis_pass_2024@redis:6379/0
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: vita_admin
+      MINIO_SECRET_KEY: vita_minio_pass_2024
+      SECRET_KEY: vita_super_secret_key_change_in_production_2024
+    networks:
+      - vita-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
     profiles:
-      - monitoring
+      - seeder
+    restart: "no"
 
 volumes:
   postgres_data:
+    driver: local
   redis_data:
-  prometheus_data:
+    driver: local
+  elasticsearch_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  minio_data:
+    driver: local
   grafana_data:
-  logs_backend:
+    driver: local
+  prometheus_data:
+    driver: local
+  nginx_logs:
+    driver: local
+  app_data:
+    driver: local
 
 networks:
   vita-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

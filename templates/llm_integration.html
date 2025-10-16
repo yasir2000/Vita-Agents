@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Integration - Vita Agents</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .model-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .model-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .model-card.active {
+            border-color: #0d6efd;
+            background-color: #f8f9ff;
+        }
+        .healthcare-badge {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+        }
+        .provider-badge {
+            font-size: 0.8em;
+        }
+        .chat-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+        }
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+        }
+        .message.user {
+            background-color: #e3f2fd;
+            margin-left: 2rem;
+        }
+        .message.assistant {
+            background-color: #f1f8e9;
+            margin-right: 2rem;
+        }
+        .loading-spinner {
+            display: none;
+        }
+        .scenario-card {
+            border-left: 4px solid #0d6efd;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        .patient-info {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    {% extends "enhanced_base.html" %}
+    
+    {% block title %}LLM Integration{% endblock %}
+    
+    {% block content %}
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2><i class="fas fa-robot me-2"></i>AI & LLM Integration</h2>
+                        <p class="text-muted">Advanced Language Models for Clinical Decision Support</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-primary" onclick="refreshModels()">
+                            <i class="fas fa-sync-alt me-1"></i>Refresh Models
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Model Selection -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-brain me-2"></i>Available AI Models</h5>
+                        <small class="text-muted">Select a model for clinical analysis and decision support</small>
+                    </div>
+                    <div class="card-body">
+                        <div id="modelsContainer" class="row">
+                            <!-- Models will be loaded here -->
+                        </div>
+                        
+                        <!-- Active Model Status -->
+                        <div id="activeModelStatus" class="mt-3 p-3 bg-light rounded" style="display: none;">
+                            <h6><i class="fas fa-check-circle text-success me-2"></i>Active Model</h6>
+                            <div id="activeModelInfo"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Chat Interface -->
+        <div class="row mb-4">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-comments me-2"></i>AI Chat Interface</h5>
+                        <small class="text-muted">Interact with the AI for clinical queries</small>
+                    </div>
+                    <div class="card-body">
+                        <div id="chatContainer" class="chat-container p-3 mb-3">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-robot fa-2x mb-2"></i>
+                                <p>Select a model and start a conversation...</p>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <input type="text" id="chatInput" class="form-control" 
+                                   placeholder="Ask about symptoms, diagnoses, treatments..."
+                                   onkeypress="handleChatKeyPress(event)">
+                            <button class="btn btn-primary" onclick="sendChatMessage()">
+                                <i class="fas fa-paper-plane me-1"></i>Send
+                            </button>
+                        </div>
+                        
+                        <div class="loading-spinner mt-2 text-center">
+                            <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+                            Generating response...
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h6><i class="fas fa-bolt me-2"></i>Quick Clinical Actions</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary" onclick="openDiagnosisModal()">
+                                <i class="fas fa-stethoscope me-2"></i>AI Diagnosis
+                            </button>
+                            <button class="btn btn-outline-warning" onclick="openDrugCheckModal()">
+                                <i class="fas fa-pills me-2"></i>Drug Interactions
+                            </button>
+                            <button class="btn btn-outline-info" onclick="loadClinicalScenarios()">
+                                <i class="fas fa-book-medical me-2"></i>Clinical Scenarios
+                            </button>
+                            <button class="btn btn-outline-success" onclick="generateSampleData()">
+                                <i class="fas fa-database me-2"></i>Generate Sample Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model Recommendations -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6><i class="fas fa-lightbulb me-2"></i>Model Recommendations</h6>
+                    </div>
+                    <div class="card-body">
+                        <small class="text-muted">
+                            <strong>For Clinical Diagnosis:</strong> Use healthcare-optimized models<br>
+                            <strong>For Drug Interactions:</strong> Models with medical knowledge<br>
+                            <strong>For General Questions:</strong> Any available model
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clinical Scenarios Demo -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-book-medical me-2"></i>Interactive Clinical Scenarios</h5>
+                        <small class="text-muted">Test AI with realistic medical cases</small>
+                    </div>
+                    <div class="card-body">
+                        <div id="scenariosContainer">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-clipboard-list fa-2x mb-2"></i>
+                                <p>Click "Clinical Scenarios" to load interactive medical cases</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Diagnosis Modal -->
+    <div class="modal fade" id="diagnosisModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-stethoscope me-2"></i>AI Clinical Diagnosis</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="diagnosisForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Patient Age</label>
+                                <input type="number" class="form-control" id="patientAge" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Gender</label>
+                                <select class="form-control" id="patientGender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Chief Complaint</label>
+                            <input type="text" class="form-control" id="chiefComplaint" 
+                                   placeholder="e.g., Chest pain for 2 hours" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">History of Present Illness</label>
+                            <textarea class="form-control" id="hpi" rows="3"
+                                      placeholder="Describe the current illness..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Vital Signs</label>
+                            <input type="text" class="form-control" id="vitals"
+                                   placeholder="e.g., BP: 140/90, HR: 85, Temp: 98.6°F">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Physical Examination</label>
+                            <textarea class="form-control" id="physicalExam" rows="2"
+                                      placeholder="Physical examination findings..."></textarea>
+                        </div>
+                    </form>
+                    <div id="diagnosisResult" class="mt-3" style="display: none;">
+                        <h6>AI Analysis Result:</h6>
+                        <div class="bg-light p-3 rounded" id="diagnosisContent"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="generateDiagnosis()">
+                        <i class="fas fa-brain me-1"></i>Generate AI Diagnosis
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drug Interaction Modal -->
+    <div class="modal fade" id="drugCheckModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-pills me-2"></i>Drug Interaction Check</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="drugCheckForm">
+                        <div class="mb-3">
+                            <label class="form-label">Current Medications</label>
+                            <textarea class="form-control" id="currentMedications" rows="3"
+                                      placeholder="List current medications (one per line or comma-separated)..." required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">New Medication to Add</label>
+                            <input type="text" class="form-control" id="newMedication"
+                                   placeholder="e.g., Warfarin 5mg daily" required>
+                        </div>
+                    </form>
+                    <div id="drugCheckResult" class="mt-3" style="display: none;">
+                        <h6>Drug Interaction Analysis:</h6>
+                        <div class="bg-light p-3 rounded" id="drugCheckContent"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-warning" onclick="checkDrugInteractions()">
+                        <i class="fas fa-search me-1"></i>Check Interactions
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentModels = {};
+        let activeModel = null;
+        let chatHistory = [];
+
+        // Load models on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadModels();
+        });
+
+        async function loadModels() {
+            try {
+                const response = await fetch('/api/llm/models');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    currentModels = data.models;
+                    activeModel = data.active_model;
+                    displayModels(data);
+                } else {
+                    throw new Error('Failed to load models');
+                }
+            } catch (error) {
+                console.error('Error loading models:', error);
+                document.getElementById('modelsContainer').innerHTML = 
+                    '<div class="col-12 text-center text-muted">Error loading models or LLM integration not available</div>';
+            }
+        }
+
+        function displayModels(data) {
+            const container = document.getElementById('modelsContainer');
+            const models = data.models;
+            
+            if (Object.keys(models).length === 0) {
+                container.innerHTML = '<div class="col-12 text-center text-muted">No models available</div>';
+                return;
+            }
+
+            let html = '';
+            for (const [key, model] of Object.entries(models)) {
+                const isActive = key === data.active_model;
+                const healthcareIcon = model.healthcare_optimized ? 
+                    '<span class="badge healthcare-badge me-1"><i class="fas fa-heartbeat"></i> Healthcare</span>' : '';
+                
+                html += `
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="card model-card h-100 ${isActive ? 'active' : ''}" 
+                             onclick="selectModel('${key}')">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="card-title mb-0">${model.name}</h6>
+                                    ${isActive ? '<i class="fas fa-check-circle text-success"></i>' : ''}
+                                </div>
+                                <div class="mb-2">
+                                    <span class="badge bg-secondary provider-badge">${model.provider}</span>
+                                    ${healthcareIcon}
+                                </div>
+                                <small class="text-muted">
+                                    Context: ${model.context_length.toLocaleString()}<br>
+                                    Cost: ${model.cost_per_token > 0 ? '$' + model.cost_per_token.toFixed(4) + '/token' : 'Free'}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+            
+            // Show active model status
+            if (data.active_model_info) {
+                const statusDiv = document.getElementById('activeModelStatus');
+                const infoDiv = document.getElementById('activeModelInfo');
+                
+                infoDiv.innerHTML = `
+                    <strong>${data.active_model_info.name}</strong> (${data.active_model_info.provider})
+                    ${data.active_model_info.healthcare_optimized ? 
+                        '<span class="badge healthcare-badge ms-2">Healthcare Optimized</span>' : ''}
+                `;
+                statusDiv.style.display = 'block';
+            }
+        }
+
+        async function selectModel(modelKey) {
+            try {
+                const response = await fetch('/api/llm/set-model', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ model_key: modelKey })
+                });
+                
+                if (response.ok) {
+                    activeModel = modelKey;
+                    showToast(`Model activated: ${currentModels[modelKey].name}`, 'success');
+                    loadModels(); // Refresh display
+                    clearChat(); // Clear chat history when switching models
+                } else {
+                    throw new Error('Failed to activate model');
+                }
+            } catch (error) {
+                console.error('Error selecting model:', error);
+                showToast('Error activating model', 'error');
+            }
+        }
+
+        function refreshModels() {
+            loadModels();
+            showToast('Models refreshed', 'info');
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            if (!activeModel) {
+                showToast('Please select a model first', 'warning');
+                return;
+            }
+            
+            // Add user message to chat
+            addMessageToChat('user', message);
+            input.value = '';
+            
+            // Show loading
+            const loadingSpinner = document.querySelector('.loading-spinner');
+            loadingSpinner.style.display = 'block';
+            
+            try {
+                const response = await fetch('/api/llm/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        prompt: message,
+                        context: chatHistory.slice(-5).map(m => `${m.role}: ${m.content}`).join('\n'),
+                        temperature: 0.7,
+                        max_tokens: 800
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.error) {
+                        addMessageToChat('assistant', `Error: ${data.error}`);
+                    } else {
+                        addMessageToChat('assistant', data.response || 'No response generated');
+                    }
+                } else {
+                    throw new Error('Failed to generate response');
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+                addMessageToChat('assistant', 'Sorry, I encountered an error. Please try again.');
+            } finally {
+                loadingSpinner.style.display = 'none';
+            }
+        }
+
+        function addMessageToChat(role, content) {
+            const chatContainer = document.getElementById('chatContainer');
+            
+            // Clear initial message if present
+            if (chatContainer.children.length === 1 && 
+                chatContainer.children[0].classList.contains('text-center')) {
+                chatContainer.innerHTML = '';
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            
+            const icon = role === 'user' ? 'fas fa-user' : 'fas fa-robot';
+            const roleLabel = role === 'user' ? 'You' : 'AI';
+            
+            messageDiv.innerHTML = `
+                <div class="d-flex align-items-start">
+                    <i class="${icon} me-2 mt-1"></i>
+                    <div>
+                        <small class="text-muted">${roleLabel}</small>
+                        <div>${content}</div>
+                    </div>
+                </div>
+            `;
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // Store in history
+            chatHistory.push({ role, content });
+            if (chatHistory.length > 20) {
+                chatHistory = chatHistory.slice(-20); // Keep last 20 messages
+            }
+        }
+
+        function clearChat() {
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.innerHTML = `
+                <div class="text-center text-muted">
+                    <i class="fas fa-robot fa-2x mb-2"></i>
+                    <p>Start a conversation with the AI...</p>
+                </div>
+            `;
+            chatHistory = [];
+        }
+
+        function openDiagnosisModal() {
+            if (!activeModel) {
+                showToast('Please select a model first', 'warning');
+                return;
+            }
+            new bootstrap.Modal(document.getElementById('diagnosisModal')).show();
+        }
+
+        function openDrugCheckModal() {
+            if (!activeModel) {
+                showToast('Please select a model first', 'warning');
+                return;
+            }
+            new bootstrap.Modal(document.getElementById('drugCheckModal')).show();
+        }
+
+        async function generateDiagnosis() {
+            const form = document.getElementById('diagnosisForm');
+            const formData = new FormData(form);
+            
+            const diagnosisData = {
+                age: document.getElementById('patientAge').value,
+                gender: document.getElementById('patientGender').value,
+                chief_complaint: document.getElementById('chiefComplaint').value,
+                hpi: document.getElementById('hpi').value,
+                vitals: document.getElementById('vitals').value,
+                physical_exam: document.getElementById('physicalExam').value
+            };
+            
+            if (!diagnosisData.age || !diagnosisData.gender || !diagnosisData.chief_complaint) {
+                showToast('Please fill in required fields', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/llm/diagnose', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(diagnosisData)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const resultDiv = document.getElementById('diagnosisResult');
+                    const contentDiv = document.getElementById('diagnosisContent');
+                    
+                    if (data.error) {
+                        contentDiv.innerHTML = `<div class="text-danger">Error: ${data.error}</div>`;
+                    } else {
+                        contentDiv.innerHTML = `<pre style="white-space: pre-wrap;">${data.response || 'No diagnosis generated'}</pre>`;
+                    }
+                    
+                    resultDiv.style.display = 'block';
+                } else {
+                    throw new Error('Failed to generate diagnosis');
+                }
+            } catch (error) {
+                console.error('Error generating diagnosis:', error);
+                showToast('Error generating diagnosis', 'error');
+            }
+        }
+
+        async function checkDrugInteractions() {
+            const currentMeds = document.getElementById('currentMedications').value;
+            const newMed = document.getElementById('newMedication').value;
+            
+            if (!currentMeds || !newMed) {
+                showToast('Please fill in both medication fields', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/llm/drug-interactions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        current_medications: currentMeds,
+                        new_medication: newMed
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const resultDiv = document.getElementById('drugCheckResult');
+                    const contentDiv = document.getElementById('drugCheckContent');
+                    
+                    if (data.error) {
+                        contentDiv.innerHTML = `<div class="text-danger">Error: ${data.error}</div>`;
+                    } else {
+                        contentDiv.innerHTML = `<pre style="white-space: pre-wrap;">${data.response || 'No interaction analysis generated'}</pre>`;
+                    }
+                    
+                    resultDiv.style.display = 'block';
+                } else {
+                    throw new Error('Failed to check drug interactions');
+                }
+            } catch (error) {
+                console.error('Error checking drug interactions:', error);
+                showToast('Error checking drug interactions', 'error');
+            }
+        }
+
+        async function loadClinicalScenarios() {
+            try {
+                const response = await fetch('/api/sample-data/scenarios');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    displayClinicalScenarios(data.scenarios);
+                } else {
+                    throw new Error('Failed to load scenarios');
+                }
+            } catch (error) {
+                console.error('Error loading scenarios:', error);
+                showToast('Error loading clinical scenarios', 'error');
+            }
+        }
+
+        function displayClinicalScenarios(scenarios) {
+            const container = document.getElementById('scenariosContainer');
+            
+            if (!scenarios || scenarios.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted">No scenarios available. Generate sample data first.</div>';
+                return;
+            }
+            
+            let html = '';
+            scenarios.forEach((scenario, index) => {
+                const patient = scenario.patient;
+                html += `
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="card scenario-card h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">${scenario.title}</h6>
+                                <div class="patient-info p-2 mb-2">
+                                    <small>
+                                        <strong>${patient.name}</strong><br>
+                                        ${patient.age}yo ${patient.gender}<br>
+                                        ${scenario.diagnosis}
+                                    </small>
+                                </div>
+                                <p class="card-text">
+                                    <small class="text-muted">${scenario.description}</small>
+                                </p>
+                                <div class="mt-auto">
+                                    <span class="badge bg-info">${scenario.difficulty_level}</span>
+                                    <button class="btn btn-sm btn-outline-primary float-end" 
+                                            onclick="analyzeScenario(${index})">
+                                        <i class="fas fa-brain me-1"></i>AI Analysis
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = `<div class="row">${html}</div>`;
+        }
+
+        async function analyzeScenario(scenarioIndex) {
+            if (!activeModel) {
+                showToast('Please select a model first', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/demo/scenario/${scenarioIndex}`);
+                
+                if (response.ok) {
+                    const scenario = await response.json();
+                    
+                    // Add scenario analysis to chat
+                    const analysisPrompt = `Analyze this clinical scenario:\n\nPatient: ${scenario.patient.name}, ${scenario.patient.age}yo ${scenario.patient.gender}\nChief Complaint: ${scenario.clinical_notes[0].chief_complaint}\nHistory: ${scenario.clinical_notes[0].history_present_illness}\n\nWhat are your thoughts on diagnosis and treatment?`;
+                    
+                    addMessageToChat('user', `Clinical Scenario Analysis: ${scenario.title}`);
+                    
+                    if (scenario.ai_recommendations) {
+                        addMessageToChat('assistant', scenario.ai_recommendations);
+                    } else {
+                        // Generate new analysis
+                        const analysisResponse = await fetch('/api/llm/generate', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                prompt: analysisPrompt,
+                                temperature: 0.3,
+                                max_tokens: 600
+                            })
+                        });
+                        
+                        if (analysisResponse.ok) {
+                            const analysisData = await analysisResponse.json();
+                            addMessageToChat('assistant', analysisData.response || 'Analysis not available');
+                        }
+                    }
+                } else {
+                    throw new Error('Failed to load scenario');
+                }
+            } catch (error) {
+                console.error('Error analyzing scenario:', error);
+                showToast('Error analyzing scenario', 'error');
+            }
+        }
+
+        async function generateSampleData() {
+            try {
+                const response = await fetch('/api/sample-data/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        patients: 25,
+                        scenarios: 8
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    showToast(`Generated ${data.patients_created} patients and ${data.scenarios_created} scenarios`, 'success');
+                } else {
+                    throw new Error('Failed to generate sample data');
+                }
+            } catch (error) {
+                console.error('Error generating sample data:', error);
+                showToast('Error generating sample data', 'error');
+            }
+        }
+    </script>
+    {% endblock %}
+</body>
+</html>

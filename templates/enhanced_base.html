@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Vita Agents Healthcare Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --primary-dark: #1e40af;
+            --success-green: #16a34a;
+            --warning-amber: #d97706;
+            --danger-red: #dc2626;
+            --sidebar-width: 280px;
+        }
+        
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
+            padding: 1rem 0;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            min-height: 100vh;
+            background-color: #f8fafc;
+        }
+        
+        .sidebar-brand {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar-brand h4 {
+            color: white;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .sidebar-brand small {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .nav-section {
+            padding: 0 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .nav-section-title {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            padding: 0 0.5rem;
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+            background-color: rgba(255,255,255,0.1);
+            transform: translateX(2px);
+        }
+        
+        .nav-link.active {
+            color: white !important;
+            background-color: rgba(255,255,255,0.2);
+            font-weight: 500;
+        }
+        
+        .nav-link i {
+            width: 20px;
+            margin-right: 0.75rem;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            transform: translateY(-1px);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+            color: white;
+            border-radius: 0.75rem 0.75rem 0 0 !important;
+            padding: 1rem 1.5rem;
+            border: none;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, var(--primary-blue), #3b82f6);
+            color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            height: 100%;
+        }
+        
+        .metric-card.success {
+            background: linear-gradient(135deg, var(--success-green), #22c55e);
+        }
+        
+        .metric-card.warning {
+            background: linear-gradient(135deg, var(--warning-amber), #f59e0b);
+        }
+        
+        .metric-card.danger {
+            background: linear-gradient(135deg, var(--danger-red), #ef4444);
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        
+        .metric-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+        
+        .metric-trend {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+        
+        .alert-item {
+            border-left: 4px solid var(--primary-blue);
+            background-color: #f8fafc;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+        
+        .alert-item.critical {
+            border-color: var(--danger-red);
+            background-color: #fef2f2;
+        }
+        
+        .alert-item.warning {
+            border-color: var(--warning-amber);
+            background-color: #fffbeb;
+        }
+        
+        .badge-status {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), #1d4ed8);
+            transform: translateY(-1px);
+        }
+        
+        .search-box {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            width: 300px;
+        }
+        
+        .user-menu {
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            margin: 1rem;
+            margin-top: auto;
+        }
+        
+        .loading-spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary-blue);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger-red);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar d-flex flex-column">
+        <div class="sidebar-brand">
+            <h4><i class="fas fa-hospital-alt"></i> Vita Agents</h4>
+            <small>Healthcare AI Platform</small>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">Core Dashboard</div>
+            <a class="nav-link" href="/"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a class="nav-link" href="/patients"><i class="fas fa-user-injured"></i> Patient Management</a>
+            <a class="nav-link position-relative" href="/alerts">
+                <i class="fas fa-exclamation-triangle"></i> Clinical Alerts
+                <span class="notification-badge">3</span>
+            </a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">Clinical Tools</div>
+            <a class="nav-link" href="/clinical"><i class="fas fa-stethoscope"></i> Decision Support</a>
+            <a class="nav-link" href="/workflows"><i class="fas fa-project-diagram"></i> Clinical Workflows</a>
+            <a class="nav-link" href="/analytics"><i class="fas fa-chart-line"></i> Healthcare Analytics</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">AI & Automation</div>
+            <a class="nav-link" href="/llm"><i class="fas fa-robot"></i> LLM Integration</a>
+            <a class="nav-link" href="/agents"><i class="fas fa-cogs"></i> Core Agents</a>
+            <a class="nav-link" href="/ai-models"><i class="fas fa-brain"></i> AI Models</a>
+            <a class="nav-link" href="/harmonization"><i class="fas fa-sync-alt"></i> Data Harmonization</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">System Management</div>
+            <a class="nav-link" href="/integration"><i class="fas fa-plug"></i> System Integration</a>
+            <a class="nav-link" href="/compliance"><i class="fas fa-shield-alt"></i> Compliance & Security</a>
+            <a class="nav-link" href="/monitoring"><i class="fas fa-heartbeat"></i> System Monitoring</a>
+            <a class="nav-link" href="/testing"><i class="fas fa-vial"></i> Testing & QA</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">Documentation</div>
+            <a class="nav-link" href="/api/docs" target="_blank"><i class="fas fa-code"></i> API Documentation</a>
+        </div>
+        
+        <div class="user-menu mt-auto">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-user-md me-2"></i>
+                <div>
+                    <div class="text-white small">Dr. John Smith</div>
+                    <div class="text-white-50" style="font-size: 0.75rem;">Cardiologist</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-0">{% block page_title %}{{ title }}{% endblock %}</h1>
+                <p class="text-muted mb-0">{% block page_subtitle %}Welcome to your healthcare AI platform{% endblock %}</p>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <input type="search" class="search-box" placeholder="Search patients, notes, alerts...">
+                <div class="position-relative">
+                    <button class="btn btn-outline-primary position-relative">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user"></i> Profile
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog"></i> Settings</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-key"></i> Change Password</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script>
+        // Global variables
+        let currentUser = null;
+        let authToken = localStorage.getItem('vita_auth_token');
+        
+        // Set axios default headers
+        if (authToken) {
+            axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
+        }
+        
+        // WebSocket for real-time updates
+        let alertSocket = null;
+        
+        function initializeRealTimeUpdates() {
+            if (window.location.protocol === 'https:') {
+                alertSocket = new WebSocket(`wss://${window.location.host}/ws/alerts`);
+            } else {
+                alertSocket = new WebSocket(`ws://${window.location.host}/ws/alerts`);
+            }
+            
+            alertSocket.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                if (data.type === 'alert_update') {
+                    updateAlertBadges(data.data.active_alerts);
+                }
+            };
+        }
+        
+        function updateAlertBadges(count) {
+            document.querySelectorAll('.notification-badge').forEach(badge => {
+                badge.textContent = count;
+                badge.style.display = count > 0 ? 'flex' : 'none';
+            });
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Highlight current page in navigation
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Initialize real-time updates
+            if (authToken) {
+                initializeRealTimeUpdates();
+            }
+        });
+        
+        // Utility functions
+        function showLoading(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = '<div class="loading-spinner"></div> Loading...';
+            }
+        }
+        
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            const container = document.querySelector('.main-content');
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+        
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        function calculateAge(birthDate) {
+            const today = new Date();
+            const birth = new Date(birthDate);
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+
+        // === PATIENT MANAGEMENT FUNCTIONS ===
+        
+        async function saveNewPatient() {
+            const form = document.getElementById('newPatientForm');
+            if (!form) {
+                showAlert('Patient form not found', 'error');
+                return;
+            }
+
+            const formData = new FormData(form);
+            const patientData = {
+                first_name: formData.get('firstName'),
+                last_name: formData.get('lastName'),
+                date_of_birth: formData.get('dateOfBirth'),
+                gender: formData.get('gender'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                address: formData.get('address'),
+                emergency_contact: formData.get('emergencyContact'),
+                emergency_phone: formData.get('emergencyPhone'),
+                medical_record_number: formData.get('mrn') || `MRN${Date.now()}`
+            };
+
+            try {
+                const response = await fetch('/api/patients', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    },
+                    body: JSON.stringify(patientData)
+                });
+
+                if (response.ok) {
+                    const patient = await response.json();
+                    showAlert(`Patient ${patient.first_name} ${patient.last_name} created successfully`, 'success');
+                    form.reset();
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('newPatientModal'));
+                    if (modal) modal.hide();
+                    // Refresh patient list if on patients page
+                    if (window.location.pathname.includes('/patients')) {
+                        setTimeout(() => window.location.reload(), 1000);
+                    }
+                } else {
+                    const error = await response.json();
+                    showAlert(error.detail || 'Failed to create patient', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error: ' + error.message, 'error');
+            }
+        }
+
+        async function editPatient(patientId) {
+            try {
+                const response = await fetch(`/api/patients/${patientId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const patient = await response.json();
+                    // Populate edit form with patient data
+                    showEditPatientModal(patient);
+                } else {
+                    showAlert('Failed to load patient details', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error: ' + error.message, 'error');
+            }
+        }
+
+        async function viewPatient(patientId) {
+            try {
+                const response = await fetch(`/api/patients/${patientId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const patient = await response.json();
+                    showPatientDetailsModal(patient);
+                } else {
+                    showAlert('Failed to load patient details', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error: ' + error.message, 'error');
+            }
+        }
+
+        async function searchPatients() {
+            const searchInput = document.querySelector('#patientSearch');
+            if (!searchInput) return;
+
+            const query = searchInput.value.trim();
+            if (!query) {
+                showAlert('Please enter a search term', 'warning');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/patients/search?q=${encodeURIComponent(query)}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displaySearchResults(data.patients);
+                } else {
+                    showAlert('Search failed', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error: ' + error.message, 'error');
+            }
+        }
+
+        async function exportPatients() {
+            try {
+                const response = await fetch('/api/patients/export', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'patients_export.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    showAlert('Patients exported successfully', 'success');
+                } else {
+                    showAlert('Export failed', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error: ' + error.message, 'error');
+            }
+        }
+
+        function importPatients() {
+            showAlert('Import functionality will be implemented with file upload handling', 'info');
+        }
+
+        // === DASHBOARD QUICK ACTIONS ===
+
+        function openNewPatientModal() {
+            const modal = new bootstrap.Modal(document.getElementById('newPatientModal'));
+            modal.show();
+        }
+
+        async function createClinicalNote() {
+            // Navigate to clinical notes or show modal
+            showAlert('Opening clinical notes interface...', 'info');
+            setTimeout(() => {
+                window.location.href = '/clinical';
+            }, 1000);
+        }
+
+        async function runDiagnostics() {
+            showAlert('Starting diagnostic tools...', 'info');
+            setTimeout(() => {
+                window.location.href = '/clinical';
+            }, 1000);
+        }
+
+        async function generateReport() {
+            try {
+                const response = await fetch('/api/reports/clinical', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    showAlert('Report generated successfully', 'success');
+                    // Display report or download
+                } else {
+                    showAlert('Failed to generate report', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error: ' + error.message, 'error');
+            }
+        }
+
+        function uploadDocument() {
+            showAlert('Document upload interface will open...', 'info');
+            // Create file input or show upload modal
+        }
+
+        async function emergency() {
+            const confirmed = confirm('ACTIVATE EMERGENCY PROTOCOL?\n\nThis will alert all emergency response teams.');
+            if (confirmed) {
+                try {
+                    const response = await fetch('/api/emergency/alert', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                        },
+                        body: JSON.stringify({
+                            type: 'Code Blue',
+                            message: 'Emergency protocol activated from dashboard',
+                            location: 'Dashboard'
+                        })
+                    });
+
+                    if (response.ok) {
+                        showAlert('🚨 EMERGENCY PROTOCOL ACTIVATED', 'error');
+                    } else {
+                        showAlert('Failed to activate emergency protocol', 'error');
+                    }
+                } catch (error) {
+                    showAlert('Emergency system error: ' + error.message, 'error');
+                }
+            }
+        }
+
+        function refreshActivity() {
+            showAlert('Refreshing activity feed...', 'info');
+            // Reload activity data
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        }
+
+        // === HELPER FUNCTIONS ===
+
+        function showEditPatientModal(patient) {
+            // Create or show edit modal with patient data
+            showAlert(`Edit patient: ${patient.first_name} ${patient.last_name}`, 'info');
+        }
+
+        function showPatientDetailsModal(patient) {
+            // Create or show patient details modal
+            showAlert(`Viewing: ${patient.first_name} ${patient.last_name}`, 'info');
+        }
+
+        function displaySearchResults(patients) {
+            // Display search results in table or cards
+            showAlert(`Found ${patients.length} patients`, 'success');
+        }
+
+        function applyFilters() {
+            showAlert('Applying filters...', 'info');
+            // Apply selected filters to patient list
+        }
+
+        function addNote(patientId) {
+            showAlert(`Adding note for patient ${patientId}`, 'info');
+            // Show note creation interface
+        }
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

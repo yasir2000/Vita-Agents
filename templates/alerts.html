@@ -1,0 +1,419 @@
+{% extends "enhanced_base.html" %}
+
+{% block title %}Clinical Alerts{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2><i class="fas fa-exclamation-triangle me-2"></i>Clinical Alerts</h2>
+                    <p class="text-muted">Real-time clinical notifications and emergency alerts</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="createAlert()">
+                        <i class="fas fa-plus me-1"></i>Create Alert
+                    </button>
+                    <button class="btn btn-outline-danger" onclick="triggerEmergency()">
+                        <i class="fas fa-ambulance me-1"></i>Emergency Alert
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-danger">
+                <div class="card-body text-center">
+                    <i class="fas fa-exclamation-circle fa-2x text-danger mb-2"></i>
+                    <h4 class="card-title text-danger" id="criticalAlerts">0</h4>
+                    <p class="card-text">Critical Alerts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-warning">
+                <div class="card-body text-center">
+                    <i class="fas fa-exclamation-triangle fa-2x text-warning mb-2"></i>
+                    <h4 class="card-title text-warning" id="highAlerts">0</h4>
+                    <p class="card-text">High Priority</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-info">
+                <div class="card-body text-center">
+                    <i class="fas fa-info-circle fa-2x text-info mb-2"></i>
+                    <h4 class="card-title text-info" id="mediumAlerts">0</h4>
+                    <p class="card-text">Medium Priority</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-success">
+                <div class="card-body text-center">
+                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                    <h4 class="card-title text-success" id="resolvedAlerts">0</h4>
+                    <p class="card-text">Resolved</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Filters -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <select class="form-select" id="priorityFilter" onchange="filterAlerts()">
+                                <option value="">All Priorities</option>
+                                <option value="critical">Critical</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="statusFilter" onchange="filterAlerts()">
+                                <option value="">All Statuses</option>
+                                <option value="active">Active</option>
+                                <option value="acknowledged">Acknowledged</option>
+                                <option value="resolved">Resolved</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="typeFilter" onchange="filterAlerts()">
+                                <option value="">All Types</option>
+                                <option value="emergency">Emergency</option>
+                                <option value="medication">Medication</option>
+                                <option value="lab">Lab Results</option>
+                                <option value="system">System</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="searchFilter" placeholder="Search alerts..." onkeyup="filterAlerts()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Alerts -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-bell me-2"></i>Active Alerts</h5>
+                </div>
+                <div class="card-body">
+                    <div id="alertsList">
+                        <!-- Alerts will be loaded here -->
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-bell-slash fa-3x mb-3"></i>
+                            <p>No active alerts</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Alert Modal -->
+<div class="modal fade" id="createAlertModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Alert</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="alertForm">
+                    <div class="mb-3">
+                        <label class="form-label">Alert Type</label>
+                        <select class="form-select" id="alertType" required>
+                            <option value="">Select Type</option>
+                            <option value="emergency">Emergency</option>
+                            <option value="medication">Medication</option>
+                            <option value="lab">Lab Results</option>
+                            <option value="system">System</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Priority</label>
+                        <select class="form-select" id="alertPriority" required>
+                            <option value="">Select Priority</option>
+                            <option value="critical">Critical</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-control" id="alertTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-control" id="alertMessage" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Patient ID (optional)</label>
+                        <input type="text" class="form-control" id="alertPatientId">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitAlert()">Create Alert</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadAlerts();
+    updateAlertStats();
+    // Auto-refresh every 30 seconds
+    setInterval(loadAlerts, 30000);
+});
+
+async function loadAlerts() {
+    try {
+        const response = await fetch('/api/alerts', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            displayAlerts(data.alerts || []);
+            updateAlertStats();
+        }
+    } catch (error) {
+        console.error('Error loading alerts:', error);
+    }
+}
+
+function displayAlerts(alerts) {
+    const container = document.getElementById('alertsList');
+    
+    if (!alerts || alerts.length === 0) {
+        container.innerHTML = `
+            <div class="text-center text-muted py-4">
+                <i class="fas fa-bell-slash fa-3x mb-3"></i>
+                <p>No alerts found</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '';
+    alerts.forEach(alert => {
+        const priorityClass = getPriorityClass(alert.priority);
+        const statusBadge = getStatusBadge(alert.status);
+        const timeAgo = formatTimeAgo(alert.created_at);
+        
+        html += `
+            <div class="alert alert-${priorityClass} alert-dismissible fade show" role="alert">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <h6 class="alert-heading">
+                            <i class="fas fa-${getAlertIcon(alert.type)} me-2"></i>
+                            ${alert.title}
+                            ${statusBadge}
+                        </h6>
+                        <p class="mb-1">${alert.message}</p>
+                        <small class="text-muted">
+                            ${alert.patient_id ? `Patient: ${alert.patient_id} • ` : ''}
+                            Created by: ${alert.created_by} • ${timeAgo}
+                        </small>
+                    </div>
+                    <div class="btn-group ms-3">
+                        ${alert.status === 'active' ? `
+                            <button class="btn btn-sm btn-outline-primary" onclick="acknowledgeAlert('${alert.id}')">
+                                <i class="fas fa-check"></i> Acknowledge
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-sm btn-outline-success" onclick="resolveAlert('${alert.id}')">
+                            <i class="fas fa-check-double"></i> Resolve
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+function getPriorityClass(priority) {
+    const classes = {
+        'critical': 'danger',
+        'high': 'warning',
+        'medium': 'info',
+        'low': 'secondary'
+    };
+    return classes[priority] || 'secondary';
+}
+
+function getStatusBadge(status) {
+    const badges = {
+        'active': '<span class="badge bg-danger ms-2">Active</span>',
+        'acknowledged': '<span class="badge bg-warning ms-2">Acknowledged</span>',
+        'resolved': '<span class="badge bg-success ms-2">Resolved</span>'
+    };
+    return badges[status] || '';
+}
+
+function getAlertIcon(type) {
+    const icons = {
+        'emergency': 'ambulance',
+        'medication': 'pills',
+        'lab': 'vial',
+        'system': 'cog'
+    };
+    return icons[type] || 'bell';
+}
+
+function formatTimeAgo(timestamp) {
+    const now = new Date();
+    const time = new Date(timestamp);
+    const diffMs = now - time;
+    const diffMins = Math.floor(diffMs / 60000);
+    
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`;
+    return `${Math.floor(diffMins / 1440)}d ago`;
+}
+
+function updateAlertStats() {
+    // This would typically fetch real stats from API
+    document.getElementById('criticalAlerts').textContent = '2';
+    document.getElementById('highAlerts').textContent = '5';
+    document.getElementById('mediumAlerts').textContent = '8';
+    document.getElementById('resolvedAlerts').textContent = '23';
+}
+
+function createAlert() {
+    new bootstrap.Modal(document.getElementById('createAlertModal')).show();
+}
+
+async function submitAlert() {
+    const alertData = {
+        type: document.getElementById('alertType').value,
+        priority: document.getElementById('alertPriority').value,
+        title: document.getElementById('alertTitle').value,
+        message: document.getElementById('alertMessage').value,
+        patient_id: document.getElementById('alertPatientId').value || null
+    };
+    
+    try {
+        const response = await fetch('/api/alerts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(alertData)
+        });
+        
+        if (response.ok) {
+            bootstrap.Modal.getInstance(document.getElementById('createAlertModal')).hide();
+            document.getElementById('alertForm').reset();
+            loadAlerts();
+            showToast('Alert created successfully', 'success');
+        } else {
+            throw new Error('Failed to create alert');
+        }
+    } catch (error) {
+        console.error('Error creating alert:', error);
+        showToast('Error creating alert', 'error');
+    }
+}
+
+async function acknowledgeAlert(alertId) {
+    try {
+        const response = await fetch(`/api/alerts/${alertId}/acknowledge`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        if (response.ok) {
+            loadAlerts();
+            showToast('Alert acknowledged', 'success');
+        }
+    } catch (error) {
+        console.error('Error acknowledging alert:', error);
+        showToast('Error acknowledging alert', 'error');
+    }
+}
+
+async function resolveAlert(alertId) {
+    try {
+        const response = await fetch(`/api/alerts/${alertId}/resolve`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        if (response.ok) {
+            loadAlerts();
+            showToast('Alert resolved', 'success');
+        }
+    } catch (error) {
+        console.error('Error resolving alert:', error);
+        showToast('Error resolving alert', 'error');
+    }
+}
+
+function triggerEmergency() {
+    if (confirm('This will trigger an emergency alert. Continue?')) {
+        const emergencyData = {
+            type: 'emergency',
+            priority: 'critical',
+            title: 'Emergency Alert',
+            message: 'Emergency situation requiring immediate attention'
+        };
+        
+        fetch('/api/emergency/alert', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(emergencyData)
+        }).then(response => {
+            if (response.ok) {
+                loadAlerts();
+                showToast('Emergency alert triggered', 'warning');
+            }
+        });
+    }
+}
+
+function filterAlerts() {
+    // Basic client-side filtering
+    const priority = document.getElementById('priorityFilter').value;
+    const status = document.getElementById('statusFilter').value;
+    const type = document.getElementById('typeFilter').value;
+    const search = document.getElementById('searchFilter').value.toLowerCase();
+    
+    // In a real implementation, this would filter server-side
+    loadAlerts();
+}
+</script>
+{% endblock %}

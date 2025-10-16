@@ -1,0 +1,485 @@
+{% extends "enhanced_base.html" %}
+
+{% block title %}Healthcare Analytics{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2><i class="fas fa-chart-line me-2"></i>Healthcare Analytics</h2>
+                    <p class="text-muted">Advanced analytics and business intelligence</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="generateReport()">
+                        <i class="fas fa-chart-bar me-1"></i>Generate Report
+                    </button>
+                    <button class="btn btn-outline-primary" onclick="exportData()">
+                        <i class="fas fa-download me-1"></i>Export Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">1,247</h4>
+                            <p class="card-text">Total Patients</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <small><i class="fas fa-arrow-up"></i> 12% from last month</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">89.2%</h4>
+                            <p class="card-text">Patient Satisfaction</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-heart fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <small><i class="fas fa-arrow-up"></i> 3.2% from last quarter</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">15.3m</h4>
+                            <p class="card-text">Avg Wait Time</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <small><i class="fas fa-arrow-down"></i> 2.1m from last week</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">96.8%</h4>
+                            <p class="card-text">System Uptime</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-server fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <small><i class="fas fa-arrow-up"></i> 1.2% from last month</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-area me-2"></i>Patient Volume Trends</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="patientVolumeChart" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-pie me-2"></i>Department Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="departmentChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clinical Metrics -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-heartbeat me-2"></i>Clinical Quality Indicators</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Medication Adherence</span>
+                            <span class="fw-bold text-success">92%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" style="width: 92%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Readmission Rate</span>
+                            <span class="fw-bold text-warning">8.5%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" style="width: 8.5%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Infection Control</span>
+                            <span class="fw-bold text-success">96.2%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" style="width: 96.2%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Safety Incidents</span>
+                            <span class="fw-bold text-danger">2.1%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-danger" style="width: 2.1%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-user-md me-2"></i>Provider Performance</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Provider</th>
+                                    <th>Patients</th>
+                                    <th>Satisfaction</th>
+                                    <th>Efficiency</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Dr. Sarah Chen</td>
+                                    <td>145</td>
+                                    <td><span class="badge bg-success">4.8★</span></td>
+                                    <td><span class="badge bg-success">95%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Dr. Michael Rodriguez</td>
+                                    <td>132</td>
+                                    <td><span class="badge bg-success">4.7★</span></td>
+                                    <td><span class="badge bg-warning">87%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Dr. Emily Thompson</td>
+                                    <td>158</td>
+                                    <td><span class="badge bg-success">4.9★</span></td>
+                                    <td><span class="badge bg-success">92%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Dr. David Kim</td>
+                                    <td>123</td>
+                                    <td><span class="badge bg-warning">4.2★</span></td>
+                                    <td><span class="badge bg-success">89%</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Operational Analytics -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-cogs me-2"></i>Operational Analytics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <canvas id="bedOccupancyChart" width="150" height="150"></canvas>
+                                <h6 class="mt-2">Bed Occupancy</h6>
+                                <p class="text-muted">85.7% Current</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <canvas id="staffUtilizationChart" width="150" height="150"></canvas>
+                                <h6 class="mt-2">Staff Utilization</h6>
+                                <p class="text-muted">78.3% Current</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <canvas id="equipmentChart" width="150" height="150"></canvas>
+                                <h6 class="mt-2">Equipment Usage</h6>
+                                <p class="text-muted">92.1% Available</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <canvas id="costAnalysisChart" width="150" height="150"></canvas>
+                                <h6 class="mt-2">Cost Analysis</h6>
+                                <p class="text-muted">Budget vs Actual</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Reports -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-file-alt me-2"></i>Recent Reports</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Report Name</th>
+                                    <th>Type</th>
+                                    <th>Generated</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Monthly Quality Report</td>
+                                    <td><span class="badge bg-primary">Quality</span></td>
+                                    <td>2 hours ago</td>
+                                    <td><span class="badge bg-success">Ready</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="downloadReport('quality-monthly')">
+                                            <i class="fas fa-download"></i> Download
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Financial Performance</td>
+                                    <td><span class="badge bg-warning">Financial</span></td>
+                                    <td>5 hours ago</td>
+                                    <td><span class="badge bg-success">Ready</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="downloadReport('financial')">
+                                            <i class="fas fa-download"></i> Download
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Patient Safety Metrics</td>
+                                    <td><span class="badge bg-danger">Safety</span></td>
+                                    <td>1 day ago</td>
+                                    <td><span class="badge bg-info">Processing</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-secondary" disabled>
+                                            <i class="fas fa-clock"></i> Processing
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Operational Efficiency</td>
+                                    <td><span class="badge bg-info">Operations</span></td>
+                                    <td>2 days ago</td>
+                                    <td><span class="badge bg-success">Ready</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="downloadReport('operations')">
+                                            <i class="fas fa-download"></i> Download
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+});
+
+function initializeCharts() {
+    // Patient Volume Trend Chart
+    const patientVolumeCtx = document.getElementById('patientVolumeChart').getContext('2d');
+    new Chart(patientVolumeCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+            datasets: [{
+                label: 'Patient Visits',
+                data: [1200, 1350, 1280, 1450, 1380, 1520, 1480, 1600, 1550, 1620],
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Department Distribution Chart
+    const departmentCtx = document.getElementById('departmentChart').getContext('2d');
+    new Chart(departmentCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Emergency', 'Internal Medicine', 'Surgery', 'Pediatrics', 'Cardiology'],
+            datasets: [{
+                data: [30, 25, 20, 15, 10],
+                backgroundColor: ['#dc3545', '#007bff', '#28a745', '#ffc107', '#17a2b8']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    // Bed Occupancy Chart
+    const bedOccupancyCtx = document.getElementById('bedOccupancyChart').getContext('2d');
+    new Chart(bedOccupancyCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Occupied', 'Available'],
+            datasets: [{
+                data: [85.7, 14.3],
+                backgroundColor: ['#dc3545', '#e9ecef']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%'
+        }
+    });
+
+    // Staff Utilization Chart
+    const staffUtilizationCtx = document.getElementById('staffUtilizationChart').getContext('2d');
+    new Chart(staffUtilizationCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Utilized', 'Available'],
+            datasets: [{
+                data: [78.3, 21.7],
+                backgroundColor: ['#ffc107', '#e9ecef']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%'
+        }
+    });
+
+    // Equipment Usage Chart
+    const equipmentCtx = document.getElementById('equipmentChart').getContext('2d');
+    new Chart(equipmentCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Available', 'In Use'],
+            datasets: [{
+                data: [92.1, 7.9],
+                backgroundColor: ['#28a745', '#e9ecef']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%'
+        }
+    });
+
+    // Cost Analysis Chart
+    const costAnalysisCtx = document.getElementById('costAnalysisChart').getContext('2d');
+    new Chart(costAnalysisCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Budget', 'Actual'],
+            datasets: [{
+                data: [60, 40],
+                backgroundColor: ['#17a2b8', '#6c757d']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%'
+        }
+    });
+}
+
+function generateReport() {
+    showToast('Generating custom report...', 'info');
+    // Simulate report generation
+    setTimeout(() => {
+        showToast('Report generated successfully!', 'success');
+    }, 2000);
+}
+
+function exportData() {
+    showToast('Exporting analytics data...', 'info');
+    // Simulate data export
+    setTimeout(() => {
+        showToast('Data exported successfully!', 'success');
+    }, 1500);
+}
+
+function downloadReport(reportType) {
+    showToast(`Downloading ${reportType} report...`, 'info');
+    // In a real implementation, this would trigger a file download
+    setTimeout(() => {
+        showToast('Report downloaded successfully!', 'success');
+    }, 1000);
+}
+</script>
+{% endblock %}
