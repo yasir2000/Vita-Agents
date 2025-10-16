@@ -1,12 +1,38 @@
-# Vita Agents: Multi-Agent AI for Healthcare Interoperability
+# 🏥 Vita Agents: Multi-Agent AI for Healthcare Interoperability
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-yellow.svg)](https://opensource.org/licenses/Apache-2.0)
 [![HIPAA Compliant](https://img.shields.io/badge/HIPAA-Compliant-green.svg)](https://www.hhs.gov/hipaa/)
-[![FHIR R4](https://img.shields.io/badge/FHIR-R4-orange.svg)](https://hl7.org/fhir/R4/)
+[![FHIR R4/R5](https://img.shields.io/badge/FHIR-R4%2FR5-orange.svg)](https://hl7.org/fhir/)
 [![Docker Ready](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
+[![GitHub release](https://img.shields.io/github/release/yasir2000/vita-agents.svg)](https://GitHub.com/yasir2000/vita-agents/releases/)
+[![GitHub stars](https://img.shields.io/github/stars/yasir2000/vita-agents.svg?style=social&label=Star)](https://GitHub.com/yasir2000/vita-agents/stargazers/)
 
-An open-source framework that leverages multi-agent AI systems to streamline healthcare data interoperability, focusing on FHIR (Fast Healthcare Interoperability Resources), HL7 standards, and Electronic Health Records (EHR) integration.
+> **🚀 Latest Release v2.1.0**: Multi-Engine FHIR Support with 11+ Open Source FHIR Servers!
+
+An enterprise-grade, open-source framework that leverages multi-agent AI systems to streamline healthcare data interoperability. Supporting FHIR (Fast Healthcare Interoperability Resources), HL7 standards, and Electronic Health Records (EHR) integration with **11+ open source FHIR engines** including HAPI FHIR, IBM FHIR, Medplum, and more.
+
+## 🌟 What's New in v2.1.0
+
+### 🔥 **Multi-Engine FHIR Support** 
+Connect to **11+ open source FHIR servers simultaneously**:
+- **HAPI FHIR Server** (hapifhir.io) - Most popular implementation
+- **IBM FHIR Server** (github.com/IBM/FHIR) - Enterprise-grade
+- **Medplum FHIR Server** (medplum.com) - Modern cloud-native  
+- **Firely .NET SDK** (fire.ly) - Comprehensive .NET implementation
+- **Spark FHIR Server** - Open source by Firely
+- **LinuxForHealth FHIR Server** - IBM's healthcare platform
+- **Aidbox FHIR Platform** - Cloud-native FHIR
+- And 4+ more engines with extensible architecture
+
+### 🎯 **Key Features**
+- ⚡ **Parallel Operations**: Execute across multiple FHIR engines simultaneously  
+- 📊 **Performance Benchmarking**: Compare engines and identify optimal performance
+- 🔄 **Cross-Engine Validation**: Ensure FHIR compliance across implementations
+- 🚀 **Data Migration**: Seamlessly migrate between different FHIR engines
+- 🔐 **Multi-Auth Support**: OAuth2, SMART on FHIR, Basic Auth, Bearer tokens
+- 🎨 **Professional CLI**: Beautiful command-line interface with rich features
+- 🏥 **Production Ready**: Enterprise-grade with Docker, monitoring, and security
 
 ## 🐳 Docker Integration (New!)
 

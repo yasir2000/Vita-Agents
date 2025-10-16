@@ -1,14 +1,41 @@
 """
-Vita Agents: Multi-Agent AI Framework for Healthcare Interoperability
+🏥 Vita Agents: Multi-Agent AI for Healthcare Interoperability
 
-This package provides a comprehensive framework for building AI agents
-that can work with healthcare data standards including FHIR, HL7, and EHR systems.
+Enterprise-grade framework for building AI agents that work with healthcare data
+standards including FHIR, HL7, and EHR systems. Now with multi-engine FHIR support
+for 11+ open source FHIR servers.
+
+Key Features:
+- Multi-engine FHIR operations across 11+ servers
+- Advanced healthcare AI agent orchestration  
+- Production-ready Docker integration
+- HIPAA-compliant security and audit logging
+- Professional CLI and web portal interfaces
+- Real-time performance monitoring and analytics
 """
 
-__version__ = "0.1.0"
-__author__ = "Yasir"
-__email__ = "yasir@vita-agents.org"
-__license__ = "Apache 2.0"
+# Import version information
+from vita_agents.__version__ import (
+    __version__,
+    __version_info__,
+    __title__,
+    __description__,
+    __author__,
+    __author_email__,
+    __license__,
+    __copyright__,
+    __url__,
+    __build__,
+    __status__,
+    __api_version__,
+    __python_requires__,
+    __fhir_versions__,
+    __hl7_versions__,
+    __features__,
+    __release_notes__,
+    get_version_info,
+    print_version_info,
+)
 
 from vita_agents.core.orchestrator import AgentOrchestrator
 from vita_agents.agents.fhir_agent import FHIRAgent

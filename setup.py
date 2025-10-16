@@ -266,4 +266,3 @@ setup(
     maintainer="Vita Agents Team",
     maintainer_email="team@vita-agents.dev",
 )
-)
