@@ -1,0 +1,210 @@
+# Vita Agents Configuration
+
+# Database configuration
+database:
+  url: "postgresql://vita_app:vita_app_password@localhost:5432/vita_agents"
+  pool_size: 20
+  max_overflow: 10
+  echo: false
+
+# Redis configuration  
+redis:
+  url: "redis://localhost:6379/0"
+  prefix: "vita_agents"
+  max_connections: 20
+
+# Security configuration
+security:
+  jwt_secret: "your-jwt-secret-key-change-in-production"
+  jwt_expiration_minutes: 30
+  encryption_key: "your-encryption-key-32-chars-long"
+  encryption_salt: "your-encryption-salt-change-in-production"
+  hipaa_compliance: true
+  audit_log_enabled: true
+  data_retention_years: 7
+  session_timeout_minutes: 15
+  max_failed_login_attempts: 3
+  account_lockout_minutes: 30
+
+# API configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  cors_origins:
+    - "http://localhost:3000"
+    - "https://vita-agents.yourdomain.com"
+  cors_methods:
+    - "GET"
+    - "POST"
+    - "PUT"
+    - "DELETE"
+  rate_limit_per_minute: 100
+
+# Healthcare API configuration
+healthcare:
+  fhir_server_url: "https://r4.smarthealthit.org"
+  fhir_version: "R4"
+  hl7_version: "2.8"
+  
+  # EHR vendor configurations
+  ehr_vendors:
+    epic:
+      base_url: "https://fhir.epic.com/interconnect-fhir-oauth"
+      client_id: ""
+      client_secret: ""
+      
+    cerner:
+      base_url: "https://fhir-open.cerner.com"
+      client_id: ""
+      client_secret: ""
+
+# Agent configuration
+agents:
+  # FHIR Agent settings
+  fhir_agent:
+    enabled: true
+    max_concurrent_tasks: 10
+    timeout_seconds: 300
+    validation_level: "strict"
+    supported_versions: ["R4", "R5"]
+    
+  # HL7 Agent settings  
+  hl7_agent:
+    enabled: true
+    max_concurrent_tasks: 5
+    timeout_seconds: 180
+    supported_versions: ["2.5", "2.6", "2.8"]
+    enable_fhir_conversion: true
+    
+  # EHR Agent settings
+  ehr_agent:
+    enabled: true
+    max_concurrent_tasks: 3
+    timeout_seconds: 600
+    bulk_export_enabled: true
+    retry_attempts: 3
+    
+  # Clinical Decision Support Agent
+  clinical_decision_agent:
+    enabled: true
+    max_concurrent_tasks: 5
+    timeout_seconds: 300
+    enable_drug_interaction_checking: true
+    enable_allergy_screening: true
+    enable_care_recommendations: true
+    
+  # Data Harmonization Agent
+  data_harmonization_agent:
+    enabled: true
+    max_concurrent_tasks: 2
+    timeout_seconds: 900
+    conflict_resolution_strategy: "highest_confidence"
+    quality_threshold: 0.7
+
+# Workflow configuration
+workflows:
+  max_concurrent_executions: 50
+  default_timeout_minutes: 30
+  enable_workflow_persistence: true
+  
+  # Predefined workflows
+  patient_data_integration:
+    steps:
+      - agent: "hl7_agent"
+        action: "parse_message"
+      - agent: "fhir_agent" 
+        action: "validate_resource"
+      - agent: "ehr_agent"
+        action: "store_data"
+        
+  clinical_decision_support:
+    steps:
+      - agent: "fhir_agent"
+        action: "extract_patient_data"
+      - agent: "clinical_decision_agent"
+        action: "analyze_patient_data"
+      - agent: "ehr_agent"
+        action: "update_care_plan"
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "json"
+  
+  # Log destinations
+  handlers:
+    console:
+      enabled: true
+      level: "INFO"
+      
+    file:
+      enabled: true
+      level: "DEBUG"
+      path: "logs/vita-agents.log"
+      max_size_mb: 100
+      backup_count: 5
+      
+    audit:
+      enabled: true
+      level: "INFO"
+      path: "logs/audit.log"
+      max_size_mb: 500
+      backup_count: 10
+
+# Monitoring configuration
+monitoring:
+  metrics:
+    enabled: true
+    port: 9090
+    path: "/metrics"
+    
+  health_checks:
+    enabled: true
+    endpoint: "/health"
+    detailed_endpoint: "/health/detailed"
+    
+  tracing:
+    enabled: true
+    jaeger_endpoint: "http://localhost:14268"
+
+# Cache configuration
+cache:
+  enabled: true
+  default_ttl_seconds: 3600
+  
+  # Cache backends
+  backends:
+    redis:
+      enabled: true
+      key_prefix: "vita_cache:"
+      
+    memory:
+      enabled: true
+      max_size_mb: 512
+
+# File storage configuration
+storage:
+  type: "local"  # local, s3, azure, gcp
+  
+  local:
+    base_path: "data/uploads"
+    max_file_size_mb: 100
+    
+  s3:
+    bucket: "vita-agents-data"
+    region: "us-east-1"
+    access_key_id: ""
+    secret_access_key: ""
+
+# Development settings
+development:
+  debug: true
+  auto_reload: true
+  show_sql: false
+  
+  # Test data settings
+  test_data:
+    enabled: true
+    sample_patients: 100
+    sample_observations: 1000

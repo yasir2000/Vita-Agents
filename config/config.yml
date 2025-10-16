@@ -1,0 +1,72 @@
+# Vita Agents Configuration
+
+agents:
+  fhir_parser:
+    enabled: true
+    version: "R4"
+    validation_level: "strict"
+    supported_versions: ["DSTU2", "STU3", "R4", "R5"]
+    
+  hl7_translator:
+    enabled: true
+    supported_versions: ["2.3", "2.4", "2.5", "2.6", "2.8"]
+    default_version: "2.8"
+    terminology_mapping: true
+    
+  ehr_integration:
+    enabled: true
+    vendors: ["epic", "cerner", "allscripts"]
+    bulk_export: true
+    real_time_sync: false
+
+security:
+  encryption: true
+  hipaa_compliance: true
+  audit_logging: true
+  jwt_secret_key: "your-secret-key-here"
+  token_expire_minutes: 30
+
+database:
+  type: "postgresql"
+  host: "localhost"
+  port: 5432
+  name: "vita_agents"
+  user: "vita_user"
+  password: "vita_password"
+  pool_size: 10
+
+redis:
+  host: "localhost"
+  port: 6379
+  db: 0
+  prefix: "vita_agents"
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://localhost:8080"
+  
+monitoring:
+  prometheus_enabled: true
+  health_check_interval: 30
+  log_level: "INFO"
+
+healthcare:
+  fhir_server_url: "http://hapi.fhir.org/baseR4"
+  terminology_service_url: "https://tx.fhir.org"
+  snomed_ct_edition: "us"
+  icd10_version: "2024"
+
+workflows:
+  patient_data_integration:
+    description: "Integrate patient data from multiple sources"
+    timeout_seconds: 600
+    retry_attempts: 3
+  
+  hl7_to_fhir_conversion:
+    description: "Convert HL7 messages to FHIR resources"
+    timeout_seconds: 300
+    retry_attempts: 2

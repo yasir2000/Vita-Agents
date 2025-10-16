@@ -1,0 +1,62 @@
+# Example workflow: EHR Bulk Export
+id: "ehr-bulk-export"
+name: "EHR Bulk Data Export"
+description: "Export patient data from EHR system and process it"
+timeout_seconds: 1800
+
+steps:
+  - id: "connect-ehr"
+    agent_id: "ehr-agent"
+    task_type: "connect_ehr"
+    parameters:
+      vendor: "{{input.ehr_vendor}}"
+      connection_config: "{{input.connection_config}}"
+      test_connection: true
+    dependencies: []
+    timeout_seconds: 120
+    
+  - id: "initiate-bulk-export"
+    agent_id: "ehr-agent"
+    task_type: "bulk_export"
+    parameters:
+      connection_id: "{{data['connect-ehr']['connection_id']}}"
+      export_request:
+        resource_types: ["Patient", "Observation", "Condition", "MedicationRequest"]
+        export_format: "ndjson"
+        since: "{{input.since_date}}"
+    dependencies: ["connect-ehr"]
+    timeout_seconds: 180
+    
+  - id: "check-export-status"
+    agent_id: "ehr-agent"
+    task_type: "check_export_status"
+    parameters:
+      connection_id: "{{data['connect-ehr']['connection_id']}}"
+      export_id: "{{data['initiate-bulk-export']['export_id']}}"
+      status_url: "{{data['initiate-bulk-export']['status_url']}}"
+    dependencies: ["initiate-bulk-export"]
+    timeout_seconds: 60
+    retry_attempts: 5
+    
+  - id: "validate-exported-data"
+    agent_id: "fhir-agent"
+    task_type: "validate_fhir_bundle"
+    parameters:
+      bundle: "{{data['check-export-status']['export_data']}}"
+    dependencies: ["check-export-status"]
+    timeout_seconds: 300
+    condition: "data['check-export-status']['status'] == 'completed'"
+    
+  - id: "quality-assessment"
+    agent_id: "fhir-agent"
+    task_type: "quality_check"
+    parameters:
+      resources: "{{data['check-export-status']['export_data']['entry']}}"
+      quality_rules: ["completeness", "consistency", "validity"]
+    dependencies: ["validate-exported-data"]
+    timeout_seconds: 600
+
+metadata:
+  created_by: "vita-agents"
+  version: "1.0"
+  tags: ["ehr", "bulk-export", "data-validation"]

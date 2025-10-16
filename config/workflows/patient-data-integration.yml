@@ -1,0 +1,59 @@
+# Example workflow: Patient Data Integration
+id: "patient-data-integration"
+name: "Patient Data Integration"
+description: "Integrate and harmonize patient data from multiple healthcare sources"
+timeout_seconds: 600
+
+steps:
+  - id: "validate-hl7"
+    agent_id: "hl7-agent"
+    task_type: "validate_hl7_message"
+    parameters:
+      message: "{{input.hl7_message}}"
+      version: "2.8"
+    dependencies: []
+    timeout_seconds: 60
+    
+  - id: "convert-hl7-to-fhir"
+    agent_id: "hl7-agent"
+    task_type: "hl7_to_fhir"
+    parameters:
+      hl7_message: "{{input.hl7_message}}"
+      target_resources: ["Patient", "Observation", "Encounter"]
+    dependencies: ["validate-hl7"]
+    timeout_seconds: 120
+    condition: "data['validate-hl7']['validation_result']['is_valid']"
+    
+  - id: "validate-fhir-resources"
+    agent_id: "fhir-agent"
+    task_type: "validate_fhir_bundle"
+    parameters:
+      bundle:
+        resourceType: "Bundle"
+        type: "collection"
+        entry: "{{data['convert-hl7-to-fhir']['conversion_result']['fhir_resources']}}"
+    dependencies: ["convert-hl7-to-fhir"]
+    timeout_seconds: 90
+    
+  - id: "quality-check"
+    agent_id: "fhir-agent"
+    task_type: "quality_check"
+    parameters:
+      resources: "{{data['convert-hl7-to-fhir']['conversion_result']['fhir_resources']}}"
+      quality_rules: ["completeness", "consistency", "validity"]
+    dependencies: ["validate-fhir-resources"]
+    timeout_seconds: 120
+    
+  - id: "extract-clinical-data"
+    agent_id: "fhir-agent"
+    task_type: "extract_clinical_data"
+    parameters:
+      resources: "{{data['convert-hl7-to-fhir']['conversion_result']['fhir_resources']}}"
+      extraction_type: "comprehensive"
+    dependencies: ["quality-check"]
+    timeout_seconds: 90
+
+metadata:
+  created_by: "vita-agents"
+  version: "1.0"
+  tags: ["integration", "hl7", "fhir", "patient-data"]
