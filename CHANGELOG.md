@@ -46,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Rich terminal UI with tables and progress bars
   - Server template management and connection testing
 
-- **HMCP - Healthcare Multi-agent Communication Protocol** 
+- **HMCP - Healthcare Model Context Protocol** 
   - Complete protocol implementation (`vita_agents/protocols/hmcp.py`)
   - Healthcare agent with clinical context awareness (`vita_agents/agents/hmcp_agent.py`)
   - Interactive CLI for healthcare agent management (`vita_agents/cli/hmcp_cli.py`)

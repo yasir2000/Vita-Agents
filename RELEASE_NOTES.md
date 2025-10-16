@@ -13,7 +13,7 @@
 ### 🚀 Multi-Engine FHIR Support
 We've added comprehensive support for **11+ open source FHIR engines**, making Vita Agents the most versatile FHIR integration platform available.
 
-### 🏥 HMCP - Healthcare Multi-agent Communication Protocol (NEW!)
+### 🏥 HMCP - Healthcare Model Context Protocol (NEW!)
 Introducing a revolutionary communication protocol specifically designed for healthcare AI agents, enabling sophisticated clinical workflows, emergency responses, and care coordination with full HIPAA compliance.
 
 #### Supported FHIR Engines:

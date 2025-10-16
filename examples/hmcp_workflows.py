@@ -3,7 +3,7 @@
 HMCP Healthcare Workflow Examples
 
 Demonstrates common healthcare multi-agent workflow patterns using the
-Healthcare Multi-agent Communication Protocol (HMCP) in Vita Agents.
+Healthcare Model Context Protocol (HMCP) in Vita Agents.
 """
 
 import asyncio

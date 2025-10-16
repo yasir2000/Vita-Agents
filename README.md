@@ -10,7 +10,7 @@
 
 > **🚀 Latest Release v2.1.0**: Multi-Engine FHIR Support + HMCP Healthcare Agent Communication!
 
-An enterprise-grade, open-source framework that leverages multi-agent AI systems to streamline healthcare data interoperability. Supporting FHIR (Fast Healthcare Interoperability Resources), HL7 standards, Electronic Health Records (EHR) integration with **11+ open source FHIR engines**, and now featuring the revolutionary **HMCP (Healthcare Multi-agent Communication Protocol)** for seamless healthcare AI agent coordination.
+An enterprise-grade, open-source framework that leverages multi-agent AI systems to streamline healthcare data interoperability. Supporting FHIR (Fast Healthcare Interoperability Resources), HL7 standards, Electronic Health Records (EHR) integration with **11+ open source FHIR engines**, and now featuring the revolutionary **HMCP (Healthcare Model Context Protocol)** for seamless healthcare AI agent coordination.
 
 ## 🌟 What's New in v2.1.0
 
