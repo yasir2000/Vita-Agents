@@ -1,0 +1,540 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v2.1.0)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: read
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12']
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: vita_agents_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        pip install pytest pytest-cov pytest-asyncio
+
+    - name: Set up environment variables
+      run: |
+        echo "VITA_DB_URL=postgresql://postgres:postgres@localhost:5432/vita_agents_test" >> $GITHUB_ENV
+        echo "VITA_REDIS_URL=redis://localhost:6379/0" >> $GITHUB_ENV
+        echo "VITA_SECRET_KEY=test-secret-key-for-github-actions" >> $GITHUB_ENV
+        echo "VITA_ENVIRONMENT=testing" >> $GITHUB_ENV
+
+    - name: Run unit tests
+      run: |
+        pytest tests/unit/ -v --cov=vita_agents --cov-report=xml --cov-report=html
+
+    - name: Run integration tests
+      run: |
+        pytest tests/integration/ -v --timeout=300
+
+    - name: Run FHIR engines tests
+      run: |
+        pytest tests/fhir_engines/ -v --timeout=300
+
+    - name: Run compliance tests
+      run: |
+        pytest tests/compliance/ -v
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install security tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit safety semgrep
+
+    - name: Run Bandit security scan
+      run: |
+        bandit -r vita_agents/ -f json -o bandit-report.json || true
+        bandit -r vita_agents/ -f txt
+
+    - name: Run Safety check
+      run: |
+        safety check --json --output safety-report.json || true
+        safety check
+
+    - name: Run Semgrep scan
+      run: |
+        semgrep --config=auto vita_agents/ --json --output=semgrep-report.json || true
+        semgrep --config=auto vita_agents/
+
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+          semgrep-report.json
+
+  build:
+    name: Build Package
+    runs-on: ubuntu-latest
+    needs: [test, security-scan]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine wheel setuptools
+
+    - name: Extract version from tag
+      id: version
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          VERSION=${GITHUB_REF#refs/tags/}
+        fi
+        echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        echo "clean_version=${VERSION#v}" >> $GITHUB_OUTPUT
+
+    - name: Update version in setup.py
+      run: |
+        sed -i "s/version='.*'/version='${{ steps.version.outputs.clean_version }}'/" setup.py
+
+    - name: Build package
+      run: |
+        python -m build
+
+    - name: Check package
+      run: |
+        twine check dist/*
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist
+        path: dist/
+
+  docker:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: [test, security-scan]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./docker/Dockerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        platforms: linux/amd64,linux/arm64
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [test, security-scan, build, docker]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Extract version from tag
+      id: version
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          VERSION=${GITHUB_REF#refs/tags/}
+        fi
+        echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        echo "clean_version=${VERSION#v}" >> $GITHUB_OUTPUT
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: dist
+        path: dist/
+
+    - name: Generate release notes
+      id: release_notes
+      run: |
+        # Extract release notes from RELEASE_NOTES.md
+        VERSION="${{ steps.version.outputs.clean_version }}"
+        
+        # Create release notes file
+        cat > release_notes.md << EOF
+        # Vita Agents ${{ steps.version.outputs.version }}
+        
+        ## 🚀 What's New
+        
+        This release includes the latest features and improvements to the Vita Agents healthcare interoperability platform.
+        
+        ### Key Features
+        - Multi-engine FHIR support for 11+ open source FHIR servers
+        - Enhanced healthcare portal with modern UI
+        - Professional CLI interface for FHIR engine management
+        - Cross-engine validation and performance benchmarking
+        - Data migration tools between different FHIR engines
+        - OAuth2 and SMART on FHIR authentication support
+        
+        ### Docker Images
+        - \`ghcr.io/yasir2000/vita-agents:${{ steps.version.outputs.clean_version }}\`
+        - \`ghcr.io/yasir2000/vita-agents:latest\`
+        
+        ### Installation
+        \`\`\`bash
+        # Install from PyPI
+        pip install vita-agents==${{ steps.version.outputs.clean_version }}
+        
+        # Or install with FHIR engines support
+        pip install vita-agents[fhir-engines]==${{ steps.version.outputs.clean_version }}
+        
+        # Docker
+        docker pull ghcr.io/yasir2000/vita-agents:${{ steps.version.outputs.clean_version }}
+        \`\`\`
+        
+        For detailed changes, see [CHANGELOG.md](https://github.com/yasir2000/vita-agents/blob/main/CHANGELOG.md).
+        EOF
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.version.outputs.version }}
+        name: Vita Agents ${{ steps.version.outputs.version }}
+        body_path: release_notes.md
+        draft: false
+        prerelease: ${{ github.event.inputs.prerelease || false }}
+        files: |
+          dist/*
+          CHANGELOG.md
+          RELEASE_NOTES.md
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-pypi:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    needs: [create-release]
+    if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'rc') && !contains(github.ref, 'beta') && !contains(github.ref, 'alpha')
+    
+    environment:
+      name: pypi
+      url: https://pypi.org/p/vita-agents
+    
+    permissions:
+      id-token: write
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: dist
+        path: dist/
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
+        verbose: true
+
+  publish-test-pypi:
+    name: Publish to Test PyPI
+    runs-on: ubuntu-latest
+    needs: [create-release]
+    if: contains(github.ref, 'rc') || contains(github.ref, 'beta') || contains(github.ref, 'alpha')
+    
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/vita-agents
+    
+    permissions:
+      id-token: write
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: dist
+        path: dist/
+
+    - name: Publish to Test PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        verbose: true
+
+  update-docs:
+    name: Update Documentation
+    runs-on: ubuntu-latest
+    needs: [create-release]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install mkdocs mkdocs-material mkdocs-mermaid2-plugin
+
+    - name: Build documentation
+      run: |
+        mkdocs build
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./site
+        publish_branch: gh-pages
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+
+  notify:
+    name: Notify Release
+    runs-on: ubuntu-latest
+    needs: [create-release]
+    if: always()
+    
+    steps:
+    - name: Extract version
+      id: version
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          VERSION=${GITHUB_REF#refs/tags/}
+        fi
+        echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+    - name: Notify Discord
+      if: success()
+      run: |
+        curl -X POST "${{ secrets.DISCORD_WEBHOOK_URL }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "embeds": [{
+              "title": "🎉 New Vita Agents Release!",
+              "description": "Version ${{ steps.version.outputs.version }} has been released!",
+              "color": 5814783,
+              "fields": [
+                {
+                  "name": "Version",
+                  "value": "${{ steps.version.outputs.version }}",
+                  "inline": true
+                },
+                {
+                  "name": "GitHub Release",
+                  "value": "[View Release](https://github.com/yasir2000/vita-agents/releases/tag/${{ steps.version.outputs.version }})",
+                  "inline": true
+                },
+                {
+                  "name": "Docker Image",
+                  "value": "`ghcr.io/yasir2000/vita-agents:${{ steps.version.outputs.version }}`",
+                  "inline": false
+                }
+              ],
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)'"
+            }]
+          }' || echo "Discord notification failed"
+
+    - name: Notify Slack
+      if: success()
+      run: |
+        curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "text": "🎉 Vita Agents ${{ steps.version.outputs.version }} has been released!",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*🎉 New Vita Agents Release!*\n\nVersion ${{ steps.version.outputs.version }} is now available."
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Version:*\n${{ steps.version.outputs.version }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Release Notes:*\n<https://github.com/yasir2000/vita-agents/releases/tag/${{ steps.version.outputs.version }}|View on GitHub>"
+                  }
+                ]
+              }
+            ]
+          }' || echo "Slack notification failed"
+
+    - name: Create deployment issue
+      if: success()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `Deploy Vita Agents ${{ steps.version.outputs.version }} to Production`,
+            body: `## 🚀 Production Deployment
+            
+            Version ${{ steps.version.outputs.version }} has been released and is ready for production deployment.
+            
+            ### Pre-deployment Checklist
+            - [ ] Backup current production database
+            - [ ] Update environment variables if needed
+            - [ ] Review breaking changes in changelog
+            - [ ] Schedule maintenance window if required
+            - [ ] Notify stakeholders of deployment
+            
+            ### Deployment Steps
+            1. Update Docker image to \`ghcr.io/yasir2000/vita-agents:${{ steps.version.outputs.version }}\`
+            2. Run database migrations if any
+            3. Update configuration files
+            4. Restart services
+            5. Verify deployment health
+            6. Run smoke tests
+            
+            ### Rollback Plan
+            - Previous version Docker image available
+            - Database backup ready for restore
+            - Configuration rollback prepared
+            
+            ### Links
+            - [Release Notes](https://github.com/yasir2000/vita-agents/releases/tag/${{ steps.version.outputs.version }})
+            - [Docker Image](https://ghcr.io/yasir2000/vita-agents:${{ steps.version.outputs.version }})
+            - [Changelog](https://github.com/yasir2000/vita-agents/blob/main/CHANGELOG.md)
+            `,
+            labels: ['deployment', 'production', 'release']
+          });
