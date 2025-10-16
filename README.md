@@ -115,29 +115,194 @@ python start_portal.py --find-port
 
 Vita Agents creates specialized AI agents that work collaboratively to handle different aspects of healthcare data processing, each with specific expertise in healthcare standards and workflows.
 
-## 🤖 Agent Architecture
+## 🤖 Sophisticated Agent Architecture
 
+```mermaid
+graph TB
+    %% User Interfaces Layer
+    subgraph UI["🎨 User Interfaces"]
+        WEB["🌐 Web Portal<br/>Healthcare Dashboard"]
+        CLI["💻 Interactive CLI<br/>HMCP Management"]
+        API["🔌 REST API<br/>OpenAPI Docs"]
+    end
+
+    %% Orchestration Layer
+    subgraph ORCH["🎼 Orchestration & Communication Layer"]
+        ORCHESTRATOR["🎯 Agent Orchestrator<br/>Workflow Management"]
+        HMCP["🏥 HMCP Protocol<br/>Healthcare Communication"]
+        ROUTER["🔀 Message Router<br/>Load Balancing"]
+        MONITOR["📊 Health Monitor<br/>Performance Analytics"]
+    end
+
+    %% Specialized Agents Layer
+    subgraph AGENTS["🤖 Specialized Healthcare Agents"]
+        direction TB
+        
+        subgraph CORE["Core Processing Agents"]
+            FHIR["📋 Enhanced FHIR Agent<br/>Multi-Engine Support<br/>11+ FHIR Servers"]
+            HL7["📨 HL7 Translation Agent<br/>v2.x ↔ FHIR Conversion"]
+            EHR["🏥 EHR Integration Agent<br/>Epic, Cerner, Allscripts"]
+        end
+        
+        subgraph CLINICAL["Clinical Intelligence Agents"]
+            CDS["🧠 Clinical Decision Support<br/>Drug Interactions, Alerts"]
+            HMCP_AGENT["🚨 HMCP Agent<br/>Emergency Response<br/>Care Coordination"]
+            NLP["📝 NLP Agent<br/>Clinical Notes, PHI Detection"]
+        end
+        
+        subgraph DATA["Data & Security Agents"]
+            HARMONY["🔄 Data Harmonization<br/>ML-Based Conflict Resolution"]
+            SECURITY["🔐 Compliance & Security<br/>HIPAA, Audit Trails"]
+            TRIAGE["⚡ Triage Agent<br/>Priority Classification"]
+        end
+    end
+
+    %% Multi-Engine FHIR Support
+    subgraph FHIR_ENGINES["🔄 Multi-Engine FHIR Support"]
+        HAPI["HAPI FHIR<br/>hapifhir.io"]
+        IBM["IBM FHIR<br/>Enterprise"]
+        MEDPLUM["Medplum<br/>Cloud Native"]
+        FIRELY["Firely .NET<br/>SDK"]
+        SPARK["Spark FHIR<br/>Lightweight"]
+        OTHERS["+ 6 More Engines<br/>LinuxForHealth, Aidbox<br/>Microsoft, Google, AWS"]
+    end
+
+    %% Healthcare Systems Integration
+    subgraph SYSTEMS["🏥 Healthcare Systems"]
+        EPIC["Epic<br/>MyChart API"]
+        CERNER["Cerner<br/>PowerChart"]
+        ALLSCRIPTS["Allscripts<br/>Developer API"]
+        HL7_SYS["HL7 Systems<br/>v2.x, CDA"]
+        DICOM["DICOM<br/>Medical Imaging"]
+    end
+
+    %% Emergency & Workflow Protocols
+    subgraph EMERGENCY["🚨 Emergency & Care Protocols"]
+        CARDIAC["💔 Cardiac Arrest<br/>ACLS Protocol"]
+        STROKE["🧠 Stroke Alert<br/>Neuro Response"]
+        SEPSIS["🦠 Sepsis Protocol<br/>Bundle Care"]
+        RESPIRATORY["🫁 Respiratory Failure<br/>Ventilator Prep"]
+        DISCHARGE["🏠 Discharge Planning<br/>Multi-disciplinary"]
+    end
+
+    %% Knowledge & Standards Layer
+    subgraph KNOWLEDGE["📚 Healthcare Knowledge & Standards"]
+        ONTOLOGIES["Medical Ontologies<br/>SNOMED CT, ICD-10"]
+        LOINC["LOINC<br/>Lab Codes"]
+        RXNORM["RxNorm<br/>Medications"]
+        GUIDELINES["Clinical Guidelines<br/>Evidence-Based Care"]
+        REGULATIONS["Regulations<br/>HIPAA, FDA"]
+    end
+
+    %% Infrastructure Layer
+    subgraph INFRA["🏗️ Infrastructure & Security"]
+        DATABASE["🗄️ PostgreSQL<br/>FHIR Resources"]
+        REDIS["⚡ Redis<br/>Caching"]
+        ELASTICSEARCH["🔍 Elasticsearch<br/>Search & Analytics"]
+        ENCRYPTION["🔒 AES-256<br/>PHI Encryption"]
+        AUDIT["📋 Audit Trails<br/>Compliance Logs"]
+    end
+
+    %% Connections - User Interfaces
+    UI --> ORCH
+    WEB --> ORCHESTRATOR
+    CLI --> HMCP
+    API --> ROUTER
+
+    %% Connections - Orchestration
+    ORCHESTRATOR --> AGENTS
+    HMCP --> HMCP_AGENT
+    ROUTER --> CORE
+    ROUTER --> CLINICAL
+    ROUTER --> DATA
+    MONITOR --> AGENTS
+
+    %% Connections - Agent Communication via HMCP
+    HMCP_AGENT -.->|Emergency Protocol| EMERGENCY
+    HMCP_AGENT -.->|Clinical Messages| CDS
+    HMCP_AGENT -.->|Patient Context| FHIR
+    HMCP_AGENT -.->|Care Coordination| HARMONY
+
+    %% Connections - Core Agents
+    FHIR --> FHIR_ENGINES
+    HL7 --> HL7_SYS
+    EHR --> SYSTEMS
+    
+    %% Connections - Clinical Intelligence
+    CDS --> KNOWLEDGE
+    NLP --> ONTOLOGIES
+    TRIAGE --> CDS
+
+    %% Connections - Data Processing
+    HARMONY --> DATABASE
+    SECURITY --> AUDIT
+    SECURITY --> ENCRYPTION
+
+    %% Connections - External Systems
+    FHIR_ENGINES --> SYSTEMS
+    AGENTS --> KNOWLEDGE
+    SECURITY --> REGULATIONS
+
+    %% Connections - Infrastructure
+    AGENTS --> INFRA
+    ORCHESTRATOR --> DATABASE
+    MONITOR --> REDIS
+
+    %% Styling
+    classDef uiClass fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef orchClass fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef agentClass fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef emergencyClass fill:#ffebee,stroke:#b71c1c,stroke-width:2px
+    classDef fhirClass fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef infraClass fill:#fafafa,stroke:#424242,stroke-width:2px
+    classDef knowledgeClass fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+
+    class UI,WEB,CLI,API uiClass
+    class ORCH,ORCHESTRATOR,HMCP,ROUTER,MONITOR orchClass
+    class AGENTS,CORE,CLINICAL,DATA,FHIR,HL7,EHR,CDS,HMCP_AGENT,NLP,HARMONY,SECURITY,TRIAGE agentClass
+    class EMERGENCY,CARDIAC,STROKE,SEPSIS,RESPIRATORY,DISCHARGE emergencyClass
+    class FHIR_ENGINES,HAPI,IBM,MEDPLUM,FIRELY,SPARK,OTHERS fhirClass
+    class INFRA,DATABASE,REDIS,ELASTICSEARCH,ENCRYPTION,AUDIT infraClass
+    class KNOWLEDGE,ONTOLOGIES,LOINC,RXNORM,GUIDELINES,REGULATIONS knowledgeClass
 ```
-┌─────────────────────────────────────────────────────────┐
-│                 Agent Orchestrator                      │
-├─────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
-│  │ FHIR Parser │  │ HL7 Translator│  │ EHR Integration │  │
-│  │   Agent     │  │    Agent      │  │     Agent       │  │
-│  └─────────────┘  └─────────────┘  └─────────────────┘  │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
-│  │ Clinical    │  │ Data        │  │ Compliance &    │  │
-│  │ Decision    │  │ Harmonization│  │ Security Agent  │  │
-│  │ Support     │  │   Agent     │  │                 │  │
-│  └─────────────┘  └─────────────┘  └─────────────────┘  │
-│  ┌─────────────────────────────────────────────────────┐  │
-│  │         Natural Language Processing Agent           │  │
-│  └─────────────────────────────────────────────────────┘  │
-├─────────────────────────────────────────────────────────┤
-│              Shared Knowledge Base                      │
-│          (Medical Ontologies, Standards)               │
-└─────────────────────────────────────────────────────────┘
-```
+
+### 🏗️ Architecture Layers Explained
+
+#### 🎨 **User Interface Layer**
+- **Web Portal**: Healthcare dashboard with real-time monitoring and agent management
+- **Interactive CLI**: HMCP-enabled command line for healthcare professionals
+- **REST API**: OpenAPI-documented endpoints for system integration
+
+#### 🎼 **Orchestration & Communication Layer**
+- **Agent Orchestrator**: Central workflow management and agent coordination
+- **HMCP Protocol**: Healthcare Multi-agent Communication Protocol for clinical context
+- **Message Router**: Intelligent load balancing and message routing
+- **Health Monitor**: Real-time performance analytics and system health
+
+#### 🤖 **Specialized Healthcare Agents**
+- **Core Processing**: FHIR (multi-engine), HL7 translation, EHR integration
+- **Clinical Intelligence**: Decision support, HMCP communication, NLP processing
+- **Data & Security**: ML harmonization, HIPAA compliance, intelligent triage
+
+#### 🔄 **Multi-Engine FHIR Support**
+- **11+ FHIR Engines**: HAPI, IBM, Medplum, Firely, Spark, and cloud providers
+- **Parallel Operations**: Simultaneous operations across multiple engines
+- **Performance Benchmarking**: Engine comparison and optimization
+
+#### 🚨 **Emergency & Care Protocols**
+- **Emergency Response**: Cardiac arrest, stroke, sepsis, respiratory failure
+- **Care Coordination**: Multi-disciplinary discharge planning and handoffs
+- **Clinical Workflows**: Automated protocol execution and team notification
+
+#### 📚 **Healthcare Knowledge & Standards**
+- **Medical Ontologies**: SNOMED CT, ICD-10, LOINC, RxNorm
+- **Clinical Guidelines**: Evidence-based care recommendations
+- **Regulatory Compliance**: HIPAA, FDA, and international standards
+
+#### 🏗️ **Infrastructure & Security**
+- **Data Storage**: PostgreSQL with FHIR resource optimization
+- **Performance**: Redis caching and Elasticsearch analytics
+- **Security**: AES-256 encryption and comprehensive audit trails
 
 ## 🎖️ Core Agent Types
 
@@ -194,6 +359,36 @@ Vita Agents creates specialized AI agents that work collaboratively to handle di
 - ✅ Care coordination and multi-disciplinary team communication
 - ✅ HIPAA-compliant secure messaging with audit trails
 - ✅ Healthcare workflow orchestration and real-time clinical guidance
+
+### 🔄 HMCP Communication Flow
+
+```mermaid
+sequenceDiagram
+    participant Provider as 👨‍⚕️ Healthcare Provider
+    participant HMCP as 🏥 HMCP Agent
+    participant Diagnostic as 🧠 Diagnostic Agent
+    participant Knowledge as 📚 Medical Knowledge
+    participant Emergency as 🚨 Emergency System
+    participant EHR as 🏥 EHR System
+
+    Note over Provider,EHR: Emergency Chest Pain Scenario
+
+    Provider->>HMCP: Patient presents with chest pain
+    HMCP->>Diagnostic: Clinical assessment request
+    Note right of HMCP: Patient context:<br/>ID, urgency level,<br/>clinical context
+    
+    Diagnostic->>Knowledge: Request differential diagnosis
+    Knowledge-->>Diagnostic: Acute coronary syndrome likely
+    Diagnostic->>HMCP: Urgent intervention needed
+    
+    HMCP->>Emergency: Initiate cardiac protocol
+    Note right of Emergency: ACLS protocol:<br/>- Cardiology team<br/>- Cath lab prep<br/>- Medications
+    
+    HMCP->>EHR: Update patient record
+    Emergency-->>Provider: Team assembled, ready for intervention
+    
+    Note over Provider,EHR: Care coordination complete in <5 minutes
+```
 
 ## 🚀 Key Features
 
