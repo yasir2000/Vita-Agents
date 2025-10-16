@@ -1,0 +1,319 @@
+name: Documentation Enhancement
+description: Suggest improvements to documentation, guides, or examples
+title: "[Docs]: "
+labels: ["documentation", "enhancement"]
+assignees:
+  - yasir2000
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve our documentation! 
+        Clear and comprehensive documentation is essential for healthcare software.
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation needs improvement?
+      options:
+        - README
+        - Installation Guide
+        - Quick Start Guide
+        - API Documentation
+        - Configuration Guide
+        - User Guide
+        - Developer Guide
+        - Architecture Documentation
+        - FHIR Integration Guide
+        - Security Guide
+        - Deployment Guide
+        - Troubleshooting Guide
+        - Code Examples
+        - Tutorials
+        - FAQ
+        - Release Notes
+        - Changelog
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Related Component
+      description: Which component does this documentation relate to?
+      options:
+        - General/Overview
+        - FHIR Agent
+        - Enhanced FHIR Agent (Multi-engine)
+        - HL7 Agent
+        - EHR Agent
+        - Clinical Decision Support
+        - Data Harmonization
+        - Compliance & Security
+        - NLP Agent
+        - Web Portal
+        - CLI Interface
+        - Docker Integration
+        - API
+        - Authentication
+        - Database
+        - Monitoring
+        - Installation/Setup
+        - Configuration
+        - Other
+    validations:
+      required: false
+
+  - type: dropdown
+    id: audience
+    attributes:
+      label: Target Audience
+      description: Who is the primary audience for this documentation?
+      options:
+        - End Users (Healthcare Workers)
+        - System Administrators
+        - Developers/Integrators
+        - DevOps Engineers
+        - Security Teams
+        - Compliance Officers
+        - New Contributors
+        - All Users
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-state
+    attributes:
+      label: Current State
+      description: |
+        What is the current state of the documentation?
+        What exists now and what are the problems?
+      placeholder: |
+        Currently, the documentation...
+        The main issues are...
+        Users are confused about...
+    validations:
+      required: true
+
+  - type: textarea
+    id: improvement-request
+    attributes:
+      label: Requested Improvement
+      description: |
+        What specific improvements would you like to see?
+        Be as detailed as possible.
+      placeholder: |
+        I would like to see...
+        The documentation should include...
+        It would be helpful to have...
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case/Scenario
+      description: |
+        Describe the specific use case or scenario that would benefit from this documentation.
+        What are users trying to accomplish?
+      placeholder: |
+        When users want to...
+        In the scenario where...
+        This would help with...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this documentation improvement?
+      options:
+        - Critical (Blocking user adoption/success)
+        - High (Significantly improves user experience)
+        - Medium (Good to have improvement)
+        - Low (Minor enhancement)
+    validations:
+      required: true
+
+  - type: textarea
+    id: missing-info
+    attributes:
+      label: Missing Information
+      description: |
+        What specific information is missing from the current documentation?
+        List any topics, procedures, or examples that should be covered.
+      placeholder: |
+        Missing information includes:
+        - How to configure X
+        - Examples of Y
+        - Troubleshooting Z
+        - Integration with...
+    validations:
+      required: false
+
+  - type: textarea
+    id: examples-needed
+    attributes:
+      label: Examples Needed
+      description: |
+        What examples, code snippets, or step-by-step guides would be helpful?
+        Be specific about the format and content.
+      placeholder: |
+        Examples needed:
+        - Code example showing how to...
+        - Step-by-step guide for...
+        - Configuration file example for...
+        - API usage example for...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: format-preference
+    attributes:
+      label: Preferred Format
+      description: What format would work best for this documentation?
+      options:
+        - Written Guide (Markdown)
+        - Code Examples with Comments
+        - Step-by-step Tutorial
+        - API Reference
+        - Configuration Template
+        - Video Tutorial
+        - Interactive Guide
+        - FAQ Format
+        - Troubleshooting Flowchart
+        - Architecture Diagram
+        - Sequence Diagram
+        - No Preference
+        - Other
+    validations:
+      required: false
+
+  - type: textarea
+    id: related-docs
+    attributes:
+      label: Related Documentation
+      description: |
+        Are there related docs that should be updated or linked?
+        Include URLs or file paths if known.
+      placeholder: |
+        Related documentation:
+        - docs/installation.md (needs update)
+        - README.md (should link to this)
+        - API docs (missing this endpoint)
+    validations:
+      required: false
+
+  - type: textarea
+    id: healthcare-context
+    attributes:
+      label: Healthcare Context
+      description: |
+        If applicable, provide healthcare-specific context for this documentation.
+        What healthcare standards, workflows, or compliance requirements should be addressed?
+      placeholder: |
+        Healthcare context:
+        - HIPAA compliance considerations
+        - FHIR R4 specification details
+        - Clinical workflow integration
+        - Interoperability requirements
+    validations:
+      required: false
+
+  - type: dropdown
+    id: fhir-engines
+    attributes:
+      label: FHIR Engines (if applicable)
+      description: Does this documentation relate to specific FHIR engines?
+      multiple: true
+      options:
+        - HAPI FHIR
+        - IBM FHIR Server
+        - Medplum
+        - Firely .NET SDK
+        - Spark FHIR Server
+        - LinuxForHealth FHIR
+        - Aidbox
+        - Microsoft FHIR Server
+        - Google Cloud Healthcare API
+        - Amazon HealthLake
+        - All Engines
+        - Engine-agnostic
+        - Not applicable
+    validations:
+      required: false
+
+  - type: textarea
+    id: user-feedback
+    attributes:
+      label: User Feedback
+      description: |
+        Have you received feedback from users about this documentation?
+        What specific questions or confusion have come up?
+      placeholder: |
+        User feedback:
+        - Users frequently ask about...
+        - Common confusion points are...
+        - Support tickets often involve...
+    validations:
+      required: false
+
+  - type: textarea
+    id: success-criteria
+    attributes:
+      label: Success Criteria
+      description: |
+        How will we know when this documentation improvement is successful?
+        What should users be able to accomplish after reading it?
+      placeholder: |
+        Success criteria:
+        - Users can successfully configure X without support
+        - Onboarding time is reduced by Y
+        - Support tickets about Z are decreased
+        - New contributors can...
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: |
+        Any additional context, references, or resources that would be helpful?
+        Include links to external docs, standards, or examples.
+      placeholder: |
+        Additional context:
+        - Link to relevant healthcare standards
+        - Similar documentation from other projects
+        - Screenshots or mockups
+        - External resources or references
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Are you interested in contributing to this documentation?
+      options:
+        - label: I would be interested in writing this documentation myself
+          required: false
+        - label: I can provide subject matter expertise/review
+          required: false
+        - label: I can help with testing the documentation with real users
+          required: false
+        - label: I can provide healthcare domain knowledge
+          required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

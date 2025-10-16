@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discord Community
+    url: https://discord.gg/vita-agents
+    about: Join our Discord server for real-time discussions, support, and community interaction
+  - name: 🏥 Healthcare Integration Support
+    url: https://github.com/yasir2000/Vita-Agents/wiki/Healthcare-Integration-Support
+    about: Specialized support for healthcare integrations, FHIR implementations, and clinical workflows
+  - name: 🔒 Security & Compliance
+    url: https://github.com/yasir2000/Vita-Agents/wiki/Security-and-Compliance
+    about: Report security vulnerabilities or discuss HIPAA compliance requirements
+  - name: 📖 Documentation
+    url: https://github.com/yasir2000/Vita-Agents/wiki
+    about: Browse our comprehensive documentation, guides, and tutorials
+  - name: 🚀 Deployment Support
+    url: https://github.com/yasir2000/Vita-Agents/discussions/categories/deployment
+    about: Get help with Docker, cloud deployments, and production setup

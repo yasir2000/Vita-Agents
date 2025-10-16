@@ -105,137 +105,197 @@ body:
         Detailed steps to reproduce the behavior:
       placeholder: |
         1. Go to '...'
-        2. Click on '....'
-        3. Scroll down to '....'
+        2. Configure '...'
+        3. Execute '...'
         4. See error
+      value: |
+        1. 
+        2. 
+        3. 
+        4. 
     validations:
       required: true
 
   - type: textarea
-    id: expected
+    id: error-logs
     attributes:
-      label: Expected Behavior
-      description: A clear and concise description of what you expected to happen.
-      placeholder: What should have happened?
-    validations:
-      required: true
-
-  - type: textarea
-    id: actual
-    attributes:
-      label: Actual Behavior
-      description: A clear and concise description of what actually happened.
-      placeholder: What actually happened?
-    validations:
-      required: true
-
-  - type: dropdown
-    id: component
-    attributes:
-      label: Component
-      description: Which component is affected?
-      options:
-        - FHIR Agent
-        - Enhanced FHIR Agent (Multi-engine)
-        - HL7 Agent
-        - EHR Agent
-        - Clinical Decision Support
-        - Data Harmonization
-        - Compliance & Security
-        - NLP Agent
-        - Web Portal
-        - CLI Interface
-        - Docker Integration
-        - Database
-        - API
-        - Authentication
-        - Other
-    validations:
-      required: false
-
-  - type: dropdown
-    id: severity
-    attributes:
-      label: Severity
-      description: How severe is this bug?
-      options:
-        - Critical (System unusable)
-        - High (Major functionality broken)
-        - Medium (Minor functionality affected)
-        - Low (Cosmetic issue)
-    validations:
-      required: true
-
-  - type: textarea
-    id: logs
-    attributes:
-      label: Error Messages/Logs
+      label: Error Logs/Stack Trace
       description: |
-        Please copy and paste any relevant log output or error messages.
-        This will be automatically formatted into code, so no need for backticks.
+        If applicable, add the full error message, stack trace, or relevant log entries.
+        Please format code blocks with triple backticks (```).
+      placeholder: |
+        ```
+        Paste error logs/stack trace here
+        ```
       render: shell
     validations:
       required: false
 
-  - type: textarea
-    id: config
+  - type: input
+    id: vita-agents-version
     attributes:
-      label: Configuration
-      description: |
-        If relevant, please share your configuration (remove any sensitive information).
-        This will be automatically formatted into code.
-      render: yaml
+      label: Vita Agents Version
+      description: What version of Vita Agents are you using?
+      placeholder: e.g., v2.1.0, latest, commit hash
     validations:
-      required: false
+      required: true
+
+  - type: dropdown
+    id: installation-method
+    attributes:
+      label: Installation Method
+      description: How did you install Vita Agents?
+      options:
+        - Docker Compose
+        - Docker (manual)
+        - pip install
+        - git clone + pip install -e
+        - Source code download
+        - Other
+    validations:
+      required: true
 
   - type: input
     id: python-version
     attributes:
       label: Python Version
-      description: What version of Python are you using?
-      placeholder: e.g., 3.11.5
+      description: What Python version are you using?
+      placeholder: e.g., 3.11.5, 3.10.12
     validations:
       required: true
 
   - type: input
-    id: os
+    id: operating-system
     attributes:
       label: Operating System
       description: What operating system are you using?
-      placeholder: e.g., Ubuntu 22.04, Windows 11, macOS 14
+      placeholder: e.g., Ubuntu 22.04, Windows 11, macOS 13.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: fhir-engine
+    attributes:
+      label: FHIR Engine (if applicable)
+      description: Which FHIR engine were you using when the bug occurred?
+      options:
+        - HAPI FHIR
+        - IBM FHIR Server
+        - Medplum
+        - Firely .NET SDK
+        - Spark FHIR Server
+        - LinuxForHealth FHIR
+        - Aidbox
+        - Microsoft FHIR Server
+        - Google Cloud Healthcare API
+        - Amazon HealthLake
+        - Custom/Other
+        - Not applicable
+    validations:
+      required: false
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Configuration
+      description: |
+        Relevant configuration details (remove sensitive information like passwords, API keys, etc.)
+        Include environment variables, config files, CLI arguments, etc.
+      placeholder: |
+        Environment variables:
+        - VITA_FHIR_ENGINE=hapi
+        - VITA_LOG_LEVEL=DEBUG
+        
+        Configuration files:
+        ```yaml
+        # config.yml content (sanitized)
+        ```
+      render: yaml
+    validations:
+      required: false
+
+  - type: textarea
+    id: data-sample
+    attributes:
+      label: Sample Data (if applicable)
+      description: |
+        If the bug involves data processing, provide a minimal sample of the data that causes the issue.
+        Please sanitize any sensitive information (PHI, PII, etc.).
+      placeholder: |
+        ```json
+        {
+          "resourceType": "Patient",
+          "id": "example",
+          "name": [{"family": "Doe", "given": ["John"]}]
+        }
+        ```
+      render: json
+    validations:
+      required: false
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Workaround
+      description: |
+        If you found a workaround for this issue, please describe it.
+        This can help other users experiencing the same problem.
+      placeholder: Describe any workaround you found...
+    validations:
+      required: false
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: |
+        How does this bug affect your work or use case?
+        What functionality is blocked or impaired?
+      placeholder: |
+        This bug prevents me from...
+        It affects my workflow by...
+        The business impact is...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: Frequency
+      description: How often does this bug occur?
+      options:
+        - Always (100% of the time)
+        - Often (>75% of the time)
+        - Sometimes (25-75% of the time)
+        - Rarely (<25% of the time)
+        - Once (happened only once)
     validations:
       required: true
 
   - type: textarea
-    id: additional
+    id: additional-context
     attributes:
       label: Additional Context
       description: |
-        Add any other context about the problem here, such as:
-        - Screenshots or videos
-        - Related issues
-        - Workarounds you've tried
-        - Impact on your workflow
-      placeholder: Any additional information...
+        Add any other context about the problem here.
+        Screenshots, network traces, related issues, etc.
+        You can drag and drop images here.
+      placeholder: Any additional information, screenshots, or context...
     validations:
       required: false
 
   - type: checkboxes
-    id: healthcare-data
+    id: checks
     attributes:
-      label: Healthcare Data
-      description: Does this bug involve actual patient data or PHI?
+      label: Pre-submission Checklist
+      description: Please verify the following before submitting
       options:
-        - label: This bug involves real patient data or PHI
+        - label: I have searched existing issues to make sure this is not a duplicate
+          required: true
+        - label: I have provided all the requested information above
+          required: true
+        - label: I have removed or sanitized any sensitive information (passwords, API keys, PHI, etc.)
+          required: true
+        - label: I can reproduce this issue consistently
           required: false
-        - label: I have removed all sensitive information from this report
-          required: true
 
-  - type: checkboxes
-    id: terms
-    attributes:
-      label: Code of Conduct
-      description: By submitting this issue, you agree to follow our Code of Conduct
-      options:
-        - label: I agree to follow this project's Code of Conduct
-          required: true

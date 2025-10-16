@@ -1,0 +1,123 @@
+# Automatic labeling based on file paths and content
+
+# Core Components
+"component: fhir-agent":
+  - "vita_agents/agents/fhir_agent.py"
+  - "vita_agents/agents/enhanced_fhir_agent.py"
+  - "vita_agents/clients/open_source_clients.py"
+  - any: ["**/fhir/**", "**/*fhir*"]
+
+"component: hl7-agent":
+  - "vita_agents/agents/hl7_agent.py"
+  - any: ["**/hl7/**", "**/*hl7*"]
+
+"component: ehr-agent":
+  - "vita_agents/agents/ehr_agent.py"
+  - any: ["**/ehr/**", "**/*ehr*"]
+
+"component: web-portal":
+  - any: ["**/web/**", "**/portal/**", "**/frontend/**"]
+
+"component: cli":
+  - "vita_agents/cli.py"
+  - "vita_agents/cli/**"
+
+"component: api":
+  - any: ["**/api/**", "**/endpoints/**", "**/routes/**"]
+
+"component: database":
+  - any: ["**/models/**", "**/db/**", "**/database/**", "**/migrations/**"]
+
+"component: docker":
+  - "Dockerfile*"
+  - "docker-compose*.yml"
+  - ".dockerignore"
+  - any: ["**/docker/**"]
+
+# File Types
+"type: documentation":
+  - "*.md"
+  - "docs/**"
+  - "*.rst"
+  - "*.txt"
+  - "mkdocs.yml"
+
+"type: configuration":
+  - "*.yml"
+  - "*.yaml"
+  - "*.json"
+  - "*.toml"
+  - "*.ini"
+  - "*.cfg"
+  - ".env*"
+  - "config/**"
+
+"type: tests":
+  - "tests/**"
+  - "test_*.py"
+  - "*_test.py"
+  - "**/*test*.py"
+
+"type: ci/cd":
+  - ".github/**"
+  - ".gitlab-ci.yml"
+  - "azure-pipelines.yml"
+  - "Jenkinsfile"
+
+# Healthcare Standards
+"healthcare: fhir":
+  - any: ["**/*fhir*", "**/fhir/**"]
+
+"healthcare: hl7":
+  - any: ["**/*hl7*", "**/hl7/**"]
+
+"healthcare: dicom":
+  - any: ["**/*dicom*", "**/dicom/**"]
+
+"healthcare: snomed":
+  - any: ["**/*snomed*", "**/snomed/**"]
+
+# Dependencies
+"dependencies":
+  - "requirements*.txt"
+  - "setup.py"
+  - "setup.cfg"
+  - "pyproject.toml"
+  - "Pipfile*"
+  - "poetry.lock"
+  - "package.json"
+  - "package-lock.json"
+  - "yarn.lock"
+
+# Security
+"security":
+  - any: ["**/security/**", "**/*security*", "**/auth/**", "**/*auth*"]
+
+# Performance
+"performance":
+  - any: ["**/performance/**", "**/benchmark/**", "**/*perf*"]
+
+# Infrastructure
+"infrastructure":
+  - "terraform/**"
+  - "*.tf"
+  - "ansible/**"
+  - "*.yml"
+  - "k8s/**"
+  - "kubernetes/**"
+
+# Size labels (based on lines changed)
+"size: XS":
+  - changed-files: 1-5
+
+"size: S":
+  - changed-files: 6-15
+
+"size: M":
+  - changed-files: 16-50
+
+"size: L":
+  - changed-files: 51-100
+
+"size: XL":
+  - changed-files: 101+

@@ -1,0 +1,326 @@
+name: Issue and PR Management
+
+on:
+  issues:
+    types: [opened, labeled, unlabeled, closed]
+  pull_request:
+    types: [opened, labeled, unlabeled, closed, ready_for_review]
+  issue_comment:
+    types: [created]
+
+jobs:
+  triage-issue:
+    if: github.event_name == 'issues' && github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - name: Add triage label
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['needs-triage']
+            });
+
+      - name: Add healthcare label for FHIR/HL7 issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const title = issue.title.toLowerCase();
+            const body = issue.body ? issue.body.toLowerCase() : '';
+            
+            const healthcareKeywords = [
+              'fhir', 'hl7', 'ehr', 'patient', 'clinical', 'healthcare', 
+              'medical', 'hipaa', 'phi', 'pii', 'dicom', 'snomed', 
+              'icd-10', 'loinc', 'cpt', 'hapi', 'medplum', 'aidbox'
+            ];
+            
+            const isHealthcareRelated = healthcareKeywords.some(keyword => 
+              title.includes(keyword) || body.includes(keyword)
+            );
+            
+            if (isHealthcareRelated) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: ['healthcare', 'fhir-related']
+              });
+            }
+
+      - name: Add priority labels based on content
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const title = issue.title.toLowerCase();
+            const body = issue.body ? issue.body.toLowerCase() : '';
+            
+            const criticalKeywords = ['critical', 'urgent', 'security', 'vulnerability', 'data loss', 'crash'];
+            const highPriorityKeywords = ['high priority', 'blocking', 'broken', 'error'];
+            
+            const isCritical = criticalKeywords.some(keyword => 
+              title.includes(keyword) || body.includes(keyword)
+            );
+            
+            const isHighPriority = highPriorityKeywords.some(keyword => 
+              title.includes(keyword) || body.includes(keyword)
+            );
+            
+            if (isCritical) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: ['priority: critical']
+              });
+            } else if (isHighPriority) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: ['priority: high']
+              });
+            }
+
+  welcome-first-time-contributor:
+    if: github.event_name == 'issues' && github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - name: Check if first-time contributor
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const query = `query($owner:String!, $repo:String!, $author:String!) {
+              repository(owner: $owner, name: $repo) {
+                issues(first: 100, filterBy: {createdBy: $author}) {
+                  totalCount
+                }
+                pullRequests(first: 100, filterBy: {createdBy: $author}) {
+                  totalCount
+                }
+              }
+            }`;
+            
+            const variables = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              author: context.payload.issue.user.login
+            };
+            
+            const result = await github.graphql(query, variables);
+            const isFirstTime = result.repository.issues.totalCount <= 1 && 
+                               result.repository.pullRequests.totalCount === 0;
+            
+            if (isFirstTime) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `👋 Welcome to Vita Agents! Thank you for your first contribution.
+
+                🏥 **Healthcare Focus**: Vita Agents is designed for healthcare interoperability and clinical workflows. Your feedback helps us build better healthcare technology.
+
+                📚 **Getting Started**:
+                - Check out our [Documentation](https://github.com/yasir2000/Vita-Agents/wiki)
+                - Join our [Discord Community](https://discord.gg/vita-agents)
+                - Review our [Contributing Guidelines](https://github.com/yasir2000/Vita-Agents/blob/main/CONTRIBUTING.md)
+
+                🔍 **What's Next**: A maintainer will review your issue and add appropriate labels. For healthcare-specific questions, feel free to mention the clinical context.
+
+                Thank you for helping improve healthcare technology! 🚀`
+              });
+              
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: ['first-time-contributor']
+              });
+            }
+
+  triage-pr:
+    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Add review labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['needs-review']
+            });
+
+      - name: Check for breaking changes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const title = pr.title.toLowerCase();
+            const body = pr.body ? pr.body.toLowerCase() : '';
+            
+            const breakingKeywords = ['breaking', 'breaking change', 'major version', 'api change'];
+            const hasBreakingChange = breakingKeywords.some(keyword => 
+              title.includes(keyword) || body.includes(keyword)
+            );
+            
+            if (hasBreakingChange) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: ['breaking-change', 'needs-major-version']
+              });
+            }
+
+      - name: Add healthcare labels for FHIR/HL7 PRs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const title = pr.title.toLowerCase();
+            const body = pr.body ? pr.body.toLowerCase() : '';
+            
+            const healthcareKeywords = [
+              'fhir', 'hl7', 'ehr', 'patient', 'clinical', 'healthcare', 
+              'medical', 'hipaa', 'phi', 'pii', 'dicom', 'snomed'
+            ];
+            
+            const isHealthcareRelated = healthcareKeywords.some(keyword => 
+              title.includes(keyword) || body.includes(keyword)
+            );
+            
+            if (isHealthcareRelated) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: ['healthcare', 'needs-healthcare-review']
+              });
+            }
+
+  assign-reviewers:
+    if: github.event_name == 'pull_request' && github.event.action == 'ready_for_review'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Assign reviewers based on files changed
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            const reviewers = new Set();
+            
+            // Add maintainer for all PRs
+            reviewers.add('yasir2000');
+            
+            // Check for specific file patterns
+            const hasDocChanges = files.some(file => 
+              file.filename.includes('README') || 
+              file.filename.includes('.md') ||
+              file.filename.includes('docs/')
+            );
+            
+            const hasFHIRChanges = files.some(file => 
+              file.filename.includes('fhir') || 
+              file.filename.includes('hl7')
+            );
+            
+            const hasSecurityChanges = files.some(file => 
+              file.filename.includes('auth') || 
+              file.filename.includes('security') ||
+              file.filename.includes('compliance')
+            );
+            
+            // Request reviews
+            if (reviewers.size > 0) {
+              await github.rest.pulls.requestReviewers({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                reviewers: Array.from(reviewers)
+              });
+            }
+
+  notify-discord:
+    if: |
+      (github.event_name == 'issues' && github.event.action == 'opened') ||
+      (github.event_name == 'pull_request' && github.event.action == 'opened')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        if: env.DISCORD_WEBHOOK != ''
+        uses: Ilshidur/action-discord@master
+        with:
+          args: |
+            🔔 **New {{ github.event_name == 'issues' && 'Issue' || 'Pull Request' }}**
+            
+            **Title**: {{ github.event.issue.title || github.event.pull_request.title }}
+            **Author**: {{ github.event.issue.user.login || github.event.pull_request.user.login }}
+            **URL**: {{ github.event.issue.html_url || github.event.pull_request.html_url }}
+            
+            {% if github.event_name == 'issues' %}
+            **Type**: Issue #{{ github.event.issue.number }}
+            {% else %}
+            **Type**: Pull Request #{{ github.event.pull_request.number }}
+            {% endif %}
+
+  stale-issue-management:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/stale@v9
+        with:
+          stale-issue-message: |
+            This issue has been automatically marked as stale because it has not had recent activity. 
+            
+            🏥 **Healthcare Priority**: If this issue affects healthcare workflows, clinical operations, or patient data handling, please comment to keep it active.
+            
+            **Next Steps**:
+            - Comment if you're still experiencing this issue
+            - Provide additional context or use cases
+            - Close if no longer relevant
+            
+            This issue will be closed automatically in 7 days if no further activity occurs.
+          stale-pr-message: |
+            This pull request has been automatically marked as stale because it has not had recent activity.
+            
+            **Next Steps**:
+            - Rebase on the latest main branch
+            - Address any review comments
+            - Comment if you need help or guidance
+            
+            This PR will be closed automatically in 7 days if no further activity occurs.
+          stale-issue-label: 'stale'
+          stale-pr-label: 'stale'
+          days-before-stale: 60
+          days-before-close: 7
+          exempt-issue-labels: 'pinned,security,healthcare-critical,priority: critical'
+          exempt-pr-labels: 'pinned,security,healthcare-critical'

@@ -1,0 +1,158 @@
+name: Auto Label PRs
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply labels based on file changes
+        uses: actions/labeler@v5
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          configuration-path: .github/labeler.yml
+          sync-labels: true
+
+      - name: Calculate PR size
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            const additions = files.reduce((sum, file) => sum + file.additions, 0);
+            const deletions = files.reduce((sum, file) => sum + file.deletions, 0);
+            const totalChanges = additions + deletions;
+            
+            // Remove existing size labels
+            const { data: currentLabels } = await github.rest.issues.listLabelsOnIssue({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+            
+            const sizeLabels = currentLabels.filter(label => label.name.startsWith('size:'));
+            for (const label of sizeLabels) {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                name: label.name
+              });
+            }
+            
+            // Add appropriate size label
+            let sizeLabel;
+            if (totalChanges <= 10) {
+              sizeLabel = 'size: XS';
+            } else if (totalChanges <= 30) {
+              sizeLabel = 'size: S';
+            } else if (totalChanges <= 100) {
+              sizeLabel = 'size: M';
+            } else if (totalChanges <= 500) {
+              sizeLabel = 'size: L';
+            } else {
+              sizeLabel = 'size: XL';
+            }
+            
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: [sizeLabel]
+            });
+
+      - name: Add healthcare-specific labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            const pr = context.payload.pull_request;
+            const title = pr.title.toLowerCase();
+            const body = pr.body ? pr.body.toLowerCase() : '';
+            
+            // Check for FHIR engine changes
+            const fhirEngines = {
+              'hapi': 'HAPI FHIR',
+              'ibm': 'IBM FHIR',
+              'medplum': 'Medplum',
+              'firely': 'Firely',
+              'spark': 'Spark FHIR',
+              'linuxforhealth': 'LinuxForHealth',
+              'aidbox': 'Aidbox',
+              'microsoft': 'Microsoft FHIR',
+              'google': 'Google Healthcare',
+              'amazon': 'Amazon HealthLake',
+              'healthlake': 'Amazon HealthLake'
+            };
+            
+            const labels = [];
+            
+            // Check for FHIR engine mentions
+            for (const [key, engine] of Object.entries(fhirEngines)) {
+              if (title.includes(key) || body.includes(key) || 
+                  files.some(file => file.filename.toLowerCase().includes(key))) {
+                labels.push(`fhir-engine: ${engine}`);
+              }
+            }
+            
+            // Check for healthcare standards
+            const standards = {
+              'fhir': 'FHIR',
+              'hl7': 'HL7',
+              'dicom': 'DICOM',
+              'snomed': 'SNOMED CT',
+              'icd': 'ICD',
+              'loinc': 'LOINC',
+              'cpt': 'CPT'
+            };
+            
+            for (const [key, standard] of Object.entries(standards)) {
+              if (title.includes(key) || body.includes(key) || 
+                  files.some(file => file.filename.toLowerCase().includes(key))) {
+                labels.push(`standard: ${standard}`);
+              }
+            }
+            
+            // Check for compliance requirements
+            const compliance = ['hipaa', 'gdpr', 'phi', 'pii'];
+            if (compliance.some(term => title.includes(term) || body.includes(term))) {
+              labels.push('compliance');
+            }
+            
+            // Add security label for security-related changes
+            const securityKeywords = ['security', 'auth', 'vulnerability', 'encrypt', 'token'];
+            if (securityKeywords.some(term => title.includes(term) || body.includes(term)) ||
+                files.some(file => securityKeywords.some(term => file.filename.toLowerCase().includes(term)))) {
+              labels.push('security');
+            }
+            
+            // Add performance label
+            const performanceKeywords = ['performance', 'optimization', 'speed', 'memory', 'cpu'];
+            if (performanceKeywords.some(term => title.includes(term) || body.includes(term))) {
+              labels.push('performance');
+            }
+            
+            // Add all labels
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: labels
+              });
+            }
