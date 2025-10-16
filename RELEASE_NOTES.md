@@ -51,6 +51,51 @@ fhir-engines performance-test --load-type heavy_load
 #### 🔄 Data Migration
 Seamlessly migrate data between different FHIR engines:
 ```python
+# Data migration example will be shown below
+```
+
+### 🏥 HMCP Healthcare Communication Features
+
+#### 🚨 Emergency Response Protocols
+Automated emergency response with real-time care team coordination:
+```bash
+# Initiate cardiac arrest response
+python -m vita_agents.cli.hmcp_cli emergency PATIENT_001 cardiac_arrest "room_305_icu"
+
+# Coordinate stroke response team
+python -m vita_agents.cli.hmcp_cli emergency PATIENT_002 stroke_alert "emergency_department"
+```
+
+#### 🤝 Care Coordination Workflows  
+Multi-disciplinary healthcare team communication:
+```bash
+# Coordinate discharge planning
+python -m vita_agents.cli.hmcp_cli coordinate PATIENT_001 discharge_planning diagnostic_copilot medical_knowledge scheduling_agent
+
+# Multidisciplinary care team coordination
+python -m vita_agents.cli.hmcp_cli coordinate PATIENT_003 multidisciplinary_care cardiology_agent pharmacy_agent nursing_agent
+```
+
+#### 💊 Clinical Decision Support
+Real-time medication checking and clinical guidance:
+```bash
+# Check drug interactions
+python -m vita_agents.cli.hmcp_cli send medical_knowledge request '{"action": "medication_check", "medications": ["warfarin", "aspirin"], "allergies": ["penicillin"]}' --patient-id PATIENT_001 --urgency urgent
+
+# Clinical decision support
+python -m vita_agents.cli.hmcp_cli send diagnostic_copilot request '{"action": "clinical_decision_support", "symptoms": ["chest_pain", "shortness_of_breath"], "vital_signs": {"bp": "160/95", "hr": 110}}' --patient-id PATIENT_004 --urgency emergency
+```
+
+#### 🔐 HIPAA-Compliant Security
+Built-in healthcare compliance and security features:
+- **PHI Protection**: Automatic identification and protection of Protected Health Information
+- **Audit Trails**: Comprehensive logging of all healthcare communications
+- **Role-Based Access**: Healthcare role-based authorization (physician, nurse, pharmacist, ai_agent)
+- **Encryption**: End-to-end encryption for all PHI-containing messages
+
+#### 📋 Healthcare Workflow Examples
+Complete pre-built clinical workflows:
+```python
 # Migrate patient data from HAPI to IBM FHIR
 migration_task = TaskRequest(
     task_type="fhir_engine_migration",
