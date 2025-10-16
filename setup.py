@@ -251,9 +251,19 @@ setup(
         ],
     },
     keywords=[
-        "healthcare", "fhir", "hl7", "ehr", "ai", "agents", 
-        "interoperability", "hipaa", "medical", "clinical"
+        "healthcare", "FHIR", "HL7", "EHR", "interoperability", 
+        "medical", "agents", "AI", "machine learning", "clinical",
+        "HIPAA", "compliance", "medical records", "health informatics",
+        "telemedicine", "telehealth", "clinical decision support",
+        "population health", "public health", "medical imaging",
+        "DICOM", "SNOMED", "ICD-10", "LOINC", "CPT"
     ],
-    license="Apache 2.0",
     zip_safe=False,
+    platforms=["any"],
+    license="Apache-2.0",
+    
+    # Metadata for PyPI
+    maintainer="Vita Agents Team",
+    maintainer_email="team@vita-agents.dev",
+)
 )
