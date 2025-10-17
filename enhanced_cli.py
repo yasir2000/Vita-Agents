@@ -1361,10 +1361,10 @@ def demo():
     team_manager = HealthcareTeamManager()
     team_manager.initialize_default_teams()
     
-    teams = team_manager.list_teams()
+    teams = team_manager.get_all_teams()
     console.print(f"✅ Created {len(teams)} healthcare teams:")
     for team_id, team in teams.items():
-        console.print(f"  • {team.name} ({len(team.agents)} agents)")
+        console.print(f"  • {team.name} ({len(team.agent_ids)} agents)")
     
     console.print("\n[yellow]Step 4: Simulating Patient Case...[/yellow]")
     time.sleep(1)
@@ -1402,25 +1402,29 @@ def demo():
     time.sleep(1)
     
     # Simulate team response
-    if "cardiac_team" in teams:
-        cardiac_team = teams["cardiac_team"]
-        console.print(f"🏥 {cardiac_team.name} activated for patient assessment")
-        console.print(f"  • Team size: {len(cardiac_team.agents)} specialists")
-        console.print(f"  • Response time: <15 minutes")
-        console.print("✅ Coordinated care plan implemented")
+    if teams:
+        cardiac_teams = [team for team in teams.values() if "cardiac" in team.name.lower()]
+        if cardiac_teams:
+            cardiac_team = cardiac_teams[0]
+            console.print(f"🏥 {cardiac_team.name} activated for patient assessment")
+            console.print(f"  • Team size: {len(cardiac_team.agent_ids)} specialists")
+            console.print(f"  • Response time: <15 minutes")
+            console.print("✅ Coordinated care plan implemented")
+        else:
+            console.print("🏥 Emergency team activated for patient assessment")
+            console.print("✅ Coordinated care plan implemented")
     
     console.print("\n[yellow]Step 7: Performance Metrics...[/yellow]")
     time.sleep(1)
     
     # Show performance
-    agent_stats = agent_framework.get_performance_summary()
     team_stats = team_manager.get_team_performance_summary()
     
     console.print("📊 System Performance:")
-    console.print(f"  • Agents Active: {agent_stats['total_agents']}")
+    console.print(f"  • Agents Active: {len(agents)}")
     console.print(f"  • Teams Active: {team_stats['total_teams']}")
-    console.print(f"  • Cases Processed: {agent_stats['total_cases_handled'] + team_stats['total_cases_handled']}")
-    console.print(f"  • Success Rate: {((agent_stats['average_success_rate'] + team_stats['average_success_rate']) / 2):.1%}")
+    console.print(f"  • Cases Processed: {team_stats['total_cases_handled']}")
+    console.print(f"  • Success Rate: {team_stats['average_success_rate']:.1%}")
     
     console.print("\n[green]✅ Demonstration Complete![/green]")
     console.print("\n[bold]The VITA Healthcare AI system demonstrates:")
