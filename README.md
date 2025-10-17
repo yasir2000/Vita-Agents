@@ -34,6 +34,15 @@ Healthcare Model Context Protocol - like MCP (Model Context Protocol) but specif
 - **Healthcare Workflows**: 5+ complete clinical workflows (diagnosis, medication checks, discharge planning)
 - **Interactive CLI**: Full-featured command line interface for healthcare agent management
 
+### 🤖 **Healthcare Agent Framework** (NEW!)
+Multi-agent collaborative healthcare AI system inspired by advanced agent frameworks:
+- **Specialized Healthcare Agents**: Diagnosticians, Pharmacists, Care Coordinators with defined roles and capabilities
+- **Intelligent Task Assignment**: Automatic routing based on agent expertise and workload
+- **Collaborative Workflows**: Complex cases handled by multiple agents working together
+- **Performance Monitoring**: Real-time tracking of agent success rates and task completion
+- **Clinical Reasoning**: Advanced diagnostic and treatment planning capabilities
+- **LLM Integration**: Seamless integration with multiple AI models (Ollama, OpenAI, Anthropic)
+
 ### 🎯 **Key Features**
 - ⚡ **Parallel Operations**: Execute across multiple FHIR engines simultaneously  
 - 📊 **Performance Benchmarking**: Compare engines and identify optimal performance
