@@ -1,6 +1,6 @@
 <img width="200" height="200" alt="image" src="https://github.com/user-attachments/assets/2d04d9da-cf5b-4fe7-8b1f-8e6a861c529f" />
 
-# 🏥 Vita Agents: Multi-Agent AI for Healthcare Interoperability
+# 🏥 Vita Agents: Advanced Multi-Agent Healthcare AI Platform
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-yellow.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -10,51 +10,113 @@
 [![GitHub release](https://img.shields.io/github/release/yasir2000/vita-agents.svg)](https://GitHub.com/yasir2000/vita-agents/releases/)
 [![GitHub stars](https://img.shields.io/github/stars/yasir2000/vita-agents.svg?style=social&label=Star)](https://GitHub.com/yasir2000/vita-agents/stargazers/)
 
-> **🚀 Latest Release v2.1.0**: Multi-Engine FHIR Support + HMCP Healthcare Agent Communication!
+> **🚀 Latest Release v3.0.0**: Revolutionary Multi-Agent Healthcare Framework with Team Coordination!
 
-An enterprise-grade, open-source framework that leverages multi-agent AI systems to streamline healthcare data interoperability. Supporting FHIR (Fast Healthcare Interoperability Resources), HL7 standards, Electronic Health Records (EHR) integration with **11+ open source FHIR engines**, and now featuring the revolutionary **HMCP (Healthcare Model Context Protocol)** for seamless healthcare AI agent coordination.
+An enterprise-grade, open-source framework that leverages advanced multi-agent AI systems to revolutionize healthcare workflows. Featuring specialized healthcare agents, intelligent team coordination, emergency response protocols, and seamless integration with 11+ FHIR engines. Built with inspiration from cutting-edge collaborative AI architectures for real-world healthcare applications.
 
-## 🌟 What's New in v2.1.0
+## 🌟 What's New in v3.0.0
 
-### 🔥 **Multi-Engine FHIR Support** 
-Connect to **11+ open source FHIR servers simultaneously**:
-- **HAPI FHIR Server** (hapifhir.io) - Most popular implementation
-- **IBM FHIR Server** (github.com/IBM/FHIR) - Enterprise-grade
-- **Medplum FHIR Server** (medplum.com) - Modern cloud-native  
-- **Firely .NET SDK** (fire.ly) - Comprehensive .NET implementation
-- **Spark FHIR Server** - Open source by Firely
-- **LinuxForHealth FHIR Server** - IBM's healthcare platform
-- **Aidbox FHIR Platform** - Cloud-native FHIR
-- And 4+ more engines with extensible architecture
+### 🤖 **Advanced Healthcare Agent Framework** (MAJOR UPDATE!)
+Complete reimplementation with sophisticated multi-agent architecture:
+- **3 Specialized Healthcare Agents**: AI Diagnostician, Pharmacist, and Care Coordinator with distinct roles and capabilities
+- **Intelligent Task Assignment**: Automatic task routing based on agent expertise, workload, and patient severity
+- **Collaborative Decision Making**: Complex cases handled through multi-agent collaboration and consensus
+- **Performance Tracking**: Real-time monitoring of agent success rates, response times, and collaboration effectiveness
+- **Clinical Reasoning**: Advanced diagnostic workflows with evidence-based decision support
 
-### 🏥 **HMCP - Healthcare Model Context Protocol** (NEW!)
-Healthcare Model Context Protocol - like MCP (Model Context Protocol) but specifically designed for healthcare environments. Enables secure, multi-step conversational workflows between healthcare agents with context preservation:
-- **Clinical Context Awareness**: Patient data, urgency levels, healthcare roles
-- **Emergency Response Protocols**: Cardiac arrest, stroke, sepsis, respiratory failure
-- **Care Coordination**: Multi-disciplinary team communication and workflow orchestration
-- **HIPAA Compliance**: Secure PHI handling with audit trails and encryption
-- **Healthcare Workflows**: 5+ complete clinical workflows (diagnosis, medication checks, discharge planning)
-- **Interactive CLI**: Full-featured command line interface for healthcare agent management
+### 👥 **Healthcare Team Management System** (NEW!)
+Revolutionary team-based coordination inspired by advanced collaborative AI frameworks:
+- **10+ Specialized Teams**: Emergency Response, ICU, Cardiac, Stroke, Primary Care, Surgical, and more
+- **Emergency Response Protocols**: Standardized protocols for cardiac arrest, stroke, sepsis with defined response times
+- **Dynamic Team Assembly**: Automatic team formation based on case requirements and agent availability
+- **Multi-Team Coordination**: Complex cases managed across multiple specialized teams
+- **Protocol Enforcement**: Automated adherence to clinical protocols and care pathways
 
-### 🤖 **Healthcare Agent Framework** (NEW!)
-Multi-agent collaborative healthcare AI system inspired by advanced agent frameworks:
-- **Specialized Healthcare Agents**: Diagnosticians, Pharmacists, Care Coordinators with defined roles and capabilities
-- **Intelligent Task Assignment**: Automatic routing based on agent expertise and workload
-- **Collaborative Workflows**: Complex cases handled by multiple agents working together
-- **Performance Monitoring**: Real-time tracking of agent success rates and task completion
-- **Clinical Reasoning**: Advanced diagnostic and treatment planning capabilities
-- **LLM Integration**: Seamless integration with multiple AI models (Ollama, OpenAI, Anthropic)
+### 🚨 **Emergency Response System** (NEW!)
+Mission-critical emergency management capabilities:
+- **Rapid Response Teams**: Sub-15-minute activation for cardiac arrest scenarios
+- **Stroke Alert Protocols**: Automated stroke team coordination with thrombolytic preparation
+- **Sepsis Management**: Multi-disciplinary sepsis response with early intervention protocols
+- **Real-Time Coordination**: Live team coordination with role-based task assignment
+- **Performance Analytics**: Emergency response time tracking and outcome analysis
+
+### 🧠 **Advanced LLM Integration** (ENHANCED)
+Seamless integration with multiple AI providers:
+- **Multi-Provider Support**: Ollama (local), OpenAI, Anthropic, HuggingFace models
+- **Healthcare-Optimized Models**: Specialized clinical reasoning and medical analysis models
+- **Dynamic Model Selection**: Automatic model selection based on task type and requirements
+- **Cost Optimization**: Intelligent routing to balance performance and cost
+- **Clinical Prompting**: Specialized prompt templates for diagnostic and treatment workflows
 
 ### 🎯 **Key Features**
+- 🤖 **Multi-Agent Collaboration**: Specialized AI agents working together on complex healthcare cases
+- 👥 **Team-Based Coordination**: Dynamic team formation and emergency response protocols
+- 🚨 **Emergency Management**: Rapid response systems for cardiac arrest, stroke, sepsis scenarios
 - ⚡ **Parallel Operations**: Execute across multiple FHIR engines simultaneously  
-- 📊 **Performance Benchmarking**: Compare engines and identify optimal performance
+- 🧠 **Advanced AI Integration**: Support for 10+ AI models with healthcare-optimized prompting
+- 📊 **Performance Analytics**: Real-time monitoring of agent performance and team effectiveness
 - 🔄 **Cross-Engine Validation**: Ensure FHIR compliance across implementations
 - 🚀 **Data Migration**: Seamlessly migrate between different FHIR engines
 - 🔐 **Multi-Auth Support**: OAuth2, SMART on FHIR, Basic Auth, Bearer tokens
-- 🎨 **Professional CLI**: Beautiful command-line interface with rich features
-- 🏥 **Healthcare Agent Communication**: HMCP protocol for clinical workflows
-- 🚨 **Emergency Response**: Automated emergency protocols and care team coordination
+- 🎨 **Professional CLI**: Beautiful command-line interface with 15+ healthcare commands
+- 🏥 **Clinical Workflows**: Complete diagnosis, medication review, and care coordination workflows
 - 🔒 **Security & Compliance**: HIPAA-compliant with comprehensive audit trails
+
+## 🏗️ System Architecture
+
+### Multi-Agent Healthcare Framework
+```
+🏥 VITA Healthcare AI Platform
+├── 🤖 Healthcare Agents
+│   ├── AI Diagnostician (Clinical reasoning, differential diagnosis)
+│   ├── AI Pharmacist (Drug interactions, dosing, adverse effects)
+│   └── Care Coordinator (Workflow management, patient navigation)
+├── 👥 Healthcare Teams
+│   ├── Emergency Response Team (Cardiac arrest, stroke protocols)
+│   ├── ICU Team (Critical care management)
+│   ├── Primary Care Team (Routine care coordination)
+│   ├── Cardiac Team (Specialized cardiac care)
+│   └── 6+ Additional Teams (Stroke, Surgical, Oncology, etc.)
+├── 🧠 LLM Integration
+│   ├── Local Models (Ollama, DeepSeek, Llama)
+│   ├── Cloud Providers (OpenAI, Anthropic)
+│   └── Healthcare Models (Clinical BERT, Med-Llama)
+└── 📊 Management System
+    ├── Task Assignment & Routing
+    ├── Performance Monitoring
+    ├── Emergency Protocols
+    └── Team Coordination
+```
+
+## � Quick Start Guide
+
+### Option 1: Complete System Demo
+```bash
+# Clone the repository
+git clone https://github.com/yasir2000/vita-agents.git
+cd vita-agents
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run comprehensive system demonstration
+python enhanced_cli.py demo
+```
+
+### Option 2: Interactive Healthcare AI Platform
+```bash
+# Start the enhanced CLI interface
+python enhanced_cli.py dashboard
+
+# Initialize healthcare agents
+python enhanced_cli.py agents init
+
+# Initialize healthcare teams
+python enhanced_cli.py teams init
+
+# Run emergency response simulation
+python enhanced_cli.py teams emergency-response --type cardiac_arrest
+```
 
 ## 🐳 Docker Integration (New!)
 
@@ -106,23 +168,226 @@ python start_portal.py
 
 **Access the portal at:** http://localhost:8080
 
-### Advanced Options
-
+### Option 3: Healthcare Portal
 ```bash
-# Development mode with hot reload
-python start_portal.py --dev
+# Start the healthcare portal (auto-detects available port)
+python start_portal.py
 
-# Specific port
-python start_portal.py --port 8081
-
-# Clean start (kills existing processes)
-python start_portal.py --clean
-
-# Auto-find available port
-python start_portal.py --find-port
+# Or use platform-specific scripts:
+# Windows: double-click start_portal.bat
+# Unix/Linux/macOS: ./start_portal.sh
 ```
 
-## 🎯 Project Overview
+**Access the portal at:** http://localhost:8080
+
+## 💻 CLI Commands Reference
+
+### 🏥 System Overview
+```bash
+# Complete system status dashboard
+python enhanced_cli.py dashboard
+
+# System version and components
+python enhanced_cli.py version
+
+# Comprehensive system demonstration
+python enhanced_cli.py demo
+```
+
+### 🤖 Healthcare Agent Management
+```bash
+# Initialize default healthcare agents
+python enhanced_cli.py agents init
+
+# List all healthcare agents
+python enhanced_cli.py agents list
+
+# Show agent capabilities and specialties
+python enhanced_cli.py agents capabilities
+
+# Agent performance status
+python enhanced_cli.py agents status
+
+# Multi-agent workflow demonstration
+python enhanced_cli.py agents workflow
+```
+
+### 🩺 Clinical AI Operations
+```bash
+# Collaborative AI diagnosis
+python enhanced_cli.py agents diagnose \
+  --age 65 \
+  --gender female \
+  --complaint "chest pain and shortness of breath" \
+  --severity urgent
+
+# Comprehensive medication review
+python enhanced_cli.py agents medication-review \
+  --age 72 \
+  --gender male \
+  --medications "metformin,lisinopril,atorvastatin" \
+  --new-med "warfarin"
+```
+
+### 👥 Healthcare Team Management
+```bash
+# Initialize default healthcare teams
+python enhanced_cli.py teams init
+
+# List all healthcare teams
+python enhanced_cli.py teams list
+
+# Show detailed team information
+python enhanced_cli.py teams details --name "Emergency Response Team"
+
+# Team performance status
+python enhanced_cli.py teams status
+
+# Create new specialized team
+python enhanced_cli.py teams create emergency_team --name "Trauma Team"
+```
+
+### 🚨 Emergency Response System
+```bash
+# Cardiac arrest emergency simulation
+python enhanced_cli.py teams emergency-response \
+  --type cardiac_arrest \
+  --age 65 \
+  --gender male
+
+# Stroke alert protocol
+python enhanced_cli.py teams emergency-response \
+  --type stroke \
+  --age 58 \
+  --gender female
+
+# Sepsis management protocol
+python enhanced_cli.py teams emergency-response \
+  --type sepsis \
+  --age 72 \
+  --gender male
+
+# Multi-team coordination demonstration
+python enhanced_cli.py teams workflow
+```
+
+### 🧠 LLM Integration
+```bash
+# List available AI models
+python enhanced_cli.py llm list-models
+
+# Show only healthcare-optimized models
+python enhanced_cli.py llm list-models --healthcare
+
+# Set active AI model
+python enhanced_cli.py llm set-model "ollama:deepseek-coder:latest"
+
+# Test AI model with clinical prompt
+python enhanced_cli.py llm test \
+  --prompt "What are the contraindications for warfarin therapy?" \
+  --temp 0.3
+
+# AI-powered clinical diagnosis
+python enhanced_cli.py llm diagnose \
+  --age 45 \
+  --gender female \
+  --complaint "severe headache with vision changes" \
+  --vitals "BP: 180/110, HR: 88"
+
+# Drug interaction analysis
+python enhanced_cli.py llm drug-check \
+  --current "warfarin,metformin,lisinopril" \
+  --new "amoxicillin"
+```
+
+### 📊 Sample Data Management
+```bash
+# Generate sample healthcare data
+python enhanced_cli.py data generate \
+  --patients 100 \
+  --scenarios 20 \
+  --output healthcare_sample_data.json
+
+# List sample patients
+python enhanced_cli.py data list-patients --limit 10
+
+# View clinical scenarios
+python enhanced_cli.py data list-scenarios
+
+# Show detailed scenario information
+python enhanced_cli.py data scenario-details 0
+```
+
+## � Healthcare Use Cases & Examples
+
+### 🚨 Emergency Response Scenario
+```bash
+# Critical cardiac arrest case
+python enhanced_cli.py teams emergency-response \
+  --type cardiac_arrest \
+  --age 68 \
+  --gender male
+
+# Expected Output:
+# 🚨 EMERGENCY RESPONSE SIMULATION
+# Emergency: Cardiac Arrest
+# 👤 Patient: 68-year-old male
+# 🏥 Emergency Response Team activated
+# 📋 Emergency Response Plan:
+#   • Protocol: Cardiac Arrest Response
+#   • Team Members: Dr. DiagnosisBot, PharmBot, CareCoordBot
+#   • Response Time: <2 minutes
+# ✅ Emergency response protocol activated successfully!
+```
+
+### 🤖 Multi-Agent Diagnosis
+```bash
+# Complex clinical case requiring collaboration
+python enhanced_cli.py agents diagnose \
+  --age 72 \
+  --gender female \
+  --complaint "chest pain, shortness of breath, leg swelling" \
+  --history "diabetes,hypertension,heart_failure" \
+  --medications "metformin,lisinopril,furosemide" \
+  --severity urgent
+
+# AI agents collaborate to provide:
+# • Differential diagnosis considerations
+# • Medication interaction analysis  
+# • Care coordination recommendations
+# • Risk stratification assessment
+```
+
+### 💊 Comprehensive Medication Review
+```bash
+# Multi-medication safety analysis
+python enhanced_cli.py agents medication-review \
+  --age 65 \
+  --gender male \
+  --medications "warfarin,metformin,atorvastatin,amlodipine" \
+  --allergies "penicillin,sulfa" \
+  --new-med "ciprofloxacin"
+
+# PharmBot analyzes:
+# • Drug-drug interactions
+# • Dosing appropriateness
+# • Allergy considerations
+# • New medication safety
+```
+
+### 👥 Team Workflow Demonstration
+```bash
+# Complex case requiring multiple teams
+python enhanced_cli.py teams workflow
+
+# Demonstrates:
+# • Emergency team initial response
+# • ICU team coordination
+# • Multi-team communication
+# • Care transition planning
+```
+
+## �🎯 Project Overview
 
 Vita Agents creates specialized AI agents that work collaboratively to handle different aspects of healthcare data processing, each with specific expertise in healthcare standards and workflows.
 
@@ -133,39 +398,48 @@ graph TB
     %% User Interfaces Layer
     subgraph UI["🎨 User Interfaces"]
         WEB["🌐 Web Portal<br/>Healthcare Dashboard"]
-        CLI["💻 Interactive CLI<br/>HMCP Management"]
+        CLI["💻 Enhanced CLI<br/>15+ Healthcare Commands"]
         API["🔌 REST API<br/>OpenAPI Docs"]
     end
 
     %% Orchestration Layer
     subgraph ORCH["🎼 Orchestration & Communication Layer"]
-        ORCHESTRATOR["🎯 Agent Orchestrator<br/>Workflow Management"]
-        HMCP["🏥 HMCP Protocol<br/>Healthcare Communication"]
+        ORCHESTRATOR["🎯 Agent Orchestrator<br/>Task Assignment & Routing"]
+        TEAM_MGR["👥 Team Manager<br/>Emergency Protocols"]
         ROUTER["🔀 Message Router<br/>Load Balancing"]
-        MONITOR["📊 Health Monitor<br/>Performance Analytics"]
+        MONITOR["📊 Performance Monitor<br/>Real-time Analytics"]
     end
 
     %% Specialized Agents Layer
     subgraph AGENTS["🤖 Specialized Healthcare Agents"]
         direction TB
         
-        subgraph CORE["Core Processing Agents"]
-            FHIR["📋 Enhanced FHIR Agent<br/>Multi-Engine Support<br/>11+ FHIR Servers"]
-            HL7["📨 HL7 Translation Agent<br/>v2.x ↔ FHIR Conversion"]
-            EHR["🏥 EHR Integration Agent<br/>Epic, Cerner, Allscripts"]
+        subgraph CORE["🏥 Core Healthcare Agents"]
+            DIAGNOSTICIAN["🩺 AI Diagnostician<br/>Clinical Reasoning<br/>Differential Diagnosis<br/>Pattern Recognition"]
+            PHARMACIST["💊 AI Pharmacist<br/>Drug Interactions<br/>Dosing Optimization<br/>Adverse Effects"]
+            COORDINATOR["📋 Care Coordinator<br/>Workflow Management<br/>Patient Navigation<br/>Care Planning"]
         end
         
-        subgraph CLINICAL["Clinical Intelligence Agents"]
-            CDS["🧠 Clinical Decision Support<br/>Drug Interactions, Alerts"]
-            HMCP_AGENT["🚨 HMCP Agent<br/>Emergency Response<br/>Care Coordination"]
-            NLP["📝 NLP Agent<br/>Clinical Notes, PHI Detection"]
+        subgraph LEGACY["🔄 Legacy Integration Agents"]
+            FHIR["📋 FHIR Agent<br/>Multi-Engine Support<br/>11+ FHIR Servers"]
+            HL7["📨 HL7 Translation<br/>v2.x ↔ FHIR Conversion"]
+            EHR["🏥 EHR Integration<br/>Epic, Cerner, Allscripts"]
         end
         
-        subgraph DATA["Data & Security Agents"]
-            HARMONY["🔄 Data Harmonization<br/>ML-Based Conflict Resolution"]
-            SECURITY["🔐 Compliance & Security<br/>HIPAA, Audit Trails"]
-            TRIAGE["⚡ Triage Agent<br/>Priority Classification"]
+        subgraph INTELLIGENCE["🧠 AI Intelligence Layer"]
+            LLM_MGR["� LLM Manager<br/>Ollama, OpenAI, Anthropic<br/>Healthcare Models"]
+            REASONING["🧠 Clinical Reasoning<br/>Evidence-Based Analysis<br/>Decision Support"]
+            NLP["📝 Medical NLP<br/>Clinical Notes Processing"]
         end
+    end
+
+    %% Healthcare Teams Layer
+    subgraph TEAMS["👥 Healthcare Teams"]
+        direction LR
+        EMERGENCY["� Emergency Response<br/>Cardiac Arrest, Stroke<br/>Sepsis Management"]
+        ICU["🏥 ICU Team<br/>Critical Care<br/>Monitoring"]
+        PRIMARY["🩺 Primary Care<br/>Routine Cases<br/>Preventive Care"]
+        SPECIALTY["⚕️ Specialty Teams<br/>Cardiac, Stroke, Surgical<br/>Oncology, Pediatric"]
     end
 
     %% Multi-Engine FHIR Support
@@ -223,57 +497,67 @@ graph TB
     %% Connections - Orchestration
     ORCHESTRATOR --> AGENTS
     HMCP --> HMCP_AGENT
+    %% Connections - Orchestration to Agents
+    ORCHESTRATOR --> AGENTS
+    TEAM_MGR --> TEAMS
     ROUTER --> CORE
-    ROUTER --> CLINICAL
-    ROUTER --> DATA
     MONITOR --> AGENTS
 
-    %% Connections - Agent Communication via HMCP
-    HMCP_AGENT -.->|Emergency Protocol| EMERGENCY
-    HMCP_AGENT -.->|Clinical Messages| CDS
-    HMCP_AGENT -.->|Patient Context| FHIR
-    HMCP_AGENT -.->|Care Coordination| HARMONY
+    %% Connections - Core Healthcare Agents
+    DIAGNOSTICIAN --> LLM_MGR
+    PHARMACIST --> LLM_MGR
+    COORDINATOR --> LLM_MGR
+    LLM_MGR --> REASONING
 
-    %% Connections - Core Agents
-    FHIR --> FHIR_ENGINES
-    HL7 --> HL7_SYS
+    %% Connections - Teams to Agents
+    EMERGENCY --> DIAGNOSTICIAN
+    EMERGENCY --> PHARMACIST
+    EMERGENCY --> COORDINATOR
+    ICU --> DIAGNOSTICIAN
+    PRIMARY --> COORDINATOR
+    SPECIALTY --> DIAGNOSTICIAN
+
+    %% Connections - Emergency Protocols
+    EMERGENCY -.->|Activates| CARDIAC
+    EMERGENCY -.->|Activates| STROKE
+    EMERGENCY -.->|Activates| SEPSIS
+    ICU -.->|Critical Care| CARDIAC
+    SPECIALTY -.->|Specialized| STROKE
+
+    %% Connections - Legacy Integration
+    LEGACY --> FHIR_ENGINES
+    FHIR --> SYSTEMS
+    HL7 --> SYSTEMS
     EHR --> SYSTEMS
     
-    %% Connections - Clinical Intelligence
-    CDS --> KNOWLEDGE
-    NLP --> ONTOLOGIES
-    TRIAGE --> CDS
-
-    %% Connections - Data Processing
-    HARMONY --> DATABASE
-    SECURITY --> AUDIT
-    SECURITY --> ENCRYPTION
-
-    %% Connections - External Systems
-    FHIR_ENGINES --> SYSTEMS
+    %% Connections - Knowledge Integration
     AGENTS --> KNOWLEDGE
-    SECURITY --> REGULATIONS
+    TEAMS --> KNOWLEDGE
+    REASONING --> KNOWLEDGE
 
     %% Connections - Infrastructure
     AGENTS --> INFRA
-    ORCHESTRATOR --> DATABASE
-    MONITOR --> REDIS
+    TEAMS --> INFRA
+    ORCH --> INFRA
 
     %% Styling
     classDef uiClass fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef orchClass fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     classDef agentClass fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef teamClass fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef emergencyClass fill:#ffebee,stroke:#b71c1c,stroke-width:2px
-    classDef fhirClass fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef fhirClass fill:#fff8e1,stroke:#f57c00,stroke-width:2px
     classDef infraClass fill:#fafafa,stroke:#424242,stroke-width:2px
     classDef knowledgeClass fill:#f1f8e9,stroke:#33691e,stroke-width:2px
 
     class UI,WEB,CLI,API uiClass
-    class ORCH,ORCHESTRATOR,HMCP,ROUTER,MONITOR orchClass
-    class AGENTS,CORE,CLINICAL,DATA,FHIR,HL7,EHR,CDS,HMCP_AGENT,NLP,HARMONY,SECURITY,TRIAGE agentClass
-    class EMERGENCY,CARDIAC,STROKE,SEPSIS,RESPIRATORY,DISCHARGE emergencyClass
+    class ORCH,ORCHESTRATOR,TEAM_MGR,ROUTER,MONITOR orchClass
+    class AGENTS,CORE,LEGACY,INTELLIGENCE,DIAGNOSTICIAN,PHARMACIST,COORDINATOR,LLM_MGR,REASONING,NLP agentClass
+    class TEAMS,EMERGENCY,ICU,PRIMARY,SPECIALTY teamClass
+    class CARDIAC,STROKE,SEPSIS,TRAUMA emergencyClass
     class FHIR_ENGINES,HAPI,IBM,MEDPLUM,FIRELY,SPARK,OTHERS fhirClass
     class INFRA,DATABASE,REDIS,ELASTICSEARCH,ENCRYPTION,AUDIT infraClass
+    class KNOWLEDGE,ONTOLOGIES,LOINC,RXNORM,GUIDELINES,REGULATIONS knowledgeClass
     class KNOWLEDGE,ONTOLOGIES,LOINC,RXNORM,GUIDELINES,REGULATIONS knowledgeClass
 ```
 
