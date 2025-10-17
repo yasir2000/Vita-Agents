@@ -6,6 +6,7 @@ Extends the original CLI with LLM capabilities and realistic healthcare scenario
 import typer
 import json
 import uuid
+import time
 import asyncio
 from typing import Optional, List
 from rich.console import Console
@@ -22,6 +23,10 @@ from healthcare_agent_framework import (
     healthcare_workflow, HealthcareRole, ClinicalTaskType, PatientSeverity,
     PatientContext, create_default_healthcare_agents
 )
+from healthcare_team_framework import (
+    team_manager, TeamType, TeamStatus, CoordinationPattern, 
+    create_default_healthcare_teams
+)
 
 app = typer.Typer(help="🏥 Vita Agents Healthcare AI Platform with LLM Integration")
 console = Console()
@@ -37,6 +42,10 @@ app.add_typer(data_app, name="data")
 # Healthcare Agent Framework Commands
 agent_app = typer.Typer(help="🤖 Healthcare Agent Framework")
 app.add_typer(agent_app, name="agents")
+
+# Healthcare Team Framework Commands
+team_app = typer.Typer(help="👥 Healthcare Team Management")
+app.add_typer(team_app, name="teams")
 
 # Original FHIR commands (simplified for brevity)
 fhir_app = typer.Typer(help="🔗 FHIR Operations")
@@ -782,6 +791,442 @@ def show_agent_capabilities(
         
         console.print()  # Add spacing between agents
 
+# Healthcare Team Framework Commands
+@team_app.command("list")
+def list_teams():
+    """List all healthcare teams"""
+    teams = team_manager.teams
+    
+    if not teams:
+        console.print("❌ No teams created. Use 'teams init' to create default teams.")
+        return
+    
+    table = Table(title="👥 Healthcare Teams")
+    table.add_column("Name", style="cyan")
+    table.add_column("Type", style="green")
+    table.add_column("Status", style="yellow")
+    table.add_column("Members", style="blue")
+    table.add_column("Active Cases", style="magenta")
+    table.add_column("Success Rate", style="red")
+    table.add_column("Lead Agent", style="white")
+    
+    for team in teams.values():
+        status_icon = {
+            TeamStatus.ACTIVE: "🟢 Active",
+            TeamStatus.ON_CALL: "🟡 On Call", 
+            TeamStatus.BUSY: "🔴 Busy",
+            TeamStatus.INACTIVE: "⚫ Inactive",
+            TeamStatus.ASSEMBLING: "🔄 Assembling"
+        }.get(team.status, team.status.value)
+        
+        lead_name = "None"
+        if team.lead_agent_id and team.lead_agent_id in team.members:
+            lead_name = team.members[team.lead_agent_id].name
+        
+        table.add_row(
+            team.name,
+            team.team_type.value.replace('_', ' ').title(),
+            status_icon,
+            str(len(team.members)),
+            str(len(team.current_cases)),
+            f"{team.metrics.success_rate:.1%}",
+            lead_name
+        )
+    
+    console.print(table)
+
+@team_app.command("init")
+def init_teams():
+    """Initialize default healthcare teams"""
+    console.print("🔄 Initializing default healthcare teams...")
+    
+    # Ensure agents exist first
+    if not healthcare_workflow.agents:
+        console.print("⚠️ No agents found. Creating default agents first...")
+        create_default_healthcare_agents()
+    
+    # Clear existing teams and create defaults
+    team_manager.teams.clear()
+    teams = create_default_healthcare_teams()
+    
+    if teams:
+        console.print(f"✅ Created {len(teams)} healthcare teams:")
+        for team in teams:
+            console.print(f"  • {team.name} ({team.team_type.value.replace('_', ' ').title()}) - {len(team.members)} members")
+    else:
+        console.print("❌ Failed to create teams. Ensure enough agents are available.")
+
+@team_app.command("status")
+def team_status():
+    """Show comprehensive team management status"""
+    status = team_manager.get_team_performance_summary()
+    
+    # Overall Team Status
+    console.print(Panel(
+        f"Total Teams: [bold]{status['total_teams']}[/bold]\n"
+        f"Active Teams: [bold green]{status['active_teams']}[/bold green]\n"
+        f"Cases Handled: [bold blue]{status['total_cases_handled']}[/bold blue]\n"
+        f"Average Success Rate: [bold magenta]{status['average_success_rate']:.1%}[/bold magenta]\n"
+        f"Team Utilization: [bold yellow]{status['team_utilization']:.1%}[/bold yellow]",
+        title="👥 Team Management Status",
+        border_style="green"
+    ))
+    
+    # Teams by Type
+    if status['teams_by_type']:
+        console.print("\n📊 Teams by Type:")
+        type_table = Table()
+        type_table.add_column("Team Type", style="cyan")
+        type_table.add_column("Count", style="green")
+        
+        for team_type, count in status['teams_by_type'].items():
+            type_table.add_row(team_type.replace('_', ' ').title(), str(count))
+        
+        console.print(type_table)
+
+@team_app.command("details")
+def team_details(
+    team_name: str = typer.Option("", "--name", help="Team name to show details for"),
+    team_type: str = typer.Option("", "--type", help="Show details for first team of this type")
+):
+    """Show detailed information about a specific team"""
+    target_team = None
+    
+    if team_name:
+        # Find team by name
+        for team in team_manager.teams.values():
+            if team.name.lower() == team_name.lower():
+                target_team = team
+                break
+    elif team_type:
+        # Find first team of specified type
+        try:
+            team_type_enum = TeamType(team_type.lower().replace(' ', '_'))
+            for team in team_manager.teams.values():
+                if team.team_type == team_type_enum:
+                    target_team = team
+                    break
+        except ValueError:
+            console.print(f"❌ Invalid team type: {team_type}")
+            console.print(f"Available types: {', '.join([t.value.replace('_', ' ').title() for t in TeamType])}")
+            return
+    
+    if not target_team:
+        console.print("❌ Team not found. Use 'teams list' to see available teams.")
+        return
+    
+    # Team Overview
+    console.print(Panel(
+        f"Type: [bold]{target_team.team_type.value.replace('_', ' ').title()}[/bold]\n"
+        f"Status: [bold]{target_team.status.value.title()}[/bold]\n"
+        f"Members: [bold]{len(target_team.members)}[/bold]\n"
+        f"Coordination: [bold]{target_team.coordination_pattern.value.replace('_', ' ').title()}[/bold]\n"
+        f"Protocols: [bold]{len(target_team.protocols)}[/bold]\n"
+        f"Active Cases: [bold]{len(target_team.current_cases)}[/bold]\n"
+        f"Success Rate: [bold]{target_team.metrics.success_rate:.1%}[/bold]",
+        title=f"👥 {target_team.name}",
+        border_style="blue"
+    ))
+    
+    # Team Members
+    if target_team.members:
+        console.print("\n👤 Team Members:")
+        member_table = Table()
+        member_table.add_column("Agent", style="cyan")
+        member_table.add_column("Role", style="green")
+        member_table.add_column("Specialties", style="yellow")
+        member_table.add_column("Lead", style="red")
+        
+        for agent_id, agent in target_team.members.items():
+            is_lead = "👑 Yes" if agent_id == target_team.lead_agent_id else "No"
+            specialties = ", ".join(agent.specialties[:2])
+            
+            member_table.add_row(
+                agent.name,
+                agent.role.value.replace('_', ' ').title(),
+                specialties,
+                is_lead
+            )
+        
+        console.print(member_table)
+    
+    # Available Protocols
+    if target_team.protocols:
+        console.print("\n📋 Available Protocols:")
+        protocol_table = Table()
+        protocol_table.add_column("Protocol", style="cyan")
+        protocol_table.add_column("Priority", style="red")
+        protocol_table.add_column("Max Response Time", style="yellow")
+        protocol_table.add_column("Required Roles", style="blue")
+        
+        for protocol in target_team.protocols:
+            required_roles = ", ".join([role.value.replace('_', ' ').title() for role in protocol.required_roles])
+            
+            protocol_table.add_row(
+                protocol.name,
+                str(protocol.priority_level),
+                str(protocol.max_response_time),
+                required_roles
+            )
+        
+        console.print(protocol_table)
+
+@team_app.command("create")
+def create_team(
+    team_type: str = typer.Argument(..., help="Team type to create"),
+    name: str = typer.Option("", "--name", help="Custom team name")
+):
+    """Create a new healthcare team"""
+    try:
+        team_type_enum = TeamType(team_type.lower().replace(' ', '_'))
+    except ValueError:
+        console.print(f"❌ Invalid team type: {team_type}")
+        console.print(f"Available types: {', '.join([t.value.replace('_', ' ').title() for t in TeamType])}")
+        return
+    
+    # Check if agents are available
+    available_agents = list(healthcare_workflow.agents.values())
+    if not available_agents:
+        console.print("❌ No agents available. Use 'agents init' to create agents first.")
+        return
+    
+    console.print(f"🔄 Creating {team_type_enum.value.replace('_', ' ').title()} team...")
+    
+    team = team_manager.auto_assemble_team(team_type_enum, available_agents)
+    
+    if team:
+        if name:
+            team.name = name
+        
+        console.print(f"✅ Created team: {team.name}")
+        console.print(f"  • Type: {team.team_type.value.replace('_', ' ').title()}")
+        console.print(f"  • Members: {len(team.members)}")
+        console.print(f"  • Lead: {team.members[team.lead_agent_id].name if team.lead_agent_id else 'None'}")
+        console.print(f"  • Protocols: {len(team.protocols)}")
+    else:
+        console.print(f"❌ Failed to create team. Not enough suitable agents available.")
+
+@team_app.command("emergency-response")
+def emergency_response_demo(
+    emergency_type: str = typer.Option("cardiac_arrest", "--type", help="Emergency type (cardiac_arrest/stroke/sepsis)"),
+    patient_age: int = typer.Option(65, "--age", help="Patient age"),
+    patient_gender: str = typer.Option("male", "--gender", help="Patient gender")
+):
+    """Demonstrate emergency response team coordination"""
+    console.print(f"🚨 [bold red]EMERGENCY RESPONSE SIMULATION[/bold red]")
+    console.print("=" * 60)
+    
+    # Create emergency patient context
+    emergency_contexts = {
+        "cardiac_arrest": PatientContext(
+            patient_id="emergency-001",
+            age=patient_age,
+            gender=patient_gender,
+            chief_complaint="Cardiac arrest - unresponsive",
+            medical_history=["Coronary artery disease", "Hypertension"],
+            severity=PatientSeverity.EMERGENCY,
+            vital_signs={"HR": "0", "BP": "0/0", "RR": "0", "O2Sat": "0%"}
+        ),
+        "stroke": PatientContext(
+            patient_id="emergency-002", 
+            age=patient_age,
+            gender=patient_gender,
+            chief_complaint="Acute neurological deficit",
+            medical_history=["Atrial fibrillation", "Diabetes"],
+            severity=PatientSeverity.EMERGENCY,
+            vital_signs={"HR": "110", "BP": "180/100", "RR": "20", "O2Sat": "95%"}
+        ),
+        "sepsis": PatientContext(
+            patient_id="emergency-003",
+            age=patient_age,
+            gender=patient_gender,
+            chief_complaint="Septic shock",
+            medical_history=["COPD", "Diabetes"],
+            severity=PatientSeverity.CRITICAL,
+            vital_signs={"HR": "130", "BP": "70/40", "RR": "28", "O2Sat": "88%"}
+        )
+    }
+    
+    if emergency_type not in emergency_contexts:
+        console.print(f"❌ Unknown emergency type: {emergency_type}")
+        return
+    
+    patient_context = emergency_contexts[emergency_type]
+    
+    console.print(f"🚨 Emergency: {emergency_type.replace('_', ' ').title()}")
+    console.print(f"👤 Patient: {patient_context.age}-year-old {patient_context.gender}")
+    console.print(f"📝 Chief Complaint: {patient_context.chief_complaint}")
+    console.print(f"🔴 Severity: {patient_context.severity.value.upper()}")
+    
+    # Find or create emergency team
+    emergency_teams = [t for t in team_manager.teams.values() if t.team_type == TeamType.EMERGENCY_TEAM]
+    
+    if not emergency_teams:
+        console.print("\n🔄 No emergency team available. Auto-assembling...")
+        available_agents = list(healthcare_workflow.agents.values())
+        emergency_team = team_manager.auto_assemble_team(TeamType.EMERGENCY_TEAM, available_agents)
+        
+        if not emergency_team:
+            console.print("❌ Failed to assemble emergency team.")
+            return
+    else:
+        emergency_team = emergency_teams[0]
+    
+    console.print(f"\n👥 Emergency Team: {emergency_team.name}")
+    console.print(f"  • Status: {emergency_team.status.value}")
+    console.print(f"  • Members: {len(emergency_team.members)}")
+    console.print(f"  • Lead: {emergency_team.members[emergency_team.lead_agent_id].name if emergency_team.lead_agent_id else 'None'}")
+    
+    # Activate appropriate protocol
+    protocol_mapping = {
+        "cardiac_arrest": "Cardiac Arrest Response",
+        "stroke": "Stroke Alert", 
+        "sepsis": "Sepsis Management"
+    }
+    
+    protocol_name = protocol_mapping.get(emergency_type)
+    if protocol_name:
+        console.print(f"\n🔄 Activating Protocol: {protocol_name}")
+        
+        execution_plan = emergency_team.activate_protocol(protocol_name, patient_context)
+        
+        if "error" in execution_plan:
+            console.print(f"❌ Protocol activation failed: {execution_plan['error']}")
+            return
+        
+        # Display execution plan
+        console.print(Panel(
+            f"Protocol: [bold]{execution_plan['protocol']}[/bold]\n"
+            f"Patient ID: {execution_plan['patient_id']}\n"
+            f"Severity: {execution_plan['severity'].upper()}\n"
+            f"Team Members: {', '.join(execution_plan['team_members'])}\n"
+            f"Estimated Completion: {execution_plan['estimated_completion'].strftime('%H:%M:%S')}",
+            title="📋 Emergency Response Plan",
+            border_style="red"
+        ))
+        
+        # Show protocol steps
+        console.print("\n📝 Protocol Steps:")
+        step_table = Table()
+        step_table.add_column("Step", style="cyan")
+        step_table.add_column("Action", style="yellow")
+        step_table.add_column("Responsible", style="green")
+        step_table.add_column("Duration", style="blue")
+        step_table.add_column("Status", style="red")
+        
+        for step in execution_plan['steps']:
+            step_table.add_row(
+                str(step['step_number']),
+                step['action'],
+                step['responsible_role'].replace('_', ' ').title(),
+                step['estimated_duration'],
+                step['status'].title()
+            )
+        
+        console.print(step_table)
+        
+        console.print(f"\n✅ Emergency response protocol activated successfully!")
+        console.print(f"⏰ Expected response time: {protocol_mapping}")
+    
+    else:
+        console.print(f"\n⚠️ No specific protocol available for {emergency_type}")
+
+@team_app.command("workflow")
+def team_workflow_demo():
+    """Demonstrate advanced team-based healthcare workflow"""
+    console.print("🏥 Advanced Team-Based Healthcare Workflow")
+    console.print("=" * 55)
+    
+    # Create complex multi-system patient case
+    patient_context = PatientContext(
+        patient_id="complex-case-001",
+        age=72,
+        gender="female",
+        chief_complaint="Multiple system failure - hypotension, altered mental status, fever",
+        medical_history=["Heart failure", "Diabetes mellitus", "Chronic kidney disease", "COPD"],
+        current_medications=["Metformin", "Lisinopril", "Furosemide", "Albuterol", "Insulin"],
+        allergies=["Penicillin", "Contrast dye"],
+        vital_signs={"HR": "125", "BP": "85/50", "RR": "26", "O2Sat": "89%", "Temp": "101.8°F"},
+        severity=PatientSeverity.CRITICAL
+    )
+    
+    console.print(f"👤 Complex Case: {patient_context.age}-year-old {patient_context.gender}")
+    console.print(f"📝 Presentation: {patient_context.chief_complaint}")
+    console.print(f"🔴 Severity: {patient_context.severity.value.upper()}")
+    console.print(f"🏥 History: {', '.join(patient_context.medical_history[:3])}...")
+    
+    # Step 1: Emergency Team Initial Response
+    console.print("\n🔄 Step 1: Emergency Team Response")
+    
+    case_id = str(uuid.uuid4())
+    assigned_team = team_manager.assign_case_to_team(case_id, patient_context, ClinicalTaskType.DIAGNOSIS)
+    
+    if assigned_team:
+        console.print(f"✅ Assigned to: {assigned_team.name}")
+        console.print(f"  • Team Type: {assigned_team.team_type.value.replace('_', ' ').title()}")
+        console.print(f"  • Members: {len(assigned_team.members)}")
+        console.print(f"  • Lead: {assigned_team.members[assigned_team.lead_agent_id].name if assigned_team.lead_agent_id else 'None'}")
+        
+        # Activate sepsis protocol if emergency team
+        if assigned_team.team_type == TeamType.EMERGENCY_TEAM:
+            console.print("\n🚨 Activating Sepsis Management Protocol...")
+            protocol_result = assigned_team.activate_protocol("Sepsis Management", patient_context)
+            if "error" not in protocol_result:
+                console.print("✅ Protocol activated successfully")
+    
+    # Step 2: ICU Team Coordination
+    console.print("\n🔄 Step 2: ICU Team Coordination")
+    
+    # Try to find or create ICU team
+    icu_teams = [t for t in team_manager.teams.values() if t.team_type == TeamType.ICU_TEAM]
+    
+    if not icu_teams:
+        console.print("🔄 Creating ICU team for critical care management...")
+        available_agents = list(healthcare_workflow.agents.values())
+        icu_team = team_manager.auto_assemble_team(TeamType.ICU_TEAM, available_agents)
+        
+        if icu_team:
+            console.print(f"✅ ICU Team assembled: {icu_team.name}")
+        else:
+            console.print("⚠️ Could not assemble ICU team - using existing emergency team")
+    else:
+        icu_team = icu_teams[0]
+        console.print(f"✅ ICU Team available: {icu_team.name}")
+    
+    # Step 3: Multi-Team Coordination Summary
+    console.print("\n📊 Multi-Team Workflow Summary:")
+    
+    active_teams = [t for t in team_manager.teams.values() if t.status == TeamStatus.ACTIVE]
+    
+    summary_table = Table(title="🏥 Active Healthcare Teams")
+    summary_table.add_column("Team", style="cyan")
+    summary_table.add_column("Type", style="green") 
+    summary_table.add_column("Role in Case", style="yellow")
+    summary_table.add_column("Key Responsibilities", style="blue")
+    
+    for team in active_teams:
+        if team.team_type == TeamType.EMERGENCY_TEAM:
+            role = "Initial Stabilization"
+            responsibilities = "Rapid assessment, life support, initial treatment"
+        elif team.team_type == TeamType.ICU_TEAM:
+            role = "Critical Care Management"
+            responsibilities = "Ongoing monitoring, complex care decisions"
+        else:
+            role = "Support"
+            responsibilities = "Specialized consultation, care coordination"
+        
+        summary_table.add_row(
+            team.name,
+            team.team_type.value.replace('_', ' ').title(),
+            role,
+            responsibilities
+        )
+    
+    console.print(summary_table)
+    
+    console.print(f"\n💡 This demonstrates advanced team coordination for complex critical care cases!")
+    console.print(f"🔄 Multiple specialized teams working together for optimal patient outcomes")
+
 # Basic FHIR commands (simplified)
 @fhir_app.command("status")
 def fhir_status():
@@ -846,18 +1291,171 @@ def dashboard():
         border_style="magenta"
     )
     
+    # Team Framework Status
+    team_status = team_manager.get_team_performance_summary()
+    team_status_panel = Panel(
+        f"Healthcare Teams: {team_status['total_teams']}\n"
+        f"Active Teams: {team_status['active_teams']}\n"
+        f"Cases Handled: {team_status['total_cases_handled']}\n"
+        f"Team Success Rate: {team_status['average_success_rate']:.1%}\n"
+        f"Team Utilization: {team_status['team_utilization']:.1%}" if team_status['total_teams'] > 0 else
+        f"No teams created yet\n"
+        f"Use 'teams init' to create default teams\n"
+        f"Teams enable multi-agent collaboration\n"
+        f"Emergency response protocols available",
+        title="👥 Healthcare Teams",
+        border_style="purple"
+    )
+    
     console.print(llm_status)
     console.print(data_status)
     console.print(agent_status_panel)
+    console.print(team_status_panel)
     
     # Quick commands
     console.print("\n🚀 [bold]Quick Commands:[/bold]")
+    console.print("• [cyan]teams init[/cyan] - Initialize healthcare teams")
+    console.print("• [cyan]teams list[/cyan] - View healthcare teams")
+    console.print("• [cyan]teams emergency-response[/cyan] - Emergency simulation")
+    console.print("• [cyan]teams workflow[/cyan] - Multi-team workflow demo")
     console.print("• [cyan]agents init[/cyan] - Initialize healthcare agents")
-    console.print("• [cyan]agents list[/cyan] - View healthcare agents")
     console.print("• [cyan]agents diagnose --help[/cyan] - Collaborative diagnosis")
-    console.print("• [cyan]agents workflow[/cyan] - Multi-agent workflow demo")
     console.print("• [cyan]llm list-models[/cyan] - View available AI models")
-    console.print("• [cyan]data generate[/cyan] - Create sample patient data")
+
+@app.command()
+def demo():
+    """Run a comprehensive demonstration of the healthcare AI system"""
+    console.print("\n[bold cyan]🏥 VITA Healthcare AI - Complete Demonstration[/bold cyan]")
+    console.print("This demo showcases the full capabilities of our multi-agent healthcare system")
+    
+    console.print("\n[yellow]Step 1: Initializing LLM System...[/yellow]")
+    time.sleep(1)
+    
+    # Initialize LLM
+    from llm_integration import LLMManager
+    llm = LLMManager()
+    
+    # Set a default model if none is active
+    available_models = llm.get_available_models()
+    if available_models and not llm.get_active_model():
+        model_keys = list(available_models.keys())
+        llm.set_active_model(model_keys[0])
+        console.print(f"✅ Activated model: {model_keys[0]}")
+    
+    console.print("\n[yellow]Step 2: Setting up Healthcare Agents...[/yellow]")
+    time.sleep(1)
+    
+    # Initialize agents
+    from healthcare_agent_framework import create_default_healthcare_agents, HealthcareAgent
+    agents = create_default_healthcare_agents()
+    
+    console.print(f"✅ Initialized {len(agents)} healthcare agents:")
+    for agent in agents:
+        console.print(f"  • {agent.name} - {agent.role}")
+    
+    console.print("\n[yellow]Step 3: Creating Healthcare Teams...[/yellow]")
+    time.sleep(1)
+    
+    # Initialize teams
+    from healthcare_team_framework import HealthcareTeamManager
+    team_manager = HealthcareTeamManager()
+    team_manager.initialize_default_teams()
+    
+    teams = team_manager.list_teams()
+    console.print(f"✅ Created {len(teams)} healthcare teams:")
+    for team_id, team in teams.items():
+        console.print(f"  • {team.name} ({len(team.agents)} agents)")
+    
+    console.print("\n[yellow]Step 4: Simulating Patient Case...[/yellow]")
+    time.sleep(1)
+    
+    # Create a sample patient case
+    patient_case = {
+        "patient_id": "DEMO-001",
+        "symptoms": ["chest pain", "shortness of breath", "fatigue"],
+        "vital_signs": {"bp": "150/95", "hr": "102", "temp": "99.2°F"},
+        "severity": "moderate"
+    }
+    
+    console.print("👤 Sample Patient Case:")
+    console.print(f"  • Patient ID: {patient_case['patient_id']}")
+    console.print(f"  • Symptoms: {', '.join(patient_case['symptoms'])}")
+    console.print(f"  • Vital Signs: BP {patient_case['vital_signs']['bp']}, HR {patient_case['vital_signs']['hr']}")
+    
+    console.print("\n[yellow]Step 5: Agent Collaboration...[/yellow]")
+    time.sleep(1)
+    
+    # Simulate agent collaboration
+    console.print("🤖 AI Diagnostician analyzing symptoms...")
+    time.sleep(2)
+    console.print("✅ Preliminary diagnosis: Possible cardiac condition, requires further evaluation")
+    
+    console.print("💊 AI Pharmacist reviewing medications...")
+    time.sleep(2)
+    console.print("✅ Medication recommendations: Hold current medications, consider cardiac workup")
+    
+    console.print("📋 Care Coordinator organizing care...")
+    time.sleep(2)
+    console.print("✅ Care plan: Schedule ECG, cardiology consult, monitor vitals q4h")
+    
+    console.print("\n[yellow]Step 6: Team Coordination...[/yellow]")
+    time.sleep(1)
+    
+    # Simulate team response
+    if "cardiac_team" in teams:
+        cardiac_team = teams["cardiac_team"]
+        console.print(f"🏥 {cardiac_team.name} activated for patient assessment")
+        console.print(f"  • Team size: {len(cardiac_team.agents)} specialists")
+        console.print(f"  • Response time: <15 minutes")
+        console.print("✅ Coordinated care plan implemented")
+    
+    console.print("\n[yellow]Step 7: Performance Metrics...[/yellow]")
+    time.sleep(1)
+    
+    # Show performance
+    agent_stats = agent_framework.get_performance_summary()
+    team_stats = team_manager.get_team_performance_summary()
+    
+    console.print("📊 System Performance:")
+    console.print(f"  • Agents Active: {agent_stats['total_agents']}")
+    console.print(f"  • Teams Active: {team_stats['total_teams']}")
+    console.print(f"  • Cases Processed: {agent_stats['total_cases_handled'] + team_stats['total_cases_handled']}")
+    console.print(f"  • Success Rate: {((agent_stats['average_success_rate'] + team_stats['average_success_rate']) / 2):.1%}")
+    
+    console.print("\n[green]✅ Demonstration Complete![/green]")
+    console.print("\n[bold]The VITA Healthcare AI system demonstrates:")
+    console.print("• 🤖 Multi-agent AI collaboration")
+    console.print("• 👥 Team-based healthcare workflows")
+    console.print("• 🚨 Emergency response protocols")
+    console.print("• 📊 Performance monitoring and analytics")
+    console.print("• 🏥 Comprehensive healthcare management")
+    
+    console.print("\n[cyan]Next steps:[/cyan]")
+    console.print("• Run 'status' to see current system state")
+    console.print("• Use 'agents diagnose' for AI-powered diagnosis")
+    console.print("• Try 'teams emergency-response' for emergency simulations")
+    console.print("• Explore 'teams workflow' for multi-team coordination")
+
+
+@app.command()
+def version():
+    """Show version information"""
+    console.print("\n[bold cyan]🏥 VITA Healthcare AI Platform[/bold cyan]")
+    console.print("Version: 2.0.0")
+    console.print("Build: Multi-Agent Healthcare Framework")
+    console.print("\nComponents:")
+    console.print("• 🤖 Healthcare Agent Framework v1.0")
+    console.print("• 👥 Team Management System v1.0") 
+    console.print("• 🧠 LLM Integration v1.0")
+    console.print("• 📊 Data Management v1.0")
+    console.print("• 🖥️  Enhanced CLI v2.0")
+    console.print("\nCapabilities:")
+    console.print("• Multi-agent AI collaboration")
+    console.print("• Team-based healthcare workflows")
+    console.print("• Emergency response protocols")
+    console.print("• Performance monitoring")
+    console.print("• Comprehensive healthcare management")
+
 
 if __name__ == "__main__":
     app()
