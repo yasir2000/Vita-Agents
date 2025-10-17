@@ -1,3 +1,5 @@
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/2d04d9da-cf5b-4fe7-8b1f-8e6a861c529f" />
+
 # 🏥 Vita Agents: Multi-Agent AI for Healthcare Interoperability
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
