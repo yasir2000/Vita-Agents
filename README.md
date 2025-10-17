@@ -568,16 +568,67 @@ graph TB
 - **Interactive CLI**: HMCP-enabled command line for healthcare professionals
 - **REST API**: OpenAPI-documented endpoints for system integration
 
+## 🚀 Core Features & Capabilities
+
+### 🤖 Advanced Healthcare Agent Framework
+- **3 Specialized AI Agents**: Each with distinct roles, capabilities, and expertise
+  - **🩺 AI Diagnostician**: Clinical reasoning, differential diagnosis, pattern recognition, risk assessment
+  - **💊 AI Pharmacist**: Drug interactions, dosing optimization, adverse effects, pharmacovigilance  
+  - **📋 Care Coordinator**: Workflow management, patient navigation, care planning, communication
+- **Intelligent Task Assignment**: Automatic routing based on agent expertise and current workload
+- **Collaborative Decision Making**: Complex cases handled through multi-agent consultation
+- **Performance Monitoring**: Real-time tracking of success rates, response times, and effectiveness
+- **Clinical Evidence Integration**: Evidence-based recommendations with sourcing and confidence levels
+
+### 👥 Healthcare Team Management System
+- **10+ Specialized Teams**: Emergency Response, ICU, Cardiac, Stroke, Primary Care, Surgical, Oncology, Pediatric, Trauma, Mental Health
+- **Dynamic Team Formation**: Automatic team assembly based on case requirements and agent availability
+- **Emergency Response Protocols**: Standardized workflows for critical situations
+  - **Cardiac Arrest**: <2 minute response with CPR, defibrillation, emergency medications
+  - **Stroke Alert**: <15 minute response with neurological assessment and thrombolytics
+  - **Sepsis Management**: <60 minute response with early intervention and monitoring
+- **Multi-Team Coordination**: Complex cases managed across multiple specialized teams
+- **Role-Based Access**: Authority levels and responsibilities clearly defined for each team member
+
+### 🚨 Emergency Response & Protocols
+- **Rapid Activation**: Emergency protocols triggered by keywords and severity levels
+- **Standardized Workflows**: Evidence-based protocols with defined steps and timelines
+- **Real-Time Monitoring**: Live tracking of response times and protocol adherence
+- **Escalation Procedures**: Automatic escalation when response times exceed thresholds
+- **Multi-Disciplinary Coordination**: Seamless handoffs between emergency and specialty teams
+
+### � AI & LLM Integration
+- **Multi-Provider Support**: Ollama (local), OpenAI, Anthropic, HuggingFace, Azure OpenAI
+- **Healthcare-Optimized Models**: Clinical BERT, Med-Llama, BiomedNLP models
+- **Intelligent Model Selection**: Automatic model routing based on task complexity and requirements
+- **Clinical Prompting**: Specialized prompt templates for medical scenarios
+- **Cost Optimization**: Balance between model performance and operational costs
+- **Context Preservation**: Maintain clinical context across multi-turn conversations
+
+### 📊 Performance Analytics & Monitoring
+- **Real-Time Dashboards**: Live system status and performance metrics
+- **Agent Performance Tracking**: Success rates, response times, collaboration effectiveness
+- **Team Coordination Metrics**: Emergency response times, protocol adherence, patient outcomes
+- **Resource Utilization**: Agent workload distribution and capacity planning
+- **Quality Improvement**: Continuous learning from case outcomes and feedback
+
+### 🔐 Security & Compliance
+- **HIPAA Compliance**: End-to-end PHI protection with audit trails
+- **Role-Based Access Control**: Granular permissions based on healthcare roles
+- **Data Encryption**: AES-256 encryption for data at rest and in transit
+- **Audit Logging**: Comprehensive tracking of all system interactions
+- **Privacy Protection**: Automatic PHI detection and anonymization capabilities
+
 #### 🎼 **Orchestration & Communication Layer**
-- **Agent Orchestrator**: Central workflow management and agent coordination
-- **HMCP Protocol**: Healthcare Model Context Protocol for clinical context
-- **Message Router**: Intelligent load balancing and message routing
-- **Health Monitor**: Real-time performance analytics and system health
+- **Agent Orchestrator**: Central workflow management and intelligent task distribution
+- **Team Manager**: Dynamic team formation and emergency protocol activation
+- **Message Router**: Intelligent load balancing and priority-based routing
+- **Performance Monitor**: Real-time analytics and system health monitoring
 
 #### 🤖 **Specialized Healthcare Agents**
-- **Core Processing**: FHIR (multi-engine), HL7 translation, EHR integration
-- **Clinical Intelligence**: Decision support, HMCP communication, NLP processing
-- **Data & Security**: ML harmonization, HIPAA compliance, intelligent triage
+- **Core Healthcare**: AI Diagnostician, Pharmacist, Care Coordinator with specialized capabilities
+- **Legacy Integration**: FHIR (multi-engine), HL7 translation, EHR system connectivity
+- **AI Intelligence**: LLM management, clinical reasoning, medical NLP processing
 
 #### 🔄 **Multi-Engine FHIR Support**
 - **11+ FHIR Engines**: HAPI, IBM, Medplum, Firely, Spark, and cloud providers
@@ -585,14 +636,14 @@ graph TB
 - **Performance Benchmarking**: Engine comparison and optimization
 
 #### 🚨 **Emergency & Care Protocols**
-- **Emergency Response**: Cardiac arrest, stroke, sepsis, respiratory failure
-- **Care Coordination**: Multi-disciplinary discharge planning and handoffs
-- **Clinical Workflows**: Automated protocol execution and team notification
+- **Emergency Response**: Cardiac arrest, stroke, sepsis with rapid activation
+- **Care Coordination**: Multi-disciplinary team coordination and handoffs
+- **Clinical Workflows**: Automated protocol execution and compliance monitoring
 
 #### 📚 **Healthcare Knowledge & Standards**
-- **Medical Ontologies**: SNOMED CT, ICD-10, LOINC, RxNorm
-- **Clinical Guidelines**: Evidence-based care recommendations
-- **Regulatory Compliance**: HIPAA, FDA, and international standards
+- **Medical Ontologies**: SNOMED CT, ICD-10, LOINC, RxNorm integration
+- **Clinical Guidelines**: Evidence-based care recommendations and protocols
+- **Regulatory Compliance**: HIPAA, FDA, and international healthcare standards
 
 #### 🏗️ **Infrastructure & Security**
 - **Data Storage**: PostgreSQL with FHIR resource optimization
@@ -1176,7 +1227,179 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 - [ ] International healthcare standards support
 - [ ] Regulatory certifications and validations
 
-## 🙏 Acknowledgments
+## � Installation & Requirements
+
+### System Requirements
+
+- **Python**: 3.8+ (3.10+ recommended)
+- **Operating System**: Windows, macOS, Linux
+- **Memory**: 8GB RAM minimum (16GB recommended for production)
+- **Storage**: 5GB free space
+- **Network**: Internet connection for LLM providers and healthcare APIs
+
+### Dependencies
+
+```python
+# Core Framework
+fastapi>=0.100.0
+uvicorn>=0.23.0
+pydantic>=2.0.0
+SQLAlchemy>=2.0.0
+redis>=4.6.0
+
+# Healthcare Standards
+fhir.resources>=7.0.0
+hl7apy>=1.3.0
+pydicom>=2.4.0
+
+# AI & Machine Learning
+openai>=1.0.0
+anthropic>=0.25.0
+ollama>=0.1.0
+transformers>=4.30.0
+torch>=2.0.0
+
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+elasticsearch>=8.0.0
+pymongo>=4.0.0
+
+# Security & Compliance
+cryptography>=41.0.0
+python-jose>=3.3.0
+passlib>=1.7.4
+```
+
+### Quick Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yasir2000/vita-agents.git
+cd vita-agents
+
+# Create virtual environment
+python -m venv vita-env
+source vita-env/bin/activate  # On Windows: vita-env\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Optional: Install development dependencies
+pip install -r requirements-dev.txt
+
+# Initialize the system
+python setup.py install
+```
+
+### Environment Configuration
+
+Create a `.env` file in the project root:
+
+```bash
+# LLM Provider Configuration
+OPENAI_API_KEY=your_openai_key_here
+ANTHROPIC_API_KEY=your_anthropic_key_here
+OLLAMA_BASE_URL=http://localhost:11434
+
+# Database Configuration
+DATABASE_URL=sqlite:///./vita_agents.db
+REDIS_URL=redis://localhost:6379
+ELASTICSEARCH_URL=http://localhost:9200
+
+# Healthcare API Configuration
+FHIR_SERVER_URL=http://localhost:8080/fhir
+HL7_MLLP_HOST=localhost
+HL7_MLLP_PORT=2575
+
+# Security Configuration
+SECRET_KEY=your_super_secure_secret_key_here
+ENCRYPTION_KEY=your_32_char_encryption_key_here
+
+# Healthcare Compliance
+HIPAA_LOGGING_ENABLED=true
+AUDIT_TRAIL_ENABLED=true
+PHI_ENCRYPTION_ENABLED=true
+```
+
+### Docker Setup (Recommended)
+
+```bash
+# Clone and navigate to project
+git clone https://github.com/yasir2000/vita-agents.git
+cd vita-agents
+
+# Build and start services
+docker-compose up -d
+
+# Initialize healthcare agents
+docker-compose exec vita-agents python -m vita_agents.cli.enhanced_cli agent init ai_diagnostician
+
+# Access the platform
+open http://localhost:8080
+```
+
+### Healthcare System Integration
+
+```bash
+# Configure FHIR endpoints
+python -m vita_agents.cli.enhanced_cli config fhir-endpoint --url "https://your-fhir-server.com/fhir"
+
+# Setup HL7 message processing
+python -m vita_agents.cli.enhanced_cli config hl7-listener --host "0.0.0.0" --port 2575
+
+# Initialize emergency response teams
+python -m vita_agents.cli.enhanced_cli team init emergency_response --protocols cardiac_arrest,stroke,sepsis
+
+# Test system connectivity
+python -m vita_agents.cli.enhanced_cli system health-check
+```
+
+### Verification
+
+```bash
+# Test the installation
+python -c "import vita_agents; print('✅ Vita Agents installed successfully')"
+
+# Verify agent framework
+python -m vita_agents.cli.enhanced_cli agent list
+
+# Test team management
+python -m vita_agents.cli.enhanced_cli team list
+
+# Run demo scenarios
+python -m vita_agents.cli.enhanced_cli demo run comprehensive_healthcare_demo
+```
+
+### Troubleshooting
+
+**Common Issues:**
+
+1. **LLM Provider Connection**
+   ```bash
+   # Test Ollama connection
+   curl http://localhost:11434/api/tags
+   
+   # Verify OpenAI API key
+   python -c "import openai; print('✅ OpenAI configured')"
+   ```
+
+2. **Database Connection**
+   ```bash
+   # Check Redis
+   redis-cli ping
+   
+   # Test Elasticsearch
+   curl http://localhost:9200/_cluster/health
+   ```
+
+3. **FHIR Server Issues**
+   ```bash
+   # Validate FHIR endpoint
+   python -m vita_agents.cli.enhanced_cli config test-fhir-connection
+   ```
+
+## �🙏 Acknowledgments
 
 - **FHIR Community** for healthcare interoperability standards
 - **HL7 International** for messaging standards and protocols

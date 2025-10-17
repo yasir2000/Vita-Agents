@@ -1,0 +1,70 @@
+# Vita Agents - Development Requirements
+# Additional dependencies for development and testing
+
+# Core development requirements from main requirements.txt
+-r requirements.txt
+
+# Enhanced Testing Framework
+pytest-html==4.1.0
+pytest-xdist==3.5.0
+pytest-benchmark==4.0.0
+pytest-sugar==0.9.7
+pytest-clarity==1.0.1
+coverage==7.3.2
+
+# Code Quality & Linting
+pylint==3.0.2
+bandit==1.7.5
+safety==2.3.5
+pre-commit==3.6.0
+
+# Type Checking
+types-requests==2.31.0.10
+types-PyYAML==6.0.12.12
+types-redis==4.6.0.11
+
+# Documentation
+mkdocs==1.5.3
+mkdocs-material==9.4.8
+mkdocs-mermaid2-plugin==1.1.1
+sphinx==7.2.6
+sphinx-rtd-theme==1.3.0
+
+# Jupyter and Analysis
+jupyter==1.0.0
+ipykernel==6.26.0
+notebook==7.0.6
+jupyterlab==4.0.8
+
+# Data Visualization
+matplotlib==3.8.0
+seaborn==0.13.0
+plotly==5.17.0
+
+# Performance Profiling
+memory-profiler==0.61.0
+line-profiler==4.1.1
+py-spy==0.3.14
+
+# API Testing
+httpie==3.2.2
+locust==2.18.0
+
+# Security Testing
+semgrep==1.50.0
+
+# Database Management
+pymongo==4.6.0
+redis-py-cluster==2.1.3
+
+# Healthcare Development Tools
+# fhir-parser==0.3.0  # Optional FHIR development tools
+# hl7-tools==1.0.0    # Optional HL7 development tools
+
+# Container & Deployment
+docker-compose==1.29.2
+kubernetes==28.1.0
+
+# Mock and Test Data
+responses==0.24.1
+freezegun==1.2.2
