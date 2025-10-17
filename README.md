@@ -1,4 +1,4 @@
-<img width="250" height="200" alt="image" src="https://github.com/user-attachments/assets/2d04d9da-cf5b-4fe7-8b1f-8e6a861c529f" />
+<img width="200" height="200" alt="image" src="https://github.com/user-attachments/assets/2d04d9da-cf5b-4fe7-8b1f-8e6a861c529f" />
 
 # 🏥 Vita Agents: Multi-Agent AI for Healthcare Interoperability
 
